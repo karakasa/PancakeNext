@@ -7,6 +7,37 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.DataType;
 internal static class AssociationStringifier
 {
+    public static string ToString(object pancakeObj, StringConversionType style)
+    {
+        if (pancakeObj == null)
+            return null;
+
+        if (pancakeObj is GhAtomList list)
+        {
+            return ListToJson(list, style);
+        }
+
+        if (MetahopperWrapper.IsMetaHopperWrapper(pancakeObj))
+        {
+            try
+            {
+                var listObj = new GhAtomList(MetahopperWrapper.ExtractMetaHopperWrapper(pancakeObj));
+                return ListToJson(listObj, style);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        if (pancakeObj is Association assoc)
+        {
+            return assoc.ToString(style);
+        }
+
+        return null;
+    }
+
     private static readonly Dictionary<StringConversionType, string[]> StyleKeywords = new();
     public enum StringConversionType
     {

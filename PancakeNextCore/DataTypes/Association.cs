@@ -1,11 +1,14 @@
 ﻿using GrasshopperIO;
+using PancakeNextCore.Polyfill;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace PancakeNextCore.DataType;
 
@@ -26,10 +29,30 @@ public sealed class Association : IStorable
     public int Length => Values is null ? 0 : Values.Count;
 
     internal List<string?>? Names { get; private set; }
-    internal List<object>? Values { get; private set; }
+    internal List<object?>? Values { get; private set; }
 
-    internal bool IsValid => Names is null || Names?.Count == Values?.Count;
+    internal bool IsValid => Names?.Count == Values?.Count;
 
+    [MemberNotNullWhen(true, nameof(Names), nameof(Values))]
+    private bool HasValues => Values is not null;
+
+    [MemberNotNull(nameof(Names), nameof(Values))]
+    private void EnsureData(int anticipatedCapacity = 0)
+    {
+        if (anticipatedCapacity > 0)
+        {
+            if (Names is null || Values is null)
+            {
+                Names = new List<string?>(anticipatedCapacity);
+                Values = new List<object?>(anticipatedCapacity);
+            }
+        }
+        else
+        {
+            Names ??= [];
+            Values ??= [];
+        }
+    }
     public void MergeWith(Association? another)
     {
         if (another is null)
@@ -39,92 +62,79 @@ public sealed class Association : IStorable
 
         if (!another.IsValid)
         {
-            throw new ArgumentException(nameof(another));
+            throw new ArgumentException("The other association is invalid.", nameof(another));
         }
 
-        var length = Values.Count;
+        if (!another.HasValues) return;
 
+        EnsureData();
+
+        Names.AddRange(another.Names);
         Values.AddRange(another.Values);
-
-        _names.AddRange(another._names);
-        for (var i = 0; i < another._names.Count; i++)
-        {
-            SetNameReference(another._names[i], length + i);
-        }
     }
 
-    public void Add(object item)
+    public void Add(object? item)
     {
         Add(null, item);
     }
 
-    private void FillWithNullNames()
+    public void Add(string? name, object? item)
     {
-        if (Names is not null) throw new InvalidOperationException(nameof(FillWithNullNames));
-        if (Values is null) return;
+        EnsureData();
 
-        Names = new(Values.Count);
-        for (var i = 0; i < Values.Count; i++)
-            Names.Add(null);
-    }
-
-    public void Add(string? name, object item)
-    {
-        if (name is null)
-        {
-            Names?.Add(name);
-        }
-        else
-        {
-            if (Names is null)
-            {
-                FillWithNullNames();
-            }
-
-            Names ??= [];
-            Names.Add(name);
-        }
-
-        Values ??= [];
+        Names.Add(name);
         Values.Add(item);
     }
 
-    public object Get(int index)
+    [MemberNotNullWhen(false, nameof(Names), nameof(Values))]
+    private bool IsOutOfRange(int index, bool throwOnError = false)
     {
-        if (index < 0 || index > Length)
+        if (!HasValues || index < 0 || index >= Length)
         {
-            throw new IndexOutOfRangeException();
+            if (throwOnError)
+                throw new IndexOutOfRangeException();
+
+            return true;
         }
 
-        return Values[index];
+        return false;
     }
 
-    public void Set(int index, object T)
+    public object? Get(int index)
     {
-        if (index < 0 || index > Length)
-        {
-            throw new IndexOutOfRangeException();
-        }
-
-        Values[index] = T;
+        IsOutOfRange(index, throwOnError: true);
+        return Values![index];
     }
 
-    public bool TryGet(int index, out object output)
+    public void Set(int index, object? value)
     {
-        if (index < 0 || index >= Length)
+        IsOutOfRange(index, throwOnError: true);
+        Values![index] = value;
+    }
+
+    public bool TryGet(int index, out object? output)
+    {
+        if (IsOutOfRange(index))
         {
             output = null;
             return false;
         }
+
         output = Values[index];
         return true;
     }
 
-    public bool TryGet(string name, out object output)
+    public bool TryGet(string name, out object? output)
     {
+        if (!HasValues)
+        {
+            output = null;
+            return false;
+        }
+
         for (var i = 0; i < Length; i++)
         {
-            if (_names[i] != null && _names[i].Equals(name))
+            if (name.Equals(Names[i]))
             {
                 output = Values[i];
                 return true;
@@ -135,14 +145,20 @@ public sealed class Association : IStorable
         return false;
     }
 
-    private bool TryGetExtended(string name, out object output)
+    private bool TryGetExtended(string name, out object? output)
     {
+        if (!HasValues)
+        {
+            output = null;
+            return false;
+        }
+
         if (TryGet(name, out output))
             return true;
 
-        if (name.StartsWith("@") && int.TryParse(name.Substring(1), out var indice))
+        if (name.StartsWith("@") && !name.TryParseSubstrAsInt(1, out var indice))
         {
-            if (indice >= 0 && indice < Values.Count)
+            if (!IsOutOfRange(indice))
             {
                 output = Values[indice];
                 return true;
@@ -150,18 +166,23 @@ public sealed class Association : IStorable
         }
 
         var lastIndex = name.LastIndexOf("@");
-        if (lastIndex == -1 || !int.TryParse(name.Substring(lastIndex + 1), out indice))
+        if (lastIndex == -1 || !name.TryParseSubstrAsInt(lastIndex + 1, out indice))
         {
             output = null;
             return false;
         }
 
+#if NET
+        var realName = name.AsSpan(0, lastIndex);
+#else
         var realName = name.Substring(0, lastIndex);
+#endif
+
         var index = 0;
 
         for (var i = 0; i < Length; i++)
         {
-            if (_names[i] != null && _names[i].Equals(realName))
+            if (StringUtility.Equals(realName, Names[i]))
             {
                 if (index == indice)
                 {
@@ -177,16 +198,14 @@ public sealed class Association : IStorable
         return false;
     }
 
-    public IEnumerable<string> GetRawNames()
+    public IEnumerable<string> GetNameWithIndexes()
     {
-        return _names.AsReadOnly();
-    }
+        if (!HasValues)
+            yield break;
 
-    public IEnumerable<string> GetNames()
-    {
         var index = 0;
 
-        foreach (var it in _names)
+        foreach (var it in Names)
         {
             yield return it ?? index.ToString();
             ++index;
@@ -195,9 +214,12 @@ public sealed class Association : IStorable
 
     public IEnumerable<string> GetJsonNames()
     {
+        if (!HasValues)
+            yield break;
+
         var index = 0;
 
-        foreach (var it in _names)
+        foreach (var it in Names)
         {
             yield return it ?? "item" + index.ToString();
             ++index;
@@ -229,25 +251,24 @@ public sealed class Association : IStorable
         }
     }
 
-    public override IGH_Goo Duplicate()
+    public Association Clone()
     {
         var tuple = new Association();
         tuple.MergeWith(this);
-
         return tuple;
     }
 
     public override string ToString()
     {
-        if (_principleIndex == 0 && Values[0] is string str)
+        if (_principleIndex == 0 && HasValues && Values[0] is string str)
             return str;
 
         return GetDescriptiveString();
     }
 
-    private static string ObjectToString(object obj)
+    private static string? ObjectToString(object? obj)
     {
-        if (obj == null)
+        if (obj is null)
             return "null";
         return obj.ToString();
     }
@@ -262,8 +283,8 @@ public sealed class Association : IStorable
 
     public string GetDescriptiveString()
     {
-        if (Values == null)
-            return Strings.EmptyTuple;
+        if (!HasValues)
+            return "<>";
 
         var types = string.Join(", ", GetItemNames());
         return $"<{types}>";
@@ -309,9 +330,11 @@ public sealed class Association : IStorable
 
     public void Clear()
     {
-        _nameIndexes.Clear();
-        _names.Clear();
-        Values.Clear();
+        Names?.Clear();
+        Values?.Clear();
+
+        Names = null;
+        Values = null;
     }
 
     public bool Equals(Association assoc)
@@ -343,7 +366,7 @@ public sealed class Association : IStorable
     public override int GetHashCode()
     {
         return -940306134
-            + EqualityComparer<List<string>>.Default.GetHashCode(_names)
+            + EqualityComparer<List<string>>.Default.GetHashCode(Names)
             + EqualityComparer<List<object>>.Default.GetHashCode(Values);
     }
 
@@ -357,43 +380,6 @@ public sealed class Association : IStorable
         return !(assoc1 == assoc2);
     }
 
-    public static string ToString(object pancakeObj, StringConversionType style)
-    {
-        if (pancakeObj == null)
-            return null;
-
-        if (pancakeObj is GhAtomList list)
-        {
-            return ListToJson(list, style);
-        }
-
-        if (MetahopperWrapper.IsMetaHopperWrapper(pancakeObj))
-        {
-            try
-            {
-                var listObj = new GhAtomList(MetahopperWrapper.ExtractMetaHopperWrapper(pancakeObj));
-                return ListToJson(listObj, style);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        if (pancakeObj is Association assoc)
-        {
-            return assoc.ToString(style);
-        }
-
-        return null;
-    }
-
-    public static bool IsSerializable(object obj)
-    {
-        return (!(obj == null)) && ((obj is Association) ||
-            (obj is GhAtomList) || MetahopperWrapper.IsMetaHopperWrapper(obj));
-    }
-
     internal static object DuplicateGeneral(object pancakeObj)
     {
         if (pancakeObj == null)
@@ -402,19 +388,6 @@ public sealed class Association : IStorable
         if (pancakeObj is GhAtomList list)
         {
             return list.Duplicate();
-        }
-
-        if (MetahopperWrapper.IsMetaHopperWrapper(pancakeObj))
-        {
-            try
-            {
-                var listObj = new GhAtomList(MetahopperWrapper.ExtractMetaHopperWrapper(pancakeObj));
-                return listObj;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
         }
 
         if (pancakeObj is Association assoc)
@@ -579,38 +552,6 @@ public sealed class Association : IStorable
 
         return base.Write(writer);
     }
-
-    protected Association(SerializationInfo reader, StreamingContext context)
-    {
-        var count = reader.GetInt32(IoLabelDataCount);
-        _principleIndex = reader.GetInt32(IoLabelPrincipleVal);
-
-        Values = new List<object>();
-        _names = new List<string>();
-
-        _names.Capacity = Values.Capacity = count;
-        for (var i = 0; i < count; i++)
-        {
-            var tag = i.ToString();
-            var str = reader.GetString(IoLabelName + tag);
-
-            _names.Add(str == "" ? null : str);
-            Values.Add(GooHelper.ReadObject(reader, tag));
-        }
-    }
-
-    public void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-        info.AddValue(IoLabelDataCount, Values.Count);
-        info.AddValue(IoLabelPrincipleVal, _principleIndex);
-        for (var i = 0; i < Values.Count; i++)
-        {
-            var tag = i.ToString();
-            info.AddValue(IoLabelName + tag, _names[i] ?? "");
-            GooHelper.WriteObject(info, tag, Values[i]);
-        }
-    }
-
     public static Association CreateFromDictionary(IDictionary dict, bool translateList = false)
     {
         var assoc = new Association(dict.Count);
@@ -644,11 +585,5 @@ public sealed class Association : IStorable
             }
         }
         return assoc;
-    }
-
-    public bool AddContent(string attributeName, object content)
-    {
-        Add(attributeName, content);
-        return true;
     }
 }
