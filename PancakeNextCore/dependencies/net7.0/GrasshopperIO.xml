@@ -1,0 +1,2710 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GrasshopperIO</name>
+    </assembly>
+    <members>
+        <member name="T:GrasshopperIO.AbsRelPaths">
+            <summary>
+            A pair consisting of an absolute and relative path
+            on a file system.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.AbsRelPaths.FromAbsolute(System.String,System.String)">
+            <summary>
+            Create a path pair from an absolute file path and a base uri.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.AbsRelPaths.#ctor(GrasshopperIO.FileSystemPath,GrasshopperIO.FileSystemPath)">
+            <summary>
+            Create a new file path. Arguments may not both be null.
+            If both are specified, it is up to the caller to ensure they are mutually correct.
+            </summary>
+            <param name="absolute">Absolute path.</param>
+            <param name="relative">Relative path.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if both the uris are null.</exception>
+        </member>
+        <member name="P:GrasshopperIO.AbsRelPaths.Absolute">
+            <summary>
+            Gets the absolute path. If null, the relative path will be set.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.AbsRelPaths.Relative">
+            <summary>
+            Gets the relative path. If null, the absolute path will be set.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.AbsRelPaths.FileName">
+            <summary>
+            Gets the filename as specified by either path.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.AbsRelPaths.FileExtension">
+            <summary>
+            Gets the file extension as specified by either path.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.AbsRelPaths.HasAbsolute">
+            <summary>
+            Gets whether the <see cref="P:GrasshopperIO.AbsRelPaths.Absolute"/> uri has been set.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.AbsRelPaths.HasRelative">
+            <summary>
+            Gets whether the <see cref="P:GrasshopperIO.AbsRelPaths.Relative"/> uri has been set.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.AbsRelPaths.HasBoth">
+            <summary>
+            Gets whether both the <see cref="P:GrasshopperIO.AbsRelPaths.Absolute"/> and <see cref="P:GrasshopperIO.AbsRelPaths.Relative"/> uris have been set.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.AbsRelPaths.WithRelative(GrasshopperIO.FileSystemPath)">
+            <summary>
+            If this pair contains an absolute but not a relative uri,
+            create a new pair with a relative Uri from the baseUri to the
+            <see cref="P:GrasshopperIO.AbsRelPaths.Absolute"/> uri.
+            </summary>
+            <param name="origin">Base uri.</param>
+            <returns>This pair, or a pair with a specified relative uri.</returns>
+        </member>
+        <member name="M:GrasshopperIO.AbsRelPaths.Resolve(System.String,System.String@,System.String@)">
+            <summary>
+            Resolve the absolute paths implied by this pair.
+            </summary>
+            <param name="origin">Origin, required to resolve the relative path.</param>
+            <param name="absolute">The absolute path, if available.</param>
+            <param name="relative">The absolute path as implied by the origin and the relative path.</param>
+            <returns>The suggested path. This is always the relative path if it can be resolved.</returns>
+        </member>
+        <member name="M:GrasshopperIO.AbsRelPaths.Resolve(System.String,System.String@,System.String@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Resolve the absolute paths implied by this pair.
+            </summary>
+            <param name="origin">Origin, required to resolve the relative path.</param>
+            <param name="absolute">The absolute path, if available.</param>
+            <param name="relative">The absolute path as implied by the origin and the relative path.</param>
+            <param name="absoluteExists">If the 'absolute' path was set, a value indicating whether there's a file there.</param>
+            <param name="relativeExists">If the 'relative' path was resolved, a value indicating whether there's a file there.</param>
+            <returns>The suggested path. This is the relative path if it can be resolved and points to an existing file,
+            otherwise it's the absolute path if it points to an existing file. If neither path specify a file, null is returned.</returns>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.Archive">
+            <summary>
+            This class represents a complete file. Grasshopper2 files are essentially zip-archives
+            containing a mixture of textual, binary and node-based entries.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Archive.PathSeparator">
+            <summary>
+            Gets the folder separator character used in Archive paths.
+            You can use forward slahes, backslashes or vertical bars in
+            your own notation though.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Archive.FileExtension">
+            <summary>
+            Gets the file extension used for Grasshopper 2.0 files (minus the period).
+            The extension is "ghz" which stands for GrassHopperZip(ped).
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.#ctor(System.String)">
+            <summary>
+            Create a new, empty archive.
+            </summary>
+            <param name="location">Initial location, may be null. Note that if a location is not set
+            at time of serialisation, relative file paths cannot be constructed.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.Clone">
+            <summary>
+            Create a deep copy of this archive in memory.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.System#ICloneable#Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>A new object that is a copy of this instance.</returns>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.Location">
+            <summary>
+            Gets the location associated with this archive.
+            This will only be set when the archive is read or written from/to file.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.Count">
+            <summary>
+            Gets the number of distinct entries in this archive.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.MessageCount">
+            <summary>
+            Gets the number of messages.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.Compression">
+            <summary>
+            Gets or sets the compression level to use when writing this archive to a file.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.Paths">
+            <summary>
+            Enumerate over all entry paths in this archive.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.Item(System.String)">
+            <summary>
+            Get the entry at the given path.
+            </summary>
+            <param name="path">Path.</param>
+            <returns>Entry at path.</returns>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.Notes">
+            <summary>
+            Enumerate over all informational messages.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.Warnings">
+            <summary>
+            Enumerate over all warning messages.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.Errors">
+            <summary>
+            Enumerate over all error messages.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.HasNotes">
+            <summary>
+            Gets whether any informational messages have been logged.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.HasWarnings">
+            <summary>
+            Gets whether any warning messages have been logged.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Archive.HasErrors">
+            <summary>
+            Gets whether any error messages have been logged.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.ValidatePath(System.String)">
+            <summary>
+            Validate and modify a path.
+            </summary>
+            <param name="path">Path to modify.</param>
+            <returns>Valid path.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.Remove(System.String)">
+            <summary>
+            Remove an entry from this archive.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.AddRoot(System.String,GrasshopperIO.DataBase.Node)">
+            <summary>
+            Add a root node to this archive.
+            </summary>
+            <param name="path">Path for content. The path must end in either ".root" or ".data"</param>
+            <param name="root">Root node.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.AddText(System.String,System.String)">
+            <summary>
+            Add text content to this archive.
+            </summary>
+            <param name="path">Path for content. The path must end in either ".txt", ".csv", ".cs", ".vb", ".py", ".xml", ".yaml", or ".json"</param>
+            <param name="text">Text data.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.AddData(System.String,System.Byte[])">
+            <summary>
+            Add byte-array content to this archive.
+            </summary>
+            <param name="path">Path for content. The path must end in either ".dat", ".png", ".jpg", ".tiff", ".zip", ".3dm", ".pdf" or ".dll"</param>
+            <param name="data">Data.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.AddDataUnsafe(System.String,System.Byte[])">
+            <summary>
+            Add byte-array content to this archive without copying. Only use this method
+            if you know there is no chance of the byte array being shared.
+            </summary>
+            <param name="path">Path for content.</param>
+            <param name="data">Data. Array will not be cloned and as such may be shared.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.GetRoot(System.String)">
+            <summary>
+            Get the root node associated with the given path.
+            </summary>
+            <param name="path">Path.</param>
+            <returns>Node at path.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.GetText(System.String)">
+            <summary>
+            Try to get the text associated with the given path.
+            </summary>
+            <param name="path">Path.</param>
+            <returns>Text or null if no such text path exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.GetData(System.String)">
+            <summary>
+            Get the byte-array associated with the given path.
+            </summary>
+            <param name="path">Path.</param>
+            <returns>Byte array.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.GetDataUnsafe(System.String)">
+            <summary>
+            Get the byte-array associated with the given path.
+            This method provides direct access to the internal array without
+            duplication, so only use it if you're not going to modify this array.
+            </summary>
+            <param name="path">Path.</param>
+            <returns>Bytes or null if no such byte path exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.RecordNote(System.String)">
+            <summary>
+            Add an informational message to this archive.
+            </summary>
+            <param name="message">Message to add.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.RecordWarning(System.String)">
+            <summary>
+            Add a warning message to this archive.
+            </summary>
+            <param name="message">Message to add.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.RecordError(System.String)">
+            <summary>
+            Add an error message to this archive.
+            </summary>
+            <param name="message">Message to add.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.ClearMessages">
+            <summary>
+            Wipe all messages.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.EnumerateAndExecute(GrasshopperIO.DataBase.TextMethod,GrasshopperIO.DataBase.DataMethod,GrasshopperIO.DataBase.RootMethod,GrasshopperIO.DataBase.NodeMethod,GrasshopperIO.DataBase.ItemMethod)">
+            <summary>
+            Enumerate over all elements in this archive and invoke a delegate for each.
+            </summary>
+            <param name="textMethod">Method for handling text data.</param>
+            <param name="dataMethod">Method for handling byte array data.</param>
+            <param name="rootMethod">Method for handling root nodes.</param>
+            <param name="nodeMethod">Method for handling all nodes (including root nodes).</param>
+            <param name="itemMethod">Method for handling item data.</param>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Archive.VersionCheck">
+            <summary>
+            Hard coded constant to be embedded into the version entry,
+            this allows us to check whether the data is corrupt.
+            It's my birthday backwards.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Archive.VersionEntry">
+            <summary>
+            FullName of zip entry under which version data will be stored.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.Write(System.String)">
+            <summary>
+            Write this archive to a file on the disk.
+            </summary>
+            <param name="filePath">Path of target file.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.Read(System.String)">
+            <summary>
+            Read a file and store its contents in a new archive.
+            </summary>
+            <param name="filePath">File to parse.</param>
+            <returns>Read archive.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Archive.Read(System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            Read a file and store its contents in a new archive.
+            </summary>
+            <param name="filePath">File to parse.</param>
+            <param name="filter">Entry name filter.</param>
+            <returns>Read archive.</returns>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.Compression">
+            <summary>
+            Enumerates the possible levels of compression.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Compression.None">
+            <summary>
+            Indicates no compression. Files will be composed quickly, but be bigger in size.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Compression.Fast">
+            <summary>
+            Indicates fast compression. Files will be composed quickly with a notable reduction in size.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Compression.Slow">
+            <summary>
+            Indicates full compression. Files will be composed slowly but will be as small as possible.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.DifferenceType">
+            <summary>
+            Enumerates all possible differences.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DifferenceType.NodeMissingInA">
+            <summary>
+            Node is present in the B archive, but not in the A archive.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DifferenceType.NodeMissingInB">
+            <summary>
+            Node is present in the A archive, but not in the B archive.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DifferenceType.ItemMissingInA">
+            <summary>
+            Item is present in the B archive, but not in the A archive.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DifferenceType.ItemMissingInB">
+            <summary>
+            Item is present in the A archive, but not in the B archive.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DifferenceType.ItemDifferent">
+            <summary>
+            Item exists in both archives, but has a different value.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.Difference">
+            <summary>
+            A single difference between two nodes.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Difference.CreateMissingNodeInA(GrasshopperIO.Path,GrasshopperIO.DataBase.Node)">
+            <summary>
+            Create a difference for a missing node in A.
+            </summary>
+            <param name="path">Path to node in B.</param>
+            <param name="node">Node in B.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Difference.CreateMissingNodeInB(GrasshopperIO.Path,GrasshopperIO.DataBase.Node)">
+            <summary>
+            Create a difference for a missing chunk in B.
+            </summary>
+            <param name="path">Path to chunk in A.</param>
+            <param name="chunk">Chunk in A.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Difference.CreateMissingItemInA(GrasshopperIO.Path,GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.Item)">
+            <summary>
+            Create a difference for a missing entry in A.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Difference.CreateMissingItemInB(GrasshopperIO.Path,GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.Item)">
+            <summary>
+            Create a difference for a missing entry in B.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Difference.CreateDifferentItem(GrasshopperIO.Path,GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.Item,GrasshopperIO.DataBase.Item)">
+            <summary>
+            Create a difference for two entries.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Difference.Type">
+            <summary>
+            Gets the type of difference.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Difference.Path">
+            <summary>
+            Gets the path to the chunk or entry in the A archive.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Difference.ChunkA">
+            <summary>
+            Chunk in the A archive, when relevant.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Difference.ChunkB">
+            <summary>
+            Chunk in the B archive, when relevant.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Difference.EntryA">
+            <summary>
+            Entry in the A archive, when relevant.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Difference.EntryB">
+            <summary>
+            Entry in the B archive, when relevant.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.Differences">
+            <summary>
+            A collection of differences.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Differences.Count">
+            <summary>
+            Gets the total number of differences.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Differences.Format(System.String,System.String)">
+            <summary>
+            Format this list of differences.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Differences.CountByType(GrasshopperIO.DataBase.DifferenceType)">
+            <summary>
+            Count the total number of differences of a given type.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Differences.Iterate(GrasshopperIO.DataBase.DifferenceType)">
+            <summary>
+            Iterate over all differences of a given type.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.TextMethod">
+            <summary>
+            Method used for operating on Text data inside an archive.
+            </summary>
+            <param name="path">Path of text data.</param>
+            <param name="text">Text data itself.</param>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.DataMethod">
+            <summary>
+            Method used for operating on Byte data inside an archive.
+            </summary>
+            <param name="path">Path of byte data.</param>
+            <param name="data">Byte data itself.</param>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.RootMethod">
+            <summary>
+            Method used for operating on root nodes inside an archive.
+            </summary>
+            <param name="path">Path of root.</param>
+            <param name="root">Root node.</param>
+            <param name="childToken">Token to be passed to all immediate children and items of this root.</param>
+            <returns>True to continue iterating over this root.</returns>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.NodeMethod">
+            <summary>
+            Method used for operating on nodes inside an archive.
+            </summary>
+            <param name="node">Node.</param>
+            <param name="parentToken">Token handed down from parental node.</param>
+            <param name="childToken">Token to be passed to all immediate children and items of this node.</param>
+            <returns>True to continue iterating over this node.</returns>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.ItemMethod">
+            <summary>
+            Method used for operating on items inside an archive.
+            </summary>
+            <param name="item">Item.</param>
+            <param name="parentToken">Token handed down from parental node.</param>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.EqualityLevel">
+            <summary>
+            Enumerates the possible levels to which node and item equality can be tested.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.EqualityLevel.NodeNames">
+            <summary>
+            Only child nodes are taken into account.
+            Nodes may have differently named items, or differently
+            valued items, while still being considered identical.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.EqualityLevel.ItemNames">
+            <summary>
+            Child nodes and item names are taken into account.
+            Nodes with differently named items cannot be identical.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.EqualityLevel.ItemData">
+            <summary>
+            Child nodes, item names and item values are taken into account.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.WriteContext">
+            <summary>
+            Shared contextual information to use used during serialisation processes.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.WriteContext.Path">
+            <summary>
+            Gets the path of the file (if known) where this data is being serialised to.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.ReadContext">
+            <summary>
+            Shared contextual information to use used during deserialisation processes.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.ReadContext.Path">
+            <summary>
+            Gets the path of the file (if known) where this data is being serialised to.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.IBinary">
+            <summary>
+            Interface to enforce support for binary (de)serialization.
+            Do not implement this interface as a 3rd party developer.
+            If you want to read and write your data to and from a GH archive,
+            implement <see cref="T:GrasshopperIO.IStorable"/> instead.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.IBinary.Write(System.IO.BinaryWriter,GrasshopperIO.DataBase.WriteContext)">
+            <summary>
+            Write the data to a binary stream.
+            </summary>
+            <param name="writer">Object to write with.</param>
+            <param name="context">Serialisation context details.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.IBinary.Read(System.IO.BinaryReader,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+            Read your data from a binary stream.
+            </summary>
+            <param name="reader">Object to read with.</param>
+            <param name="context">Deserialisation context details.</param>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.ISml">
+            <summary>
+            Interface to enforce support for Sml (de)serialization.
+            Do not implement this interface as a 3rd party developer.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.ISml.Write(GrasshopperIO.DataBase.SmlWriter,GrasshopperIO.DataBase.WriteContext)">
+            <summary>
+            Write the data to a binary stream.
+            </summary>
+            <param name="writer">Object to write with.</param>
+            <param name="context">Serialisation context details.</param>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.Item">
+            <summary>
+            Represents a single data entry in an archive.
+            An entry is an immutable combination of name, index and data.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Item.Write(System.IO.BinaryWriter,GrasshopperIO.DataBase.Item)">
+            <summary>
+            Write an item to an archive.
+            </summary>
+            <param name="writer">Writer object.</param>
+            <param name="item">Item to serialize.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Item.Read(System.IO.BinaryReader,GrasshopperIO.DataBase.Item@)">
+            <summary>
+            Read an iem from a binary reader.
+            </summary>
+            <param name="reader">Reader object.</param>
+            <param name="item">Deserialized item.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Item.Write(GrasshopperIO.DataBase.SmlWriter,GrasshopperIO.DataBase.Item)">
+            <summary>
+            Write an item to an sml string.
+            </summary>
+            <param name="writer">Writer object.</param>
+            <param name="item">Item to serialize.</param>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Item.Name">
+            <summary>
+            Gets the location assigned to this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Item.Value">
+            <summary>
+            Gets the value of this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Item.Type">
+            <summary>
+            Gets the type of the contained value.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Item.IsArray">
+            <summary>
+            Gets whether the contained value is an array.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Item.ToString">
+            <summary>
+            Gets a string representation of this item. This conversion can be lossy.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Item.AreIndentical(GrasshopperIO.DataBase.Item,GrasshopperIO.DataBase.Item)">
+            <summary>
+            Test two entries for equality. This comparison (unlike Equals and CompareTo)
+            test both the location and value of the entry.
+            </summary>
+            <param name="a">First entry.</param>
+            <param name="b">Second entry.</param>
+            <returns>True if entries are identical.</returns>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.NamedList`1">
+            <summary>
+            An immutable list of values which have names.
+            Note that eventhrough the collection itself is immutable,
+            the values it contains may not be.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.#ctor(System.Func{`0,GrasshopperIO.Name})">
+            <summary>
+            Create a new, empty keyed list.
+            </summary>
+            <param name="getName">T -> Name method.</param>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.NamedList`1.Count">
+            <summary>
+            Gets the number of elements.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.NamedList`1.Item(System.Int32)">
+            <summary>
+            Gets the instance at the given index.
+            </summary>
+            <param name="index">Index of item to retrieve.</param>
+            <returns>Instance at index.</returns>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.NamedList`1.Item(GrasshopperIO.Name)">
+            <summary>
+            Gets the instance (if any) with the given name.
+            </summary>
+            <param name="name">Name to search for.</param>
+            <returns>Instance with name or default(T).</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.Add(`0)">
+            <summary>
+            Add a new instance to this collection.
+            This method will throw in case of a name collision.
+            </summary>
+            <param name="instance">Instance to add.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.AddRange(System.Collections.Generic.List{`0})">
+            <summary>
+            Add new instances to this collection.
+            This method will throw in case of a name collision.
+            </summary>
+            <param name="instances">Instances to add.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.Remove(`0)">
+            <summary>
+            Remove a specific instance from this collection.
+            Note, the instance must be part of this collection,
+            it is not enough for the instance key to be present.
+            </summary>
+            <param name="instance">Instance to remove.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.RemoveName(GrasshopperIO.Name)">
+            <summary>
+            Remove a specific Name+T pair from this collection.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.Replace(`0)">
+            <summary>
+            Replace an item.
+            </summary>
+            <param name="instance">New value.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.Contains(GrasshopperIO.Name)">
+            <summary>
+            Test whether a specific name has already been defined.
+            </summary>
+            <param name="name">Name.</param>
+            <returns>True if the name has been defined.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.TryFind(GrasshopperIO.Name,`0@)">
+            <summary>
+            Try and find the item with the given name.
+            </summary>
+            <param name="name">Name to search for.</param>
+            <param name="instance">Found instance.</param>
+            <returns>True if item was found.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NamedList`1.IndexOf(GrasshopperIO.Name)">
+            <summary>
+            Try and find the index of a specific name.
+            </summary>
+            <param name="name">Name to search for.</param>
+            <returns>Index of name or -1.</returns>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.NamedList`1.Items">
+            <summary>
+            Iterate over all items in this collection.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.Node">
+            <summary>
+            Nodes are the main organising entities in Grasshopper IO hierarchical
+            dictionaries. Nodes may contain any number of uniquely named items,
+            as well as any number of uniquely named child nodes.
+            Nodes explicitly implement the <see cref="T:GrasshopperIO.IWriter"/> and <see cref="T:GrasshopperIO.IReader"/>
+            interfaces, which is how nodes are most commonly exposed to client code.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.Create">
+            <summary>
+            Create a loose, empty node.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.Create(GrasshopperIO.Name)">
+            <summary>
+            Create a loose, empty node.
+            </summary>
+            <param name="name">Name of this root node.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.Create(GrasshopperIO.Name,GrasshopperIO.IStorable)">
+            <summary>
+            Create a loose node which contains a single storable object.
+            </summary>
+            <param name="name">Name of this root node.</param>
+            <param name="content">Data to store in this node.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.#ctor(GrasshopperIO.Name)">
+            <summary>
+            You are not allowed to construct new nodes yourself. Either use a static
+            Create() method or create new nodes by emitting them from existing nodes.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.EnsureItemCollection">
+            <summary>
+            Ensure the item collection is instantiated.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.EnsureNodeCollection">
+            <summary>
+            Ensure the node collection is instantiated.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Node.Name">
+            <summary>
+            Gets the location of this node.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.Clear">
+            <summary>
+            Clear this node by removing all children and items.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.ToString">
+            <inheritdoc />
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Node.Topology">
+            <summary>
+            Gets the structural description of this node.
+            This includes all child nodes, but not any item names.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.AreIndentical(GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.EqualityLevel,System.Boolean)">
+            <summary>
+            Test two nodes for equality. This comparison tests both the location,
+            children and items of the node.
+            </summary>
+            <param name="a">First node.</param>
+            <param name="b">Second node.</param>
+            <param name="level">Identity strictness.</param>
+            <param name="recursive">If true, child nodes must also be identical.</param>
+            <returns>True if nodes are identical.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.FindDifferences(GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.Node,GrasshopperIO.DataBase.EqualityLevel,GrasshopperIO.DataBase.NodeMatcher[])">
+            <summary>
+            Find the differences between two nodes.
+            </summary>
+            <param name="a">First node.</param>
+            <param name="b">Second node.</param>
+            <param name="level">Level of comparison for differences.</param>
+            <param name="matchers">Matchers to apply.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.AllTypeIdentifiers">
+            <summary>
+            Collect all the type identifiers associated with IStorable types which have been
+            stored in this node, and all its children and grand-children.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.CollectTypeIdentifiers(System.Collections.Generic.HashSet{System.Guid})">
+            <summary>
+            Collect all the type identifiers this node and all its children and grand-children are aware of.
+            </summary>
+            <param name="collection">Collection of identifiers to populate.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.GetHashCode">
+            <summary>
+            Gets the hash code for this node. Note that nodes are mutable and that this
+            method is *not* threadsafe. You should never rely on node hashes if you suspect
+            some thread other than the caller may be affecting this node or any of the child
+            nodes.
+            Also note that the hash does not include any of the messaging strings.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Node.ItemCount">
+            <summary>
+            Gets the number of items in this node.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Node.Items">
+            <summary>
+            Iterate over all items in this node.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.HasItem(GrasshopperIO.Name)">
+            <summary>
+            Test to see whether an item with a specific name and index has been defined in this node.
+            </summary>
+            <param name="location">Location of item to find.</param>
+            <returns>True when an item with this name and index exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.HasItem(GrasshopperIO.Name,GrasshopperIO.DataBase.DataType)">
+            <summary>
+            Test to see whether an item with a specific name and index has been defined in this node.
+            </summary>
+            <param name="location">Location of item to find.</param>
+            <param name="storageType">Item data type.</param>
+            <returns>True when an item with this name and index exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.HasItemOrNode(GrasshopperIO.Name)">
+            <summary>
+            Gets whether the specified location is available as either an item or a node.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.FindItem(GrasshopperIO.Name)">
+            <summary>
+            Get the value associated with the specified location.
+            </summary>
+            <param name="name">Location of value to find.</param>
+            <returns>The value linked to the given name and index or null if no such value exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.RemoveItem(GrasshopperIO.Name)">
+            <summary>
+            Remove an item from this node.
+            </summary>
+            <param name="name">Location of item to remove.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.AddItem(GrasshopperIO.Name,GrasshopperIO.DataBase.Value)">
+            <summary>
+            Add a new item to this node. Item location must be unique.
+            </summary>
+            <param name="name">Location of item to add.</param>
+            <param name="value">Item value.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.AddItem(GrasshopperIO.DataBase.Item)">
+            <summary>
+            Add a new item to this node. Item location must be unique.
+            </summary>
+            <param name="item">Item to add.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.ReplaceItem(GrasshopperIO.DataBase.Item)">
+            <summary>
+            Replace an existing item, or add it if it doesn't exist yet.
+            </summary>
+            <param name="item">New item value.</param>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Node.NodeCount">
+            <summary>
+            Gets the number of child nodes in this node.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Node.Nodes">
+            <summary>
+            Iterate over all immediate child nodes.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.HasNode(GrasshopperIO.Name)">
+            <summary>
+            Test to see whether a child with a specific name and index has been defined in this node.
+            </summary>
+            <returns>True when a child with this name and index exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.FindNode(GrasshopperIO.Name)">
+            <summary>
+            Get the child with the specified name and index.
+            </summary>
+            <param name="location">Name of node to retrieve.</param>
+            <returns>The node with the given name and index or null if no such node exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.EmitNode(GrasshopperIO.Name)">
+            <summary>
+            Add a new child to this node. The node name+index may not collide with another child already part of this node.
+            </summary>
+            <param name="name">Name of node to emit.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.RemoveNode(GrasshopperIO.Name)">
+            <summary>
+            Remove a child from this node.
+            </summary>
+            <param name="location">Location of node to remove.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.AddCustomNode(GrasshopperIO.DataBase.Node)">
+             <summary>
+             Add a pre-made node as a child to this node. This is not generally recommended
+             but may be done for performance or memory optimisations, for example when a node
+             can be cached.
+            
+             If this child node is shared amongst multiple parent nodes, you may *never*
+             modify it after assignment, as that will break hash code on parent nodes.
+             </summary>
+             <param name="node">Child node to add.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.Select(System.String)">
+            <summary>
+            Try and find a node in this hierarchy.
+            </summary>
+            <param name="path">Path to child or grand-child. Must be a comma separated list of names.</param>
+            <returns>Child node if found, otherwise null.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.EnumerateAndExecute(System.Object,GrasshopperIO.DataBase.NodeMethod,GrasshopperIO.DataBase.ItemMethod)">
+            <summary>
+            Enumerate over all child nodes and items in this node and invoke a delegate for each.
+            </summary>
+            <param name="incomingToken">Token to use for first level invokes.</param>
+            <param name="nodeMethod">Method for handling all nodes.</param>
+            <param name="itemMethod">Method for handling all items.</param>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Node.IoVersionNumber">
+            <summary>
+            Represents the current IO version.
+            When a breaking change to the data layout of GrasshopperIO archives
+            must be implemented, this version will increment.
+            I'm guessing 255 breaking changes will suffice for the lifetime of the
+            Grasshopper 2 project, but if need be 255 can indicate a larger versioning
+            integers stored subsequently.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Node.IoVersionSpec">
+            <summary>
+            Defines when the current version specificiation was made official.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.GrasshopperIO#DataBase#IBinary#Write(System.IO.BinaryWriter,GrasshopperIO.DataBase.WriteContext)">
+            <summary>
+            Explicit implementation of <see cref="M:GrasshopperIO.DataBase.IBinary.Write(System.IO.BinaryWriter,GrasshopperIO.DataBase.WriteContext)"/>.
+            Use the static methods on the IO class to serialize nodes
+            correctly and with a minimum of effort.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.GrasshopperIO#DataBase#IBinary#Read(System.IO.BinaryReader,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+            Explicit implementation of ISerializable.Read.
+            Use the static methods on the IO class to deserialize nodes
+            correctly and with a minimum of effort.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.ReadVersion1(System.IO.BinaryReader,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+            Method for parsing version=1 of the GrasshopperIO specification.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.ReadVersion2(System.IO.BinaryReader,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+            Method for parsing version=2 of the GrasshopperIO specification.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Node.GrasshopperIO#DataBase#ISml#Write(GrasshopperIO.DataBase.SmlWriter,GrasshopperIO.DataBase.WriteContext)">
+            <summary>
+            Explicit implementation of <see cref="M:GrasshopperIO.DataBase.IBinary.Write(System.IO.BinaryWriter,GrasshopperIO.DataBase.WriteContext)"/>.
+            Use the static methods on the IO class to serialize nodes
+            correctly and with a minimum of effort.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Node.IdentifierLocation">
+            <summary>
+            The location under which type identifiers are stored.
+            I tried to pick something which is unlikely to get picked by anyone else,
+            but I didn't go out of my way.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.NodeMatcher">
+            <summary>
+            A class used for finding matching child-chunks.
+            Use this if you do not wish to merely compare all chunks in an archive using their Locations.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.NodeMatcher.Find(GrasshopperIO.DataBase.Node,System.Collections.Generic.IReadOnlyList{GrasshopperIO.DataBase.Node},System.Int32@)">
+            <summary>
+            Override this method to provide customised chunk matching.
+            The default behaviour matches chunks based on their Location.
+            </summary>
+            <param name="baseNode">Base chunk to match.</param>
+            <param name="potentialMatches">List of possible matches.</param>
+            <param name="matchingIndex">The index within the list of potential matches which matches the base chunk, or -1 if there is no match.</param>
+            <returns>True if the matchingIndex represents a meaningful value.</returns>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.SharedStorage">
+            <summary>
+            Legacy class used only to skip the appropriate number of bytes
+            during node deserialisation.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SharedStorage.#ctor">
+            <summary>
+            Create a new, empty shared storage.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.SimpleImmutableList`1">
+            <summary>
+            A cheap and quick immutable list optimised
+            for the most common use case in GrasshopperIO.
+            Adding and indexing values is fast, removing values is slow,
+            as is adding values to a list which in the past already
+            had values added to it.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.SimpleImmutableList`1._list">
+            <summary>
+            This mutable list will be shared amongst many SimpleImmutableList
+            instances. Every time values are appended, the mutable list will be grown
+            and a new wrapper SimpleImmutableList instance will be
+            created around it. This is how we ensure decent Add() performance.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.SimpleImmutableList`1.Count">
+            <summary>
+            Gets the number of items in this list.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.SimpleImmutableList`1.Item(System.Int32)">
+            <summary>
+            Gets the indexed item.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SimpleImmutableList`1.Add(`0)">
+            <summary>
+            Add an item to this list.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SimpleImmutableList`1.AddRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Add a collection of items to this list.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SimpleImmutableList`1.RemoveAt(System.Int32)">
+             <summary>
+            Remove an indexed element from this list.
+             </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SimpleImmutableList`1.SetItem(System.Int32,`0)">
+            <summary>
+            Overwrite an element in this list.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.SimpleImmutableList`1.Forwards">
+            <summary>
+            Iterate over all elements from the lowest to the highest index.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.SimpleImmutableList`1.Backwards">
+            <summary>
+            Iterate over all elements from the highest to the lowest index.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.SmlWriter">
+            <summary>
+            A basic utility class for writing SML compliant text.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.SmlWriter.Depth">
+            <summary>
+            Gets the current indentation depth.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.SmlWriter.IndentCode">
+            <summary>
+            Gets the indentation string to use.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.SmlWriter.IndentText">
+            <summary>
+            Gets the current indent text.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.ToString">
+            <summary>
+            Convert the text inside this writer to a string.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.SmlWriter.SmlElement">
+            <summary>
+            A disposable element object. The object must be disposed
+            when the block ends to ensure SML compliant text.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.SmlWriter.SmlAttribute">
+            <summary>
+            A disposable attribute object. The object must be disposed
+            when the block ends to ensure SML compliant text.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.SmlAttribute.Dispose(System.String)">
+            <summary>
+            Append a comment to the end of the attribute and dispose the attribute.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.SmlAttribute.AddTypeCode(GrasshopperIO.DataBase.DataType)">
+            <summary>
+            Write a data type code to this attribute, if needed for correct deserialisation.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.SmlAttribute.AddValue(GrasshopperIO.DataBase.Value)">
+            <summary>
+            Write a value to this attribute.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.SmlAttribute.AddItem(GrasshopperIO.DataBase.DataType,System.Object)">
+            <summary>
+            Write a value to this attribute.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.BeginAttribute(System.String)">
+            <summary>
+            Begin a new attribute.
+            </summary>
+            <param name="name">Name of attribute.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.BeginAttribute(GrasshopperIO.Name)">
+            <summary>
+            Begin a new attribute.
+            </summary>
+            <param name="name">Name of attribute.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.WriteLine(System.String)">
+            <summary>
+            Write a line with the proper indentation. The line string
+            must already be valid Sml, it will not be escaped.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.Escape(System.String)">
+            <summary>
+            Apply Sml escape rules for text.
+            <para>Hyphens are surrounded by double quotes.</para>
+            <para>Strings with whitespace are surrounded by double quotes.</para>
+            <para>Strings containing double quotes are surrounded by double quotes.</para>
+            <para>Double quotes in strings are doubled up.</para>
+            <para>Strings containing hash characters are surrounded by double quotes.</para>
+            <para>Strings containing newline character are split into lines, surrounded by double quotes and separated by slashes.</para>
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.Surround(System.String)">
+            <summary>
+            Surround a text with double quotes and replace all internal double quotes
+            with doubled up double quotes. All line-break and return chars are stripped.
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.SmlWriter.Break(System.String[])">
+            <summary>
+            Create a valid multi-line string.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.DataType">
+            <summary>
+            Enumerates all the possible types that can be stored in a GrasshopperIO.dll archive.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Boolean">
+            <summary>
+            System.Boolean
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Byte">
+            <summary>
+            System.Byte
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Integer32">
+            <summary>
+            System.Int32
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.UInteger32">
+            <summary>
+            System.UInt32
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Integer64">
+            <summary>
+            System.Int64
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.UInteger64">
+            <summary>
+            System.UInt64
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.DateTime64">
+            <summary
+            >System.DateTime
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Guid128">
+            <summary>
+            System.Guid
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.BigInteger">
+            <summary>
+            System.Numerics.BigInteger
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Float32">
+            <summary>
+            System.Single
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Float64">
+            <summary>
+            System.Double
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Decimal96">
+            <summary>
+            System.Decimal
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Complex128">
+            <summary>
+            System.Numerics.Complex
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Version">
+            <summary>
+            System.Version
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.String">
+            <summary>
+            System.String
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.Serializable">
+            <summary>
+            Indicates data implements ISerializable. the raw data in this case is a byte[].
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.DataType.FilePath">
+            <summary>
+            A tuple of an absolute and a relative Uri. Either may be null, but not both.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.DataBase.Value">
+            <summary>
+            Represents a single immutable value in an archive.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.FromObject(System.Object)">
+            <summary>
+            Stores a generic object. The object must either provide its own deserialization
+            via the Serializable attribute or the ISerializable interface, or it must be supported
+            as one of the standard types via the System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            class. The object will be stored as a byte-array.
+            </summary>
+            <param name="value">Object to serialize.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.#ctor(GrasshopperIO.DataBase.DataType,System.Object,System.Boolean)">
+            <summary>
+            The one and only 'real' constructor. All others should call this one.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.DataBase.Value.HashPrimes">
+            <summary>
+            An array of 49 three-digit primes used for hashing.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.Write(System.IO.BinaryWriter,GrasshopperIO.DataBase.Value)">
+            <summary>
+            Write an entry to an archive.
+            </summary>
+            <param name="writer">Writer object.</param>
+            <param name="entry">Entry to serialize.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.WriteValue(System.IO.BinaryWriter,GrasshopperIO.DataBase.DataType,System.Object)">
+            <summary>
+            Write a value guaranteed to be of a specific storage type.
+            </summary>
+            <param name="writer">Writer object.</param>
+            <param name="type">Type of value.</param>
+            <param name="value">Boxed value.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.WriteValues(System.IO.BinaryWriter,GrasshopperIO.DataBase.DataType,System.Object)">
+            <summary>
+            Write a value array guaranteed to be of a specific storage type.
+            </summary>
+            <param name="writer">Writer object.</param>
+            <param name="type">Type of value.</param>
+            <param name="valueArray">Value array.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.Read(System.IO.BinaryReader,GrasshopperIO.DataBase.Value@)">
+            <summary>
+            Read an entry from a binary reader.
+            </summary>
+            <param name="reader">Reader object.</param>
+            <param name="entry">Deserialized entry.</param>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.ReadValue(System.IO.BinaryReader,GrasshopperIO.DataBase.DataType)">
+            <summary>
+            Read a value guaranteed to be of a specific storage type.
+            </summary>
+            <param name="reader">Reader object.</param>
+            <param name="type">Type of value.</param>
+            <returns>Object read from stream.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.ReadValues(System.IO.BinaryReader,GrasshopperIO.DataBase.DataType)">
+            <summary>
+            Read a value array guaranteed to be of a specific storage type.
+            </summary>
+            <param name="reader">Reader object.</param>
+            <param name="type">Type of value.</param>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.Type">
+            <summary>
+            Gets the type for this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.IsArray">
+            <summary>
+            Gets whether this entry stores an array of values.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.RawData">
+            <summary>
+            Gets the raw data stored in this entry.
+            There are also type-safe accessors available which you should consider using.
+            Internal data is supposed to be immutable, so when you use this accessor to modify
+            the state of the raw data you may cause all sorts of problems.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.Count">
+            <summary>
+            Gets the number of items stored in this entry.
+            If the entry does not represent an array, this property always returns one.
+            If the entry does represent an array, the length of the array is returned.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.SizeEstimate">
+            <summary>
+            Gets an estimate of the number of bytes this value takes up when written to file.
+            Note that this will differ from the size taken up in memory at runtime.
+            Also note that the values will sometimes be estimations rather than the actual value,
+            as determining the actual size would require a lot of resources.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetBoolean">
+            <summary>
+            Get the boolean inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetByte">
+            <summary>
+            Get the byte inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetInteger32">
+            <summary>
+            Get the int inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetInteger64">
+            <summary>
+            Get the long inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetUInteger32">
+            <summary>
+            Get the uint inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetUInteger64">
+            <summary>
+            Get the ulong inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetBigInteger">
+            <summary>
+            Get the big integer inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetGuid">
+            <summary>
+            Get the Guid inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetDateTime">
+            <summary>
+            Get the date inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetTimeSpan">
+            <summary>
+            Get the date inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetFloat32">
+            <summary>
+            Get the float inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetFloat64">
+            <summary>
+            Get the double inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetDecimal">
+            <summary>
+            Get the decimal inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetComplex">
+            <summary>
+            Get the complex number inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetString">
+            <summary>
+            Get the string inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetFilePath">
+            <summary>
+            Get the file path inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetVersion">
+            <summary>
+            Get the version inside this entry.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.DeserializeObject``1">
+            <summary>
+            Deserialize an object from the internal data.
+            </summary>
+            <typeparam name="T">Object type to deserialize.</typeparam>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetBooleanArray">
+            <summary>
+            Get the boolean array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetByteArray">
+            <summary>
+            Get the byte array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetInteger32Array">
+            <summary>
+            Get the int array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetInteger64Array">
+            <summary>
+            Get the long array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetUInteger32Array">
+            <summary>
+            Get the uint array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetUInteger64Array">
+            <summary>
+            Get the ulong array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetBigIntegerArray">
+            <summary>
+            Get the BigInteger array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetGuidArray">
+            <summary>
+            Get the Guid array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetDateTimeArray">
+            <summary>
+            Get the date array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetFloat32Array">
+            <summary>
+            Get the float array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetFloat64Array">
+            <summary>
+            Get the double array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetDecimalArray">
+            <summary>
+            Get the decimal array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetComplexArray">
+            <summary>
+            Get the complex number array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetStringArray">
+            <summary>
+            Get the string array inside this entry.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.DataBase.Value.GetVersionArray">
+            <summary>
+            Get the version array inside this entry.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.ToString">
+            <summary>
+            Gets a string representation of this item. This conversion can be lossy.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.AreIndentical(GrasshopperIO.DataBase.Value,GrasshopperIO.DataBase.Value)">
+            <summary>
+            Test two entries for equality. This comparison (unlike Equals and CompareTo)
+            test both the location and value of the entry.
+            </summary>
+            <param name="a">First entry.</param>
+            <param name="b">Second entry.</param>
+            <returns>True if entries are identical.</returns>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.AreArraysIdentical(GrasshopperIO.DataBase.DataType,System.Array,System.Array)">
+            <summary>
+            Test two arrays for equality. This method is only called on the RawData of entries,
+            so we do not have to worry about nested arrays.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.DataBase.Value.AreArraysIdentical(System.Array,System.Array)">
+            <summary>
+            Downwind array equality tester. When calling this function it should
+            already be established that both arrays are equally long and of the same type.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.FileSystemPath">
+            <summary>
+            An absolute or relative path on a file system.
+            This type re-implements some functionality normally provided by the
+            <see cref="T:System.Uri"/> type, but it does so in a reliable, and
+            cross-platform consistent way.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.#ctor(System.String)">
+            <summary>
+            Create a new path from a textual uri.
+            </summary>
+            <param name="path">Path. If the path is supposed to represent a folder,
+            it *must* end with a directory separator character.</param>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.#ctor(System.String[],System.String,System.String)">
+            <summary>
+            Direct constructor.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.Validate">
+            <summary>
+            Validate this path and throw an exception if it's invalid.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.FileSystemPath.Folders">
+            <summary>
+            A list of path (i.e. drive and directory) elements. This does not include the file name or
+            file extension, and the first element may be an empty string in the case the path starts with
+            a directory separator character (i.e. a Unix root).
+            If you modify the elements in this array it may render the path invalid.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.FileSystemPath.File">
+            <summary>
+            Gets the file name. This may be an empty string is the path represents a folder.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.FileSystemPath.Extension">
+            <summary>
+            Gets the file extension, including the dot.
+            This may be an empty string.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.FileSystemPath.ContainsFile">
+            <summary>
+            Gets whether this path points to a file.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.FileSystemPath.ContainsDrive">
+            <summary>
+            Test whether the first element in the folder list probably
+            represents a drive identifier.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.FileSystemPath.IsAbsolute">
+            <summary>
+            Gets whether this is an absolute path.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.FileSystemPath.IsRelative">
+            <summary>
+            Gets whether this is a relative path.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.FileSystemPath.ParentCount">
+            <summary>
+            Count the number of parent folders at the beginning of this path.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.ToString">
+            <summary>
+            Create a string representation of this path using the current OSs directory separator symbols.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.ToString(System.String,System.String)">
+            <summary>
+            Create a string representation of this path using custom separator symbols.
+            </summary>
+            <param name="directorySeparator">Separator string between directories.</param>
+            <param name="fileSeparator">Separator string between final directory and file.</param>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.WithoutFile">
+            <summary>
+            Strip the file data from this path.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.WithFile(System.String,System.String)">
+            <summary>
+            Set new file data to this path.
+            </summary>
+            <param name="name">File name.</param>
+            <param name="extension">File extension, including the dot.</param>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.MakeRelative(GrasshopperIO.FileSystemPath,GrasshopperIO.FileSystemPath)">
+            <summary>
+            Create a relative path between two absolute paths. If there is no
+            relative path from 'a' to 'b' because they have nothing in common,
+            'b' is returned.
+            </summary>
+            <param name="a">Absolute departure.</param>
+            <param name="b">Absolute terminal.</param>
+            <returns>A relative path encoding the difference from a to b, or just b.</returns>
+        </member>
+        <member name="M:GrasshopperIO.FileSystemPath.MakeAbsolute(GrasshopperIO.FileSystemPath,GrasshopperIO.FileSystemPath)">
+            <summary>
+            Create an absolute path from a relative path and a starting point.
+            </summary>
+            <param name="from">Relative path to resolve.</param>
+            <param name="origin">Absolute starting point.</param>
+            <returns>An absolute path.</returns>
+        </member>
+        <member name="T:GrasshopperIO.ICustomIoId">
+            <summary>
+            Implement this interface in your class if you cannot attach an <see cref="T:GrasshopperIO.IoIdAttribute"/>
+            to your type. When the IoId of a specific type which implements this interface is required,
+            it will be instantiated and interrogated once, and the id will be cached for future queries.
+            This means your class must also provide a public constructor without any arguments.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.ICustomIoId.CustomIoId">
+            <summary>
+            Gets the custom id associated with this type.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.IO">
+            <summary>
+            Static methods for safe reading and writing to and from IStorable implementations.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IO.Duplicate(GrasshopperIO.IStorable)">
+            <summary>
+            Duplicate an instance of an IStorable type using (de)serialization.
+            </summary>
+            <param name="instance">Instance to duplicate.</param>
+            <returns>Duplicated instance.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.Duplicate``1(``0)">
+            <summary>
+            Duplicate an instance of an IStorable type using (de)serialization.
+            </summary>
+            <typeparam name="T">Type constraint.</typeparam>
+            <param name="instance">Instance to duplicate.</param>
+            <returns>Duplicated instance.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ValidateIStorable(System.Type,System.String@)">
+            <summary>
+            Validate the design of a type which implements the IStorable interface.
+            </summary>
+            <param name="type">Type of IStorable.</param>
+            <param name="reason">If this method returns false, the reason for the invalid type.</param>
+            <returns>True if instance is valid.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ValidateIStorable(System.Type,System.Reflection.ConstructorInfo@,System.String@)">
+            <summary>
+            Validate the design of a type which implements the IStorable interface.
+            </summary>
+            <param name="type">Type of IStorable.</param>
+            <param name="constructor">The restoration constructor will be returned here.</param>
+            <param name="reason">If this method returns false, the reason for the invalid type.</param>
+            <returns>True if instance is valid.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.GetIStorableConstructor(System.Type,System.Reflection.ConstructorInfo@)">
+            <summary>
+            Gets the constructor of a type which takes a single IReader argument.
+            If such a constructor does not exist null will be returned.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.IO._typeIReader">
+            <summary>
+            Type for IReader.
+            </summary>
+        </member>
+        <member name="F:GrasshopperIO.IO._typeIStorable">
+            <summary>
+            Type for IStorable.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IO.GetIoId(System.Type,System.Boolean)">
+            <summary>
+            Gets the value of the identifier attribute associated with a type.
+            If the type doesn't have the IdentifierAttribute, an exception will be thrown.
+            </summary>
+            <param name="type">Type to inspect.</param>
+            <param name="inherit">True to search this types inheritance chain to find the attribute.</param>
+            <returns>Identifier.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.TryGetIoId(System.Type,System.Guid@,System.Boolean)">
+            <summary>
+            Gets the value of the IoId attribute associated with a type.
+            </summary>
+            <param name="type">Type to inspect.</param>
+            <param name="id">Returned identifier.</param>
+            <param name="inherit">True to search this types inheritance chain to find the attribute.</param>
+            <returns>True if an identifier was found.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.IsObsolete(System.Type,System.String@)">
+            <summary>
+            Gets the value of the identifier attribute associated with a type.
+            If the type doesn't have the IdentifierAttribute, an exception will be thrown.
+            </summary>
+            <param name="type">Type to inspect.</param>
+            <param name="workAround">If the type is obsolete, returns the work around message here.</param>
+            <returns>Identifier.</returns>
+        </member>
+        <member name="E:GrasshopperIO.IO.LinkType">
+            <summary>
+            This event is raised whenever a specific type implementation is required
+            during deserialisation. Normally, all deserialisable types will have been
+            registered with GrasshopperIO.IO ahead of time, but it is possible some
+            types were omitted from standard registration due to their non-publicness,
+            or maybe because they need to be loaded on demand.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IO.ResolveType(System.Guid)">
+            <summary>
+            Try and get the type associated with a particular identifier.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IO.RegisterRestorableType(System.Type,System.Guid)">
+            <summary>
+            Add a type to the known set of restorable types.
+            Consider using the overload which only takes a single type parameter
+            to ensure your registration is correct.
+            </summary>
+            <param name="type">Type to add.</param>
+            <param name="id">Identifier associated with type.</param>
+            <returns>True if registration was successful.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.RegisterRestorableType(System.Type)">
+            <summary>
+            Add a type to the known set of restorable types.
+            The type must have an <see cref="T:GrasshopperIO.IoIdAttribute"/> attribute associated with it.
+            </summary>
+            <param name="type">Type to add.</param>
+            <returns>True if registration was successful.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.WriteNodeToByteArray(GrasshopperIO.IWriter,System.String)">
+            <summary>
+            Serialize a node directly to a byte array.
+            </summary>
+            <param name="node">Node to serialise.</param>
+            <param name="pathHint">Location of result, if known or makes sense.</param>
+        </member>
+        <member name="M:GrasshopperIO.IO.WriteNodeToFile(GrasshopperIO.IWriter,System.String)">
+            <summary>
+            Write a node to a file.
+            </summary>
+            <param name="node">Node to serialize.</param>
+            <param name="path">File path to write to.</param>
+        </member>
+        <member name="M:GrasshopperIO.IO.WriteNodeToStream(GrasshopperIO.IWriter,System.IO.Stream,GrasshopperIO.DataBase.WriteContext)">
+            <summary>
+            Append a node to a stream.
+            </summary>
+            <param name="node">Node to serialize.</param>
+            <param name="stream">Stream to write to.</param>
+            <param name="context">Deserialisation context.</param>
+        </member>
+        <member name="M:GrasshopperIO.IO.WriteNodeToStream(GrasshopperIO.IWriter,System.IO.BinaryWriter,GrasshopperIO.DataBase.WriteContext)">
+            <summary>
+            Append a node to a stream using a binary writer.
+            </summary>
+            <param name="node">Node to serialize.</param>
+            <param name="writer">Binary writer.</param>
+            <param name="context">Serialisation context.</param>
+        </member>
+        <member name="M:GrasshopperIO.IO.WriteStorableToFile(GrasshopperIO.IStorable,System.String)">
+            <summary>
+            Write a storable object to a file.
+            </summary>
+            <param name="storable">Storable object.</param>
+            <param name="path">File destination.</param>
+        </member>
+        <member name="M:GrasshopperIO.IO.WriteStorableToStream(GrasshopperIO.IStorable,System.IO.Stream,GrasshopperIO.DataBase.WriteContext)">
+            <summary>
+            Append a storable object to a stream.
+            </summary>
+            <param name="storable">Storable object.</param>
+            <param name="stream">File stream to write to.</param>
+            <param name="context">Serialisation context.</param>
+        </member>
+        <member name="M:GrasshopperIO.IO.WriteStorableToStream(GrasshopperIO.IStorable,System.IO.BinaryWriter,GrasshopperIO.DataBase.WriteContext)">
+            <summary>
+            Append a storable object to a stream.
+            </summary>
+            <param name="storable">Storable object.</param>
+            <param name="writer">Writer to use.</param>
+            <param name="context">Serialisation context.</param>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadNodeFromByteArray(System.Byte[],System.String)">
+            <summary>
+            Read a node directly from a byte array.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadNodeFromFile(System.String)">
+            <summary>
+            Read a node from a file.
+            </summary>
+            <param name="path">File path.</param>
+            <returns>Deserialized node.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadNodeFromStream(System.IO.Stream,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+            Read a node from a stream.
+            </summary>
+            <param name="stream">Data stream.</param>
+            <param name="context">Deserialisation context.</param>
+            <returns>Deserialized node.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadNodeFromStream(System.IO.BinaryReader,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+            Read a node from a binary reader.
+            </summary>
+            <param name="reader">Binary reader.</param>
+            <param name="context">Deserialisation context.</param>
+            <returns>Deserialized node.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadStorableFromFile(System.String)">
+            <summary>
+             Read an IStorable object from a file.
+            </summary>
+            <param name="path">File.</param>
+            <returns>Deserialised object.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadStorableFromStream(System.IO.Stream,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+             Read an IStorable object from a stream.
+            </summary>
+            <param name="stream">Data stream.</param>
+            <param name="context">Deserialisation context.</param>
+            <returns>Deserialised object.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadStorableFromStream(System.IO.BinaryReader,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+             Read an IStorable object from a binary reader.
+            </summary>
+            <param name="reader">Binary reader.</param>
+            <param name="context">Deserialisation context.</param>
+            <returns>Deserialised object.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadStorableFromFile``1(System.String)">
+            <summary>
+             Read an IStorable object from a file.
+            </summary>
+            <param name="path">File.</param>
+            <returns>Deserialised object.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadStorableFromStream``1(System.IO.Stream,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+             Read an IStorable object from a stream.
+            </summary>
+            <param name="stream">Data stream.</param>
+            <param name="context">Deserialisation context.</param>
+            <returns>Deserialised object.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IO.ReadStorableFromStream``1(System.IO.BinaryReader,GrasshopperIO.DataBase.ReadContext)">
+            <summary>
+             Read an IStorable object from a binary reader.
+            </summary>
+            <param name="reader">Binary reader.</param>
+            <param name="context">Deserialisation context.</param>
+            <returns>Deserialised object.</returns>
+        </member>
+        <member name="T:GrasshopperIO.IoIdAttribute">
+            <summary>
+            An attribute which associates an ID with a serialised object.
+            This is usually required for the deserialisation of derived types,
+            where it isn't clear which exact type is required to parse a specific 
+            portion of a file stream.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IoIdAttribute.#ctor(System.String)">
+            <summary>
+            Create a new Identifier from a formatted GUID.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.IoIdAttribute.Id">
+            <summary>
+            Gets the identifier associated with this attribute.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.IReader">
+            <summary>
+            Provides access to a subset of Node methods used for writing archives.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.IReader.Name">
+            <summary>
+            Gets the name of this reader.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IReader.FindReader(GrasshopperIO.Name)">
+            <summary>
+            Find the reader sub-object by name and index.
+            </summary>
+            <param name="name">Name of reader to find.</param>
+            <returns>The reader identified by the name and index or null if no such reader exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IReader.HasItem(GrasshopperIO.Name)">
+            <summary>
+            Test whether a certain item exists.
+            </summary>
+            <param name="name">Name of item to find.</param>
+            <returns>True if such an item exists within this reader.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IReader.HasItem(GrasshopperIO.Name,GrasshopperIO.DataBase.DataType)">
+            <summary>
+            Test whether a certain item exists.
+            </summary>
+            <param name="name">Name of item to find.</param>
+            <param name="storageType">Item type constraint.</param>
+            <returns>True if such an item exists within this reader.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IReader.HasNode(GrasshopperIO.Name)">
+            <summary>
+            Test whether a certain child node/reader exists.
+            </summary>
+            <param name="name">Name of node/reader to find.</param>
+            <returns>True if node/reader is defined.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IReader.HasItemOrNode(GrasshopperIO.Name)">
+            <summary>
+            Gets whether the specified name is available as either an item, or a node.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IReader.FindItem(GrasshopperIO.Name)">
+            <summary>
+            Get the value associatd with the specified name and index.
+            </summary>
+            <param name="name">Name of value to find.</param>
+            <returns>The value linked to the given name and index or null if no such value exists.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IReader.TryRead``1(GrasshopperIO.Name,``0)">
+            <summary>
+            Try and read a value if it exists.
+            </summary>
+            <param name="name">Name of value.</param>
+            <param name="valueIfMissing">Value to return if there is no item with the given name.</param>
+            <returns>Read value or default.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Boolean(GrasshopperIO.Name)">
+            <summary>
+            Read a boolean value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Boolean value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Integer8(GrasshopperIO.Name)">
+            <summary>
+            Read a byte value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Byte value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Integer32(GrasshopperIO.Name)">
+            <summary>
+            Read an integer value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Integer value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Integer64(GrasshopperIO.Name)">
+            <summary>
+            Read an integer value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Integer value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.IntegerXx(GrasshopperIO.Name)">
+            <summary>
+            Read an integer value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Integer value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Number32(GrasshopperIO.Name)">
+            <summary>
+            Read a floating point value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Floating point value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Number64(GrasshopperIO.Name)">
+            <summary>
+            Read a floating point value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Floating point value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Decimal128(GrasshopperIO.Name)">
+            <summary>
+            Read a decimal value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Decimal point value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Complex128(GrasshopperIO.Name)">
+            <summary>
+            Read a complex number value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Decimal point value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.DateTime(GrasshopperIO.Name)">
+            <summary>
+            Read a datetime value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Datetime value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.TimeSpan(GrasshopperIO.Name)">
+            <summary>
+            Read a datetime value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Datetime value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Guid128(GrasshopperIO.Name)">
+            <summary>
+            Read a Guid value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Guid value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.String(GrasshopperIO.Name)">
+            <summary>
+            Read a string value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>String value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.FilePath(GrasshopperIO.Name)">
+            <summary>
+            Read a file path value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>File path value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Version(GrasshopperIO.Name)">
+            <summary>
+            Read a version value.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Version value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Type(GrasshopperIO.Name)">
+            <summary>
+            Read a type value. Since a type may not be loaded during
+            read, this operation may fail.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Type value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Type(GrasshopperIO.Name,System.Collections.Generic.IEnumerable{System.Type},System.Type@)">
+            <summary>
+            Read a type value. Since a type may not be loaded during
+            read, this operation may fail. A list of possible fallback
+            types may be specified, and an identically named one will be
+            picked if the exact type is not found.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IReader.TypeName(GrasshopperIO.Name)">
+            <summary>
+            Read the assembly qualified name of the type.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Type name value.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Storable(GrasshopperIO.Name)">
+            <summary>
+            Read a storable object. This method requires that
+            the object was originally written using IWriter.WriteStorable,
+            that the type of the original value had an IdentifierAttribute
+            associated with it and that that identifier is known in the
+            current running context.
+            </summary>
+            <param name="name">Inner name for data. If null, the current reader will be used.</param>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Storable``1(GrasshopperIO.Name)">
+            <summary>
+            Read a storable object of a specific type.
+            default(T) will be returned if the name does not point to a valid block.
+            </summary>
+            <param name="name">Inner name for data. If null, the current reader will be used.</param>
+        </member>
+        <member name="M:GrasshopperIO.IReader.StorableArray``1(GrasshopperIO.Name)">
+            <summary>
+            Read a collection of storable objects.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IReader.BooleanArray(GrasshopperIO.Name)">
+            <summary>
+            Read a boolean array.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Boolean array.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Integer8Array(GrasshopperIO.Name)">
+            <summary>
+            Read a byte array.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Byte array.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Integer32Array(GrasshopperIO.Name)">
+            <summary>
+            Read an integer array.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Integer array.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Integer64Array(GrasshopperIO.Name)">
+            <summary>
+            Read an integer array.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Integer array.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Number32Array(GrasshopperIO.Name)">
+            <summary>
+            Read a float array.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Float array.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.Number64Array(GrasshopperIO.Name)">
+            <summary>
+            Read a float array.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Float array.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.StringArray(GrasshopperIO.Name)">
+            <summary>
+            Read a string array.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>String array.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.GuidArray(GrasshopperIO.Name)">
+            <summary>
+            Read a Guid array.
+            </summary>
+            <param name="name">Name of item.</param>
+            <returns>Guid array.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the requested name+index do not exist.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IReader.SupportsArray``1">
+            <summary>
+            Gets whether an array of type T can be automatically restored.
+            </summary>
+            <typeparam name="T">Type constraint.</typeparam>
+            <returns>True if an array of type T can be automatically restored.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IReader.GenericArray``1(GrasshopperIO.Name)">
+             <summary>
+            Restore an array of values. This method only works if <see cref="M:GrasshopperIO.IReader.SupportsArray``1"/>
+             returns true for the same type constraint.
+             </summary>
+             <typeparam name="T">Type constraint.</typeparam>
+             <param name="name">Name of item.</param>
+             <returns>Restored values.</returns>
+        </member>
+        <member name="T:GrasshopperIO.IStorable">
+            <summary>
+            Implement this interface if you wish to participate in GrasshopperIO serialization. 
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IStorable.Store(GrasshopperIO.IWriter)">
+            <summary>
+            This method is called whenever the instance is required to serialize itself.
+            </summary>
+            <param name="writer">Writer object to serialize with.</param>
+        </member>
+        <member name="T:GrasshopperIO.IWriter">
+            <summary>
+            This interface is implemented by Node and provides ways to store the standard data types.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.IWriter.Name">
+            <summary>
+            Gets the location of this writer.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.CreateWriter(GrasshopperIO.Name)">
+            <summary>
+            Create a new writer and slave it to this writer.
+            </summary>
+            <param name="location">Location of writer.</param>
+            <returns>A new writer instance that is part of this writer.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.AddItem(GrasshopperIO.DataBase.Item)">
+            <summary>
+            Add a new entry to this writer. Entry location must be unique.
+            </summary>
+            <param name="entry">Entry to add.</param>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Boolean(GrasshopperIO.Name,System.Boolean)">
+            <summary>
+            Write a Boolean value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Integer8(GrasshopperIO.Name,System.Byte)">
+            <summary>
+            Write a Byte value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Integer32(GrasshopperIO.Name,System.Int32)">
+            <summary>
+            Write a 32-bit Integer value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Integer64(GrasshopperIO.Name,System.Int64)">
+            <summary>
+            Write a 64-bit Integer value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.IntegerXx(GrasshopperIO.Name,System.Numerics.BigInteger)">
+            <summary>
+            Write a System.Numerics.BigInteger value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Number32(GrasshopperIO.Name,System.Single)">
+            <summary>
+            Write a System.Single value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Number64(GrasshopperIO.Name,System.Double)">
+            <summary>
+            Write a System.Double value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Decimal128(GrasshopperIO.Name,System.Decimal)">
+            <summary>
+            Write a System.Decimal value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Complex128(GrasshopperIO.Name,System.Numerics.Complex)">
+            <summary>
+            Write a System.Numerics.Complex number value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.DateTime(GrasshopperIO.Name,System.DateTime)">
+            <summary>
+            Write a DateTime value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.TimeSpan(GrasshopperIO.Name,System.TimeSpan)">
+            <summary>
+            Write a TimeSpan value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Guid128(GrasshopperIO.Name,System.Guid)">
+            <summary>
+            Write a Guid value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.String(GrasshopperIO.Name,System.String)">
+            <summary>
+            Write a String value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.FilePath(GrasshopperIO.Name,GrasshopperIO.FileSystemPath)">
+            <summary>
+            Write a File path value based on an absolute path.
+            If the archive location has been set, a relative path will be
+            included from the archive to the absolute path.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="absolutePath">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.FilePath(GrasshopperIO.Name,GrasshopperIO.AbsRelPaths)">
+            <summary>
+            Write a File path value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Version(GrasshopperIO.Name,System.Version)">
+            <summary>
+            Write a Version value.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Type(GrasshopperIO.Name,System.Type)">
+            <summary>
+            Write type value.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Storable(GrasshopperIO.Name,GrasshopperIO.IStorable)">
+            <summary>
+            Write an object which implements IStorable to the archive.
+            Always use this method instead of calling the Store() method
+            on the object itself.
+            </summary>
+            <param name="location">Inner location for data. If null, the current writer will be used.</param>
+            <param name="value">Value to store.</param>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.StorableArray``1(GrasshopperIO.Name,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Write a collection of objects which implement the IStorable interface.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.BooleanArray(GrasshopperIO.Name,System.Boolean[])">
+            <summary>
+            Write an array of booleans.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Integer8Array(GrasshopperIO.Name,System.Byte[])">
+            <summary>
+            Write an array of bytes.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Integer32Array(GrasshopperIO.Name,System.Int32[])">
+            <summary>
+            Write an array of 32-bit integers.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Integer64Array(GrasshopperIO.Name,System.Int64[])">
+            <summary>
+            Write an array of 64-bit integers.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Number32Array(GrasshopperIO.Name,System.Single[])">
+            <summary>
+            Write an array of floats.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.Number64Array(GrasshopperIO.Name,System.Double[])">
+            <summary>
+            Write an array of doubles.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.StringArray(GrasshopperIO.Name,System.String[])">
+            <summary>
+            Write an array of strings.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.GuidArray(GrasshopperIO.Name,System.Guid[])">
+            <summary>
+            Write an array of guids.
+            </summary>
+            <param name="location">Location of entry.</param>
+            <param name="value">Value of entry.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if another item with the same name already exists.</exception>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.SupportsArray``1">
+            <summary>
+            Gets whether an array of type T can be automatically stored.
+            </summary>
+            <typeparam name="T">Type constraint.</typeparam>
+            <returns>True if an array of type T can be automatically and efficiently stored.</returns>
+        </member>
+        <member name="M:GrasshopperIO.IWriter.GenericArray``1(GrasshopperIO.Name,``0[])">
+            <summary>
+            Store an array of values. This method only works if <see cref="M:GrasshopperIO.IWriter.SupportsArray``1"/>
+            returns true for the same type constraint.
+            </summary>
+            <typeparam name="T">Type constraint.</typeparam>
+            <param name="location">Location of entry.</param>
+            <param name="array">Values to store.</param>
+        </member>
+        <member name="T:GrasshopperIO.LinkTypeEventArgs">
+            <summary>
+            Event arguments used for type/identifier linking.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.LinkTypeEventArgs.#ctor(System.Guid)">
+            <summary>
+            Create a new LinkTypeEventArgs instance for a specific identifier.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.LinkTypeEventArgs.Identifier">
+            <summary>
+            Gets the identifier associated with the type.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.LinkTypeEventArgs.Type">
+            <summary>
+            Gets the type (if any) assigned to these event arguments.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.LinkTypeEventArgs.AssociateType(System.Type)">
+            <summary>
+            Call this method to associate a specific type with the identifier.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.Name">
+            <summary>
+            A name is used to uniquely identify a specific item or node.
+            It is a combination of a text label and an optional integer index.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.Name.IsAllowedChar(System.Char)">
+            <summary>
+            Tests whether a specific char is allowed in a name label.
+            Most latinate upper and lower case letters are allowed, as well as some
+            symbols such as underscores, periods, colons and braces.
+            </summary>
+            <param name="c">Character to test.</param>
+            <returns>True if character is allowed.</returns>
+        </member>
+        <member name="M:GrasshopperIO.Name.IsAllowedLabel(System.String,System.String@)">
+            <summary>
+            Tests whether a string is a valid name label.
+            </summary>
+            <param name="label">String to test.</param>
+            <param name="violation">Violation (if any).</param>
+            <returns>True if label is valid.</returns>
+        </member>
+        <member name="F:GrasshopperIO.Name.Empty">
+            <summary>
+            Gets a sensible placeholder name. Placeholders can be used
+            if you do not care about the name, or if the node is about
+            to be deserialised anyway.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.Name.#ctor(System.String)">
+            <summary>
+            Constuctor for names without an index.
+            </summary>
+            <param name="label">Label of name.</param>
+        </member>
+        <member name="M:GrasshopperIO.Name.#ctor(System.String,System.Int32)">
+            <summary>
+            Constructor for names with indices.
+            </summary>
+            <param name="label">Label of name.</param>
+            <param name="index">Index of name. Valid values are:
+            <para>-1 = no index</para>
+            <para>0 to int.MaxValue = valid index</para></param>
+        </member>
+        <member name="M:GrasshopperIO.Name.op_Implicit(System.String)~GrasshopperIO.Name">
+            <summary>
+            Widening conversion operator from string to name.
+            If the text ends with a hash followed by an integer constant,
+            it is interpreted as the index.
+            </summary>
+            <param name="text">Label (and possibly index) of name.</param>
+        </member>
+        <member name="P:GrasshopperIO.Name.Label">
+            <summary>
+            Gets the label of this name.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.Name.Index">
+            <summary>
+            Gets the index of this name. An index of -1 indicates no index is implied.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.Name.IsIndexed">
+            <summary>
+            Gets whether the index has been set.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.Name.WithIndex(System.Int32)">
+            <summary>
+            Change the index of this name. This is slightly quicker
+            than creating a new Name from scratch as it skips label
+            validation.
+            </summary>
+            <param name="index">New index.</param>
+        </member>
+        <member name="M:GrasshopperIO.Name.CompareTo(GrasshopperIO.Name)">
+            <summary>
+            Compare two names.
+            </summary>
+            <param name="other">ID to compare to.</param>
+            <returns>Comparison code.</returns>
+        </member>
+        <member name="M:GrasshopperIO.Name.Equals(GrasshopperIO.Name)">
+            <summary>
+            Compare two names for equality.
+            </summary>
+            <param name="other">ID to compare to.</param>
+            <returns>True if both IDs are identical.</returns>
+        </member>
+        <member name="M:GrasshopperIO.Name.Equals(System.Object)">
+            <summary>
+            Compare two names for equality.
+            </summary>
+            <param name="obj">ID to compare to.</param>
+            <returns>True if the IDs are identical.</returns>
+        </member>
+        <member name="M:GrasshopperIO.Name.ToString">
+            <summary>
+            Gets a string representation for this name.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.Name.GetHashCode">
+            <summary>
+            Gets the hash code for this name.
+            </summary>
+            <returns>Hash.</returns>
+        </member>
+        <member name="T:GrasshopperIO.Path">
+            <summary>
+            A sequence of names, identifying a node or item from the root of an archive.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.Path.Length">
+            <summary>
+            Gets the number of steps in this path.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.Path.Item(System.Int32)">
+            <summary>
+            Gets the location step at the given index.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.Path.Tail">
+            <summary>
+            Gets the last location in this path.
+            </summary>
+        </member>
+        <member name="P:GrasshopperIO.Path.Head">
+            <summary>
+            Get all location except the last one.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.Path.StartsWith(GrasshopperIO.Path)">
+            <summary>
+            Tests whether this path starts with the other path.
+            </summary>
+        </member>
+        <member name="M:GrasshopperIO.Path.Append(GrasshopperIO.Name)">
+            <summary>
+            Append a new step to this path.
+            </summary>
+        </member>
+        <member name="T:GrasshopperIO.StorableException">
+            <summary>
+            Used for store/restore exceptions.
+            </summary>
+        </member>
+    </members>
+</doc>
