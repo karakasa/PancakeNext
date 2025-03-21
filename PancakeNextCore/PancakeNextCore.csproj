@@ -8,6 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataTypes\AssociationStringifier.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Pancake48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ExportSTL.svg" />
+    <EmbeddedResource Include="Resources\Pancake48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.8.0">
       <ExcludeAssets></ExcludeAssets>
     </PackageReference>
@@ -20,21 +33,28 @@
   <ItemGroup>
     <Reference Include="Grasshopper2" Condition="'$(TargetFramework)' != 'net48'">
       <HintPath>dependencies\net7.0\Grasshopper2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="GrasshopperIO" Condition="'$(TargetFramework)' != 'net48'">
       <HintPath>dependencies\net7.0\GrasshopperIO.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Grasshopper2" Condition="'$(TargetFramework)' == 'net48'">
       <HintPath>dependencies\net48\Grasshopper2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="GrasshopperIO" Condition="'$(TargetFramework)' == 'net48'">
       <HintPath>dependencies\net48\GrasshopperIO.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\" />
     <Folder Include="Parameters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="DataTypes\AssociationStringifier.cs" />
   </ItemGroup>
 
 </Project>

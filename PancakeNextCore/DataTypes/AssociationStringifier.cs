@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.DataTypes;
+
 internal static class AssociationStringifier
 {
     public static string ToString(object pancakeObj, StringConversionType style)

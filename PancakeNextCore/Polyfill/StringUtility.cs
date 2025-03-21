@@ -22,4 +22,13 @@ internal static class StringUtility
         return int.TryParse(val.Substring(startIndex), out result);
 #endif
     }
+
+    public static bool EqualsSubstring(string a, int startIndexInA, int lengthInA, string b)
+    {
+#if NET
+        return Equals(a.AsSpan(startIndexInA, lengthInA), b);
+#else
+        return Equals(a.Substring(startIndexInA, lengthInA), b);
+#endif
+    }
 }

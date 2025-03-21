@@ -24,17 +24,21 @@ internal static class PluginLifetime
         Editor.Instance.Closing += static (o, e) => BeforeUiClose();
     }
 
-    public static void PriorityLoad()
+    public static void PreUiLoad()
     {
-
+        // Eto.Forms.MessageBox.Show("PreUiLoad");
     }
 
     public static void PostUiLoad()
     {
         RegisterCloseEvent();
+
+        // Eto.Forms.MessageBox.Show("PostUiLoad");
     }
     public static void BeforeUiClose()
     {
         Config.SaveToFile();
+
+        // Eto.Forms.MessageBox.Show("BeforeUiClose");
     }
 }

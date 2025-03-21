@@ -32,12 +32,6 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
     {
         ReadVersion(reader);
     }
-
-    private Nomen CreateName()
-    {
-
-    }
-
     private void PopulateInfoFromAttributes()
     {
         var type = GetType();

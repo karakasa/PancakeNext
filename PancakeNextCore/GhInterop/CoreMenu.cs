@@ -219,7 +219,7 @@ internal sealed class CoreMenu
 
     private void AddMenuFeatures(MenuItemCollection retMenu)
     {
-        var menu = new MenuConstructor(retMenu);
+        /*var menu = new MenuConstructor(retMenu);
 
         _mnuTitleExchange = menu.AddLabel("Strings.CoreMenu_AddMenuFeatures_PrepareForExchange", "exchange");
 
@@ -279,6 +279,6 @@ internal sealed class CoreMenu
                 _mnuDevMode = dropdown.AddEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, mnuDevMode_Click, Config.DevMode);
                 dropdown.AddSeparator();
             }
-        }
+        }*/
     }
 }

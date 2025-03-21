@@ -17,10 +17,10 @@ public sealed class PluginInfo : Plugin
               new("Pancake", "Provides tools for teamworking"),
               CoreVersion)
     {
-        var bitmap = Eto.Drawing.Bitmap.FromResource("PancakeNext.Resources.Pancake48.png");
+        var bitmap = Eto.Drawing.Bitmap.FromResource("PancakeNextCore.Resources.Pancake48.png");
         _icon = AbstractIcon.FromBitmap(bitmap);
 
-        PluginLifetime.PriorityLoad();
+        PluginLifetime.PreUiLoad();
     }
     private IIcon _icon;
     public override string Author => "Keyu Gan";
