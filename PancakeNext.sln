@@ -5,8 +5,6 @@ VisualStudioVersion = 17.13.35617.110
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PancakeNextCore", "PancakeNextCore\PancakeNextCore.csproj", "{8D2888CF-7648-4AA0-913F-7771E084A1A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G2FileViewer", "G2FileViewer\G2FileViewer.csproj", "{53A06FE4-FB7C-48AC-A931-612F77D9E6C5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg2GhIcon", "Svg2GhIcon\Svg2GhIcon.csproj", "{E906977E-1CAB-4C16-949F-CDB1D83B455E}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{8D2888CF-7648-4AA0-913F-7771E084A1A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2888CF-7648-4AA0-913F-7771E084A1A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D2888CF-7648-4AA0-913F-7771E084A1A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53A06FE4-FB7C-48AC-A931-612F77D9E6C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53A06FE4-FB7C-48AC-A931-612F77D9E6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53A06FE4-FB7C-48AC-A931-612F77D9E6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53A06FE4-FB7C-48AC-A931-612F77D9E6C5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E906977E-1CAB-4C16-949F-CDB1D83B455E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E906977E-1CAB-4C16-949F-CDB1D83B455E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E906977E-1CAB-4C16-949F-CDB1D83B455E}.Release|Any CPU.ActiveCfg = Release|Any CPU

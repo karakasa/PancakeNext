@@ -53,8 +53,4 @@
     <Folder Include="Parameters\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="DataTypes\AssociationStringifier.cs" />
-  </ItemGroup>
-
 </Project>

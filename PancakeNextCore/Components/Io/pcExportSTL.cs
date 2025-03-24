@@ -15,15 +15,11 @@ using Path = System.IO.Path;
 namespace PancakeNextCore.Components.Io;
 
 [IoId("5d6c7460-aedd-4ede-bd29-7730b0228c1f")]
-public sealed class pcExportSTL : Component
+public sealed class pcExportSTL : PancakeComponent
 {
     static pcExportSTL()
     {
         CreateBinaryHeader();
-    }
-
-    public pcExportSTL(IReader reader) : base(reader)
-    {
     }
 
     private static readonly byte[] BinaryStlHeader = new byte[80];
@@ -32,7 +28,20 @@ public sealed class pcExportSTL : Component
         var customHeader = Encoding.ASCII.GetBytes("PancakeForGhSTLMaker,v1");
         Buffer.BlockCopy(customHeader, 0, BinaryStlHeader, 5, customHeader.Length);
     }
-    public pcExportSTL() : base(new Nomen("Export STL", "Export a mesh to a STL file.", "Pancake", "Export", 1))
+
+    public pcExportSTL(IReader reader) : base(reader)
+    {
+    }
+
+    public pcExportSTL() : base(typeof(pcExportSTL))
+    {
+    }
+
+    protected override void RegisterInputs()
+    {
+    }
+
+    protected override void RegisterOutputs()
     {
     }
 
@@ -183,5 +192,5 @@ public sealed class pcExportSTL : Component
         writer.Write("endsolid PancakeGHSTLMaker\n");
     }
 
-    protected override IIcon IconInternal => SvgGhIcon.CreateFromSvgResource("ExportSTL", 32, 32);
+    protected override IIcon? ActualIcon => SvgGhIcon.CreateFromSvgResource("ExportSTL", 32, 32);
 }

@@ -1,6 +1,6 @@
-﻿namespace PancakeNext.Dataset;
+﻿namespace PancakeNextCore.Dataset;
 
-public static partial class ComponentLibrary
+internal static partial class ComponentLibrary
 {
     private static void AddBuiltinParamList()
     {

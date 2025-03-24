@@ -13,56 +13,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PancakeNext.Dataset;
 using Grasshopper2.UI.Icon;
+using Grasshopper2.UI.Canvas;
+using System.Diagnostics.CodeAnalysis;
+using PancakeNextCore.GhInterop;
 
-namespace PancakeNextCore.GhInterop;
+namespace PancakeNextCore.Components;
 
 public abstract class PancakeComponent : Component, IPancakeLocalizable
 {
-    private static readonly Nomen EmptyNomen = Nomen.Empty;
-    protected PancakeComponent() : base(EmptyNomen)
+    protected PancakeComponent(Type componentName) : base(ComponentLibrary.LookUpComponent(componentName))
     {
-        PopulateInfoFromAttributes();
-        var name = CreateNameFromMetadata();
-        this.SetNomenByReflection(name);
+        ProcessRuntimeModifier();
+        HandleLocalizationForNewlyCreated();
     }
 
     protected PancakeComponent(IReader reader) : base(reader)
     {
         ReadVersion(reader);
+
+        ProcessRuntimeModifier();
+        HandleLocalizationForRestored();
     }
-    private void PopulateInfoFromAttributes()
-    {
-        var type = GetType();
 
-        while (type != typeof(PancakeComponent))
-        {
-            ReadAttributes(type);
-            type = type.BaseType;
-        }
-
-        if (_subPanelIndex == -1)
-        {
-            // TODO
-            // Debug.WriteLine("missing: " + GetType().Name + " no subpanel info.");
-        }
-
-        RefreshLocalizationAppearance();
-        SaveCurrentLangIfNot();
-    }
-    private Nomen CreateNameFromMetadata()
-    {
-        var rank = ShouldBeVisible ? DisplayRank : Rank.Hidden;
-
-        return new Nomen(
-            LocalizedName,
-            LocalizedDescription,
-            CategoryName,
-            _sectionName,
-            _subPanelIndex,
-            rank);
-    }
 
     protected override void AddInputs(InputAdder inputs)
     {
@@ -77,21 +50,51 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
         RegisterOutputs();
         _currentOutputManager = null;
     }
-
-    public const string CategoryName = "Pancake";
+    private void RefreshLocalizationAppearance(Nomen expected)
+    {
+        // ModifyNameAndInfo(LocalizedName, LocalizedDescription);
+    }
 
     public void RefreshLocalizationAppearance()
     {
-        //CopyFrom(new GH_InstanceDescription(DisplayName,
-          //  LocalizedNickname, DisplayDescription, CategoryName, _sectionName));
+        // ModifyNameAndInfo(LocalizedName, LocalizedDescription);
     }
 
     private bool _isSupported = true;
-    private string _sectionName = "";
-    private int _subPanelIndex = -1;
+    private string? _versionRequirementString;
 
-    [Obsolete]
-    public virtual string LocalizedNickname { get => GetType().Name; }
+    private void ProcessRuntimeModifier()
+    {
+        var type = GetType();
+        var depth = 0;
+
+        while (type != typeof(PancakeComponent) && type is not null && depth < 16)
+        {
+            ReadAttributes(type);
+            type = type.BaseType;
+            ++depth;
+        }
+    }
+
+    [MemberNotNull(nameof(LocalizedDescription), nameof(LocalizedName))]
+    private void HandleLocalizationForNewlyCreated()
+    {
+        SaveCurrentLangIfNot();
+
+        LocalizedName = Nomen.Name;
+        LocalizedDescription = Nomen.Info;
+    }
+
+    [MemberNotNull(nameof(LocalizedDescription), nameof(LocalizedName))]
+    private void HandleLocalizationForRestored()
+    {
+        var expectedNomen = ComponentLibrary.LookUpComponent(GetType(), Obsolete);
+        RefreshLocalizationAppearance(expectedNomen);
+        SaveCurrentLangIfNot();
+
+        LocalizedName = Nomen.Name;
+        LocalizedDescription = Nomen.Info;
+    }
 
     private void ReadAttributes(Type type)
     {
@@ -101,64 +104,48 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
             {
                 case MinimalVersionAttribute ver when _isSupported:
                     _isSupported = ver.SatisfyRequirement();
-                    break;
-                case ComponentCategoryAttribute comp when _subPanelIndex == -1:
-                    _sectionName = ComponentLibrary.GetCategoryString(comp.SectionName);
-                    _subPanelIndex = comp.SubPanelIndex;
+                    if (!_isSupported)
+                    {
+                        _versionRequirementString = ver.GetAnticipatedVersion();
+                    }
                     break;
             }
         }
     }
 
-    public abstract string LocalizedName { get; }
-    public abstract string LocalizedDescription { get; }
-
-    protected virtual Rank DisplayRank { get; } = Rank.Normal;
-    private bool ShouldBeVisible => _isSupported && !Obsolete && (!DebugOnly || Config.DevMode);
-    protected virtual bool DebugOnly => false;
+    public string LocalizedName { get; private set; }
+    public string LocalizedDescription { get; private set; }
     protected override void PreProcess(Solution solution)
     {
         if (!_isSupported)
         {
-            throw new NotSupportedException("Version not supported.");
+            throw new NotSupportedException($"This component requires {_versionRequirementString ?? ""}");
         }
 
         base.PreProcess(solution);
     }
 
-    private InputAdder _currentInputManager = null;
-    private OutputAdder _currentOutputManager = null;
+    private InputAdder? _currentInputManager = null;
+    private OutputAdder? _currentOutputManager = null;
 
     protected abstract void RegisterInputs();
     protected abstract void RegisterOutputs();
     private static T CreateLocalizedParameter<T>(
-        string identifier, 
+        string identifier,
         Access access,
         Requirement requirement
-        ) 
+        )
         where T : AbstractParameter, new()
     {
         if (!ComponentLibrary.LookupLocalizedParamInfo(identifier,
-            out string name, out string nickname, out string desc))
+            out var name, out var nickname, out var desc))
         {
             // The identifier doesn't exist. Shouldn't happen.
             name = nickname = desc = identifier;
             IssueTracker.ReportInPlace($"Unknown identifier during param creation: {identifier}");
         }
 
-        var param = new T
-        {
-            Requirement = requirement,
-            UserName = nickname
-        };
-
-        param.ModifyNameAndInfo(name, desc);
-
-        // Access doesn't have a public setter (designed to be set by non-default ctor)
-        // Find out a better way to change Access.
-        param.SetAccessByReflection(access);
-
-        return param;
+        return AccessWrapper.CreateParam<T>(name, nickname, desc, access, requirement);
     }
     protected TParam AddParam<TParam>(
         string identifier,
@@ -194,7 +181,6 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
         paramToAdd.Set(defValue);
 
         if (_currentInputManager != null)
-
             Parameters.AddInput(paramToAdd);
         else
             Parameters.AddOutput(paramToAdd);
@@ -222,27 +208,9 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
     protected GenericParameter AddParam(string identifier, Access access = Access.Item, Requirement requirement = Requirement.MustExist)
         => AddParam<GenericParameter>(identifier, access, requirement);
 
-    [Obsolete]
-    protected IParameter LastAddedParameter
-    {
-        get
-        {
-            EnsureDuringCreationPeriod();
-
-            if (_currentInputManager != null)
-                return Parameters.Input(Parameters.InputCount - 1);
-            else
-                return Parameters.Output(Parameters.OutputCount - 1);
-        }
-    }
-
-    [Obsolete]
-    public virtual IEnumerable<string> LocalizedKeywords => null;
-
     private const string SettingLastSaveLocal = "LastSaveLocalization";
 
-    public string LastSaveLocalization 
-        => GetValue(SettingLastSaveLocal, default(string));
+    public string? LastSaveLocalization => GetValue(SettingLastSaveLocal, default);
 
     private void SaveCurrentLangIfNot()
     {
@@ -252,12 +220,12 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
         }
     }
 
-    protected string GetValue(string settingName, string defaultValue)
+    protected string? GetValue(string settingName, string? defaultValue)
         => CustomValues.Get(settingName, defaultValue);
     protected void SetValue(string settingName, string strValue)
         => CustomValues.Set(settingName, strValue);
 
-    public Version LastSaveVersion { get; private set; }
+    public Version? LastSaveVersion { get; private set; }
     private const string CfgSaveVersion = "LastSaveVersion";
     protected bool IsNewlyCreated { get; private set; } = true;
     public override void Store(IWriter writer)
@@ -284,16 +252,13 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
         }
     }
 
-    protected void FailInUntrusted()
+    protected void FailInUntrusted(IDataAccess? access = null)
     {
-        if (Config.IsInUntrustedMode)
-        {
-            // TODO
+        if (!Config.IsInUntrustedMode) return;
 
-            // AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Access violation. Cannot use this feature in the untrusted mode.");
-            // OnPingDocument().RequestAbortSolution();
-            throw new InvalidOperationException();
-        }
+        Document?.Solution?.Stop();
+        access?.AddError("Access violation", "This feature is disabled in the untrusted mode.");
+        throw new InvalidOperationException();
     }
 
     protected virtual IIcon? ActualIcon { get; }

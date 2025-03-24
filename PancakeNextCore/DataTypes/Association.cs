@@ -2,21 +2,15 @@
 using Grasshopper2.Data.Meta;
 using GrasshopperIO;
 using PancakeNextCore.Polyfill;
-using PancakeNextCore.Utility;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace PancakeNextCore.DataTypes;
-
-[IoId("22B79783-C674-4BC4-AFBA-014C94D727BD")]
-public sealed class Association : IStorable
+public abstract class Association : IStorable, ICloneable
 {
     private sealed class TemporaryPear : IPear
     {
@@ -31,6 +25,7 @@ public sealed class Association : IStorable
     public Association()
     {
     }
+
     public Association(int capacity)
     {
         if (capacity < 0)
@@ -42,7 +37,6 @@ public sealed class Association : IStorable
     }
 
     private static readonly Name IoLabelDataCount = new("Count");
-    private static readonly Name IoLabelName = new("Name");
     private const string IoLabelData = "Data";
     private static readonly Name IoLabelPrincipleVal = new("PrincipleVal");
 
@@ -53,7 +47,6 @@ public sealed class Association : IStorable
             return;
 
         EnsureData(count);
-        Names.AddRange(reader.StringArray(IoLabelName));
 
         _principleIndex = reader.TryRead<int>(IoLabelPrincipleVal, -1);
 
@@ -69,20 +62,9 @@ public sealed class Association : IStorable
             {
                 Values.Add(null);
             }
-
-                /*var val = reader.FindItem(location);
-            if (val is null)
-            {
-                Values[i] = reader.Storable(location);
-            }
-            else
-            {
-                Values[i] = val.RawData;
-            }*/
         }
     }
-
-    public void Store(IWriter writer)
+    public virtual void Store(IWriter writer)
     {
         if (!HasValues)
         {
@@ -95,8 +77,6 @@ public sealed class Association : IStorable
 
         if (_principleIndex >= 0)
             writer.Integer32(IoLabelPrincipleVal, _principleIndex);
-
-        writer.StringArray(IoLabelName, Names.ToArray());
 
         var tempPear = new TemporaryPear();
 
@@ -120,66 +100,26 @@ public sealed class Association : IStorable
 
     public int Length => Values is null ? 0 : Values.Count;
 
-    internal List<string?>? Names { get; private set; }
-    internal List<object?>? Values { get; private set; }
+    public List<object?>? Values { get; protected set; }
 
-    internal bool IsValid => Names?.Count == Values?.Count;
+    [MemberNotNullWhen(true, nameof(Values))]
+    public bool HasValues => Values is not null;
 
-    [MemberNotNullWhen(true, nameof(Names), nameof(Values))]
-    private bool HasValues => Values is not null;
-
-    [MemberNotNull(nameof(Names), nameof(Values))]
-    private void EnsureData(int anticipatedCapacity = 0)
+    [MemberNotNull(nameof(Values))]
+    protected virtual void EnsureData(int anticipatedCapacity = 0)
     {
         if (anticipatedCapacity > 0)
         {
-            if (Names is null || Values is null)
-            {
-                Names = new List<string?>(anticipatedCapacity);
-                Values = new List<object?>(anticipatedCapacity);
-            }
+            Values ??= new List<object?>(anticipatedCapacity);
         }
         else
         {
-            Names ??= [];
             Values ??= [];
         }
     }
-    public void MergeWith(Association? another)
-    {
-        if (another is null)
-        {
-            throw new NullReferenceException(nameof(another));
-        }
 
-        if (!another.IsValid)
-        {
-            throw new ArgumentException("The other association is invalid.", nameof(another));
-        }
-
-        if (!another.HasValues) return;
-
-        EnsureData();
-
-        Names.AddRange(another.Names);
-        Values.AddRange(another.Values);
-    }
-
-    public void Add(object? item)
-    {
-        Add(null, item);
-    }
-
-    public void Add(string? name, object? item)
-    {
-        EnsureData();
-
-        Names.Add(name);
-        Values.Add(item);
-    }
-
-    [MemberNotNullWhen(false, nameof(Names), nameof(Values))]
-    private bool IsOutOfRange(int index, bool throwOnError = false)
+    [MemberNotNullWhen(false, nameof(Values))]
+    protected bool IsOutOfRange(int index, bool throwOnError = false)
     {
         if (!HasValues || index < 0 || index >= Length)
         {
@@ -216,173 +156,17 @@ public sealed class Association : IStorable
         return true;
     }
 
-    public bool TryGet(string name, out object? output)
+    public virtual void Clear()
     {
-        if (!HasValues)
-        {
-            output = null;
-            return false;
-        }
-
-        for (var i = 0; i < Length; i++)
-        {
-            if (name.Equals(Names[i]))
-            {
-                output = Values[i];
-                return true;
-            }
-        }
-
-        output = null;
-        return false;
+        Values?.Clear();
+        Values = null;
     }
-
-    private bool TryGetExtended(string name, out object? output)
-    {
-        if (!HasValues)
-        {
-            output = null;
-            return false;
-        }
-
-        if (TryGet(name, out output))
-            return true;
-
-        if (name.StartsWith("@") && !name.TryParseSubstrAsInt(1, out var indice))
-        {
-            if (!IsOutOfRange(indice))
-            {
-                output = Values[indice];
-                return true;
-            }
-        }
-
-        var lastIndex = name.LastIndexOf("@");
-        if (lastIndex == -1 || !name.TryParseSubstrAsInt(lastIndex + 1, out indice))
-        {
-            output = null;
-            return false;
-        }
-
-#if NET
-        var realName = name.AsSpan(0, lastIndex);
-#else
-        var realName = name.Substring(0, lastIndex);
-#endif
-
-        var index = 0;
-
-        for (var i = 0; i < Length; i++)
-        {
-            if (StringUtility.Equals(realName, Names[i]))
-            {
-                if (index == indice)
-                {
-                    output = Values[i];
-                    return true;
-                }
-
-                ++index;
-            }
-        }
-
-        output = null;
-        return false;
-    }
-
-    public IEnumerable<string> GetNameWithIndexes()
-    {
-        if (!HasValues)
-            yield break;
-
-        var index = 0;
-
-        foreach (var it in Names)
-        {
-            yield return it ?? index.ToString();
-            ++index;
-        }
-    }
-
-    public IEnumerable<string> GetJsonNames()
-    {
-        if (!HasValues)
-            yield break;
-
-        var index = 0;
-
-        foreach (var it in Names)
-        {
-            yield return it ?? "item" + index.ToString();
-            ++index;
-        }
-    }
-
-    public Association(IEnumerable<object?> list) : this(null, list)
-    {
-    }
-
-    public Association(IEnumerable<string?>? names, IEnumerable<object?> list)
-    {
-        Values = [.. list];
-
-        if (names is null)
-        {
-            Names = [.. Enumerable.Repeat<string?>(null, Values.Count)];
-        }
-        else
-        {
-            Names = [.. names];
-
-            if (!IsValid)
-            {
-                throw new ArgumentException("The number of names and values must be the same.");
-            }
-        }
-    }
-
-    public Association Clone()
-    {
-        var tuple = new Association();
-        tuple.MergeWith(this);
-        return tuple;
-    }
-
-    public override string ToString()
-    {
-        if (_principleIndex == 0 && HasValues && Values[0] is string str)
-            return str;
-
-        return GetDescriptiveString();
-    }
-
-    private static string? ObjectToString(object? obj)
+    protected static string? ObjectToString(object? obj)
     {
         if (obj is null)
             return "null";
         return obj.ToString();
     }
-
-    private IEnumerable<string> GetItemNames()
-    {
-        if (!HasValues) 
-            yield break;
-
-        for (var i = 0; i < Length; i++)
-        {
-            yield return ((Names[i] != null) ? $"{Names[i]}: " : "") + ObjectToString(Values[i]);
-        }
-    }
-
-    public string GetDescriptiveString()
-    {
-        if (!HasValues)
-            return "<>";
-
-        var types = string.Join(", ", GetItemNames());
-        return $"<{types}>";
-    }
-
     public object? GetPrincipleValue()
     {
         if (!HasValues)
@@ -394,19 +178,7 @@ public sealed class Association : IStorable
         return Values[_principleIndex];
     }
 
-    private int _principleIndex = -1;
-
-    public int FindIndexByName(string name)
-    {
-        if (!HasValues) return -1;
-
-        for (var i = 0; i < Names.Count; i++)
-            if (Names[i] == name)
-                return i;
-
-        return -1;
-    }
-
+    protected int _principleIndex = -1;
     public bool SetPrincipleValue(int index)
     {
         if (IsOutOfRange(index))
@@ -415,172 +187,15 @@ public sealed class Association : IStorable
         _principleIndex = index;
         return true;
     }
-
-    public bool SetPrincipleValue(string name)
-    {
-        var index = FindIndexByName(name);
-
-        if (index < 0)
-            return false;
-
-        return SetPrincipleValue(index);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(obj, this))
-            return true;
-
-        if (obj is not Association assoc)
-            return false;
-
-        return Equals(assoc);
-    }
-
-    public void Clear()
-    {
-        Names?.Clear();
-        Values?.Clear();
-
-        Names = null;
-        Values = null;
-    }
-
-    public bool Equals(Association another)
-    {
-        if (another is null) 
-            return false;
-
-        var thisLength = Length;
-
-        if (another.Length != thisLength)
-            return false;
-
-        for (var i = 0; i < thisLength; i++)
-        {
-            if (!string.Equals(Names![i], another.Names![i])) return false;
-            if (!object.Equals(Values![i], another.Values![i])) return false;
-        }
-
-        return true;
-    }
-
     public override int GetHashCode()
     {
         if (!HasValues) return 0;
 
         return unchecked(-940306134
-            + EqualityComparer<List<string?>>.Default.GetHashCode(Names) * 7
             + EqualityComparer<List<object?>>.Default.GetHashCode(Values) * 13);
     }
+    internal abstract Association GenericClone();
+    object ICloneable.Clone() => GenericClone();
 
-    public static bool operator ==(Association assoc1, Association assoc2)
-    {
-        return assoc1.Equals(assoc2);
-    }
-
-    public static bool operator !=(Association assoc1, Association assoc2)
-    {
-        return !(assoc1 == assoc2);
-    }
-
-    /*public bool TryGetNode(string name, out INodeQueryReadCapable node)
-    {
-        TryGetNode(name, out var node2, false);
-        node = node2 as INodeQueryReadCapable;
-        return node != null;
-    }
-
-    public bool TryGetNode(string name, out INodeQueryWriteCapable node, bool createIfNotExist)
-    {
-        if (!TryGetExtended(name, out var obj))
-        {
-            if (createIfNotExist)
-            {
-                var assoc2 = new Association();
-                Add(name, assoc2);
-                node = assoc2;
-                return true;
-            }
-
-            node = null;
-            return false;
-        }
-
-        if (obj is INodeQueryWriteCapable assoc)
-        {
-            node = assoc;
-            return true;
-        }
-
-        node = null;
-        return false;
-    }
-
-    public bool TryGetContent(string attributeName, out object content)
-    {
-        return TryGetExtended(attributeName, out content);
-    }
-
-    public bool SetContent(string attributeName, object content)
-    {
-        var index = _names.IndexOf(attributeName);
-        if (index == -1)
-        {
-            Add(attributeName, content);
-            return true;
-        }
-
-        Values[index] = content;
-        return true;
-    }
-
-    public IEnumerable<KeyValuePair<string, INodeQueryReadCapable>> GetNodes()
-    {
-        for (var i = 0; i < _names.Count; i++)
-        {
-            if (Values[i] is INodeQueryReadCapable inode)
-                yield return new KeyValuePair<string, INodeQueryReadCapable>(_names[i], inode);
-        }
-    }
-
-    public IEnumerable<KeyValuePair<string, object>> GetAttributes()
-    {
-        for (var i = 0; i < _names.Count; i++)
-        {
-            if (!(Values[i] is INodeQueryReadCapable) && _names[i] != null)
-                yield return new KeyValuePair<string, object>(_names[i], Values[i]);
-        }
-    }
-
-    public IEnumerable<KeyValuePair<string, object>> GetNamedValues()
-    {
-        for (var i = 0; i < _names.Count; i++)
-        {
-            if (_names[i] != null)
-                yield return new KeyValuePair<string, object>(_names[i], Values[i]);
-        }
-    }*/
-
-    public static Association CreateFromDictionary(IDictionary dict, bool translateList = false)
-    {
-        var assoc = new Association(dict.Count);
-        foreach (DictionaryEntry it in dict)
-        {
-            if (it.Key is not string name)
-            {
-                throw new ArgumentException("Key must be string.", nameof(dict));
-            }
-
-            if (it.Value is IDictionary id)
-            {
-                assoc.Add(name, CreateFromDictionary(id, translateList));
-            }
-            else
-            {
-                assoc.Add(name, it.Value);
-            }
-        }
-        return assoc;
-    }
+    public abstract IEnumerable<string> GetNamesForExport();
 }

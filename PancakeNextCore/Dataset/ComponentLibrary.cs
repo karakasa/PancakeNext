@@ -1,25 +1,17 @@
-﻿using Grasshopper2.UI;
+﻿using Eto.Drawing;
+using Grasshopper2.UI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
-namespace PancakeNext.Dataset;
+namespace PancakeNextCore.Dataset;
 
-public static partial class ComponentLibrary
+internal static partial class ComponentLibrary
 {
-    public static bool IgnoreObsecure = true;
-
-    public static string GetCategoryString(string section)
-    {
-        if (!_cateInfos.TryGetValue(section, out var v))
-            return section;
-
-        return $"{v.Index:D2} | {v.FriendlyName}";
-    }
-
 #if DEBUG
-    private static HashSet<string> _queryed = new HashSet<string>();
+    private static HashSet<string> _queryed = [];
 
-    public static IEnumerable<string> NonQuery()
+    public static IEnumerable<string> ParametersNotAccessed()
     {
         return _paramInfos.Keys.Except(_queryed);
     }
@@ -55,18 +47,76 @@ public static partial class ComponentLibrary
         public string Description;
     };
 
-    private struct CategoryInfo
+    private sealed class CategoryInfo
     {
-        public string FriendlyName;
-        public int Index;
+        public string FriendlyName { get; }
+        public int Index { get; }
+
+        readonly string Description;
+        public CategoryInfo(string friendlyName, int index)
+        {
+            FriendlyName = friendlyName;
+            Index = index;
+
+            Description = $"{Index:D2} | {FriendlyName}";
+        }
+        public override string ToString() => Description;
     }
 
-    private static Dictionary<string, ParamInfo> _paramInfos = new Dictionary<string, ParamInfo>();
-    private static Dictionary<string, CategoryInfo> _cateInfos = new Dictionary<string, CategoryInfo>();
+    private sealed class ComponentInfo
+    {
+        public Type Identifier { get; set; } = typeof(void);
+        public CategoryInfo? Section { get; set; }
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
+        public int SubSection { get; set; }
+        public Rank Rank { get; set; }
+        public Nomen ToNomen(bool obsolete = false)
+        {
+            if (Identifier.Name.IndexOf(DeprecatedSuffix, StringComparison.Ordinal) > 0 || Identifier.GetCustomAttribute<ObsoleteAttribute>() is not null)
+                obsolete = true;
+
+            return new Nomen(Name, Description, CategoryName, Section?.ToString() ?? "", SubSection, obsolete ? Rank.Hidden : Rank);
+        }
+
+        public static implicit operator ComponentInfo((Type Identifier, string Name, string Desc, int SubSection) tuple)
+        {
+            return (tuple.Identifier, tuple.Name, tuple.Desc, tuple.SubSection, Rank.Normal);
+        }
+
+        public static implicit operator ComponentInfo((Type Identifier, string Name, string Desc, int SubSection, Rank Rank) tuple)
+        {
+            return new()
+            {
+                Identifier = tuple.Identifier,
+                Name = tuple.Name,
+                Description = tuple.Desc,
+                SubSection = tuple.SubSection,
+                Rank = tuple.Rank
+            };
+        }
+    }
+
+    private static readonly Dictionary<string, ParamInfo> _paramInfos = [];
+    private static readonly Dictionary<Type, ComponentInfo> _componentInfos = [];
+
+    static int LastCategoryIndex = -1;
+
+    private static void AddCategory(string categoryName, IEnumerable<ComponentInfo> infos)
+    {
+        ++LastCategoryIndex;
+        var c = new CategoryInfo(categoryName, LastCategoryIndex);
+
+        foreach (var info in infos)
+        {
+            info.Section = c;
+            _componentInfos[info.Identifier] = info;
+        }
+    }
 
     public static void Param(string identifier, string name, string nickname, string desc)
     {
-        _paramInfos[identifier] = new ParamInfo()
+        _paramInfos[identifier] = new()
         {
             Name = name,
             NickName = nickname,
@@ -74,18 +124,16 @@ public static partial class ComponentLibrary
         };
     }
 
-    public static void Category(string identifier, string name, int index)
-    {
-        _cateInfos[identifier] = new CategoryInfo()
-        {
-            FriendlyName = name,
-            Index = index
-        };
-    }
-
     static ComponentLibrary()
     {
+        AddBuiltinComponentList();
         AddBuiltinParamList();
-        AddBuiltinCategoryList();
+    }
+
+    public const string CategoryName = "Pancake";
+    public const string DeprecatedSuffix = "_old";
+    public static Nomen LookUpComponent(Type name, bool obsolete = false)
+    {
+        return _componentInfos[name].ToNomen(obsolete);
     }
 }

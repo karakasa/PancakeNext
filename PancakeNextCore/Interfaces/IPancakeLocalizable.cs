@@ -5,6 +5,6 @@ public interface IPancakeLocalizable
     string LocalizedName { get; }
     string LocalizedDescription { get; }
 
-    string LastSaveLocalization { get; }
+    string? LastSaveLocalization { get; }
     void RefreshLocalizationAppearance();
 }

@@ -22,4 +22,10 @@ public sealed class MemberNotNullWhenAttribute : Attribute
     public MemberNotNullWhenAttribute(bool result, params string[] members) { }
 }
 
+[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
+public sealed class NotNullWhenAttribute : Attribute
+{
+    public NotNullWhenAttribute(bool result) { }
+}
+
 #endif
