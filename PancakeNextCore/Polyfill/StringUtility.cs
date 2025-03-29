@@ -23,6 +23,26 @@ internal static class StringUtility
 #endif
     }
 
+    public static bool TryParseSubstrAsDouble(this string val, int startIndex, int length, out double result)
+    {
+#if NET
+        return double.TryParse(val.AsSpan(startIndex, length), out result);
+#else
+        return double.TryParse(val.Substring(startIndex, length), out result);
+#endif
+    }
+#if !NET
+    public static string Substr(this string val, int startIndex, int length)
+    {
+        return val.Substring(startIndex, length);
+    }
+#else
+    public static ReadOnlySpan<char> Substr(this string val, int startIndex, int length)
+    {
+        return val.AsSpan(startIndex, length);
+    }
+#endif
+
     public static bool EqualsSubstring(string a, int startIndexInA, int lengthInA, string b)
     {
 #if NET
@@ -31,4 +51,37 @@ internal static class StringUtility
         return Equals(a.Substring(startIndexInA, lengthInA), b);
 #endif
     }
+
+    public static IEnumerable<string> SplitWhile(this string str, Func<char, bool> predicate)
+    {
+        int lastResult = -1;
+        var currentStr = string.Empty;
+
+        foreach (var it in str)
+        {
+            var currentPredicate = predicate(it) ? 1 : 0;
+            if (lastResult == -1) lastResult = currentPredicate;
+            if (currentPredicate != lastResult)
+            {
+                yield return currentStr;
+                lastResult = currentPredicate;
+                currentStr = "" + it;
+            }
+            else
+            {
+                currentStr += it;
+            }
+        }
+
+        if (currentStr != string.Empty)
+        {
+            yield return currentStr;
+        }
+    }
+
+    public static bool IsNumeric(char c) => (c >= '0' && c <= '9') || c == '.';
+
+    public static bool IsNumericAndNegative(char c) => (c >= '0' && c <= '9') || c == '.' || c == '-';
+
+    public static bool IsNumeric(string s) => s.All(IsNumeric);
 }

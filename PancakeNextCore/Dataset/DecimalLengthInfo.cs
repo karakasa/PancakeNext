@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace PancakeNextCore.Dataset;
 
-public static class GhDecimalLengthInfo
+public static class DecimalLengthInfo
 {
     public struct DecimalUnit
     {
@@ -13,11 +13,11 @@ public static class GhDecimalLengthInfo
         public UnitSystem RhinoUnit;
     }
 
-    public static Dictionary<string, DecimalUnit> UnitList = new Dictionary<string, DecimalUnit>();
+    public static readonly Dictionary<string, DecimalUnit> UnitList = [];
 
-    private static Dictionary<UnitSystem, double> RhinoRatio = new Dictionary<UnitSystem, double>();
+    private static readonly Dictionary<UnitSystem, double> RhinoRatio = [];
 
-    static GhDecimalLengthInfo()
+    static DecimalLengthInfo()
     {
         AddDecimalUnit("mm", 0.001, UnitSystem.Millimeters);
         AddDecimalUnit("cm", 0.01, UnitSystem.Centimeters);
