@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Management.Instrumentation;
 using PancakeNextCore.Dataset;
 using PancakeNextCore.Polyfill;
 using PancakeNextCore.Utility;

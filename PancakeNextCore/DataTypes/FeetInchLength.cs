@@ -10,7 +10,7 @@ namespace PancakeNextCore.DataTypes;
 
 public sealed class FeetInchLength : Quantity
 {
-    public double RawValue { get; set; }
+    public double RawValue { get; private set; }
     public double FeetLength => RawValue;
 
     public static int DefaultPrecision { get; set; } = 64;
