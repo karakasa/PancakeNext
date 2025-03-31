@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0;net48</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Eto.Forms" Version="2.8.0">
+			<ExcludeAssets></ExcludeAssets>
+		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="RhinoCommon" Version="8.11.24254.15001">
+			<ExcludeAssets></ExcludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Grasshopper2" Condition="'$(TargetFramework)' != 'net48'">
+			<HintPath>dependencies\net7.0\Grasshopper2.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GrasshopperIO" Condition="'$(TargetFramework)' != 'net48'">
+			<HintPath>dependencies\net7.0\GrasshopperIO.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Grasshopper2" Condition="'$(TargetFramework)' == 'net48'">
+			<HintPath>dependencies\net48\Grasshopper2.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GrasshopperIO" Condition="'$(TargetFramework)' == 'net48'">
+			<HintPath>dependencies\net48\GrasshopperIO.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+</Project>
