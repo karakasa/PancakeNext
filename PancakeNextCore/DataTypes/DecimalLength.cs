@@ -151,4 +151,11 @@ public sealed class DecimalLength : Quantity
         obj.RawValue = -obj.RawValue;
         return obj;
     }
+
+    public override int GetHashCode()
+    {
+        return unchecked(RawValue.GetHashCode() * 7 + _currentUnit.GetHashCode() * 13);
+    }
+
+    public override bool IsNegative => RawValue < 0;
 }

@@ -72,6 +72,17 @@ public static class DecimalLengthInfo
         });
     }
 
+    public static bool TryConvertToRhinoUnit(double meter, UnitSystem rhinoUnit, out double amt)
+    {
+        if (!RhinoRatio.TryGetValue(rhinoUnit, out var val))
+        {
+            amt = 0;
+            return false;
+        }
+        amt = meter / val;
+        return true;
+    }
+
     public static double ConvertToRhinoUnit(double meter, UnitSystem rhinoUnit)
     {
         if (!RhinoRatio.TryGetValue(rhinoUnit, out var val))

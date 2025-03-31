@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PancakeNextCore.DataTypes;
+
+[IoId("5442B78E-DC82-4EE2-9887-0C77FF395F9A")]
 public sealed class AssociationParameter : Parameter<Association>
 {
     public AssociationParameter(IReader reader) : base(reader)

@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace PancakeNextCore.DataTypes;
 
-public abstract class Quantity
+public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
 {
     public abstract string UnitName { get; }
     public abstract QuantityType UnitType { get; }
@@ -14,6 +14,7 @@ public abstract class Quantity
     public abstract void FromNeutralUnit(double neutralAmount);
     public abstract double ToDocumentUnit();
     public abstract void FromDocumentUnit(double quantity);
+    public abstract bool IsNegative { get; }
     public virtual Quantity DuplicateAndNegate()
     {
         throw new InvalidOperationException("The quantity cannot be negative.");
@@ -204,5 +205,31 @@ public abstract class Quantity
     private static void ThrowIncompatible(QuantityType thisType, QuantityType anotherType)
     {
         throw new InvalidOperationException($"{thisType} cannot be operated with {anotherType}");
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Quantity other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Equals(Quantity? other)
+    {
+        if (other is null) return false;
+        return this.UnitType == other.UnitType && 
+            this.UnitName == other.UnitName &&
+            this.ToNeutralUnit() == other.ToNeutralUnit();
+    }
+
+    public int CompareTo(Quantity? other)
+    {
+        if (other is null) return 1;
+        ThrowWhenIncompatible(other);
+
+        return ToNeutralUnit().CompareTo(other.ToNeutralUnit());
     }
 }

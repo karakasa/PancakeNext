@@ -3,6 +3,7 @@ using PancakeNextCore.Polyfill;
 using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -23,11 +24,11 @@ public sealed class FeetInchLength : Quantity
     public int InchFractionPartSecond { get; private set; } = 0;
     public double Error => Math.Abs(Math.Abs(RawValue) - (FeetIntegerPart + (InchIntegerPart
             + 1.0 * InchFractionPartFirst / InchFractionPartSecond) / 12));
-    public bool Negative { get; private set; } = false;
+    private bool Negative { get; set; } = false;
 
     public int Precision { get; private set; } = DefaultPrecision;
     public bool Precise { get; private set; } = false;
-
+    internal void SetPreciseWithinError(double error) => Precise = Math.Abs(Error) < error;
     private void UpdateRawValue()
     {
         RawValue = (Negative ? -1 : 1) * (FeetIntegerPart + (InchIntegerPart
@@ -489,4 +490,10 @@ public sealed class FeetInchLength : Quantity
             return obj2;
         }
     }
+
+    public override int GetHashCode()
+    {
+        return RawValue.GetHashCode();
+    }
+    public override bool IsNegative => Negative;
 }
