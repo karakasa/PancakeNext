@@ -4,6 +4,9 @@ using Grasshopper2.UI;
 using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using Rhino.UI;
+using System;
+using System.Collections;
+using System.Xml.Linq;
 
 namespace SimpleCompatibleLayer;
 
@@ -31,6 +34,152 @@ public abstract class CompatibleComponent : Component
     private sealed class DataAccessWrapper(CompatibleComponent comp) : IGH_DataAccess
     {
         private readonly CompatibleComponent _comp = comp;
+        private IDataAccess Access => _comp._currentAccess!;
+
+        public int Iteration => Access.Iterations;
+
+        public void AbortComponentSolution() => Access.Solution.Cancelled();
+
+        public bool BlitData<Q>(int paramIndex, GH_Structure<Q> tree, bool overwrite) where Q : IGH_Goo
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DisableGapLogic()
+        {
+            throw new NotSupportedException();
+        }
+
+        public void DisableGapLogic(int paramIndex)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool GetData<T>(int index, ref T destination)
+        {
+            return Access.GetItem(index, out destination);
+        }
+
+        public bool GetData<T>(string name, ref T destination)
+        {
+            for (var i = 0; i < _comp.Parameters.InputCount; i++)
+            {
+                if (_comp.Parameters.Input(i).Nomen.Name == name)
+                {
+                    return GetData(i, ref destination);
+                }
+            }
+            return false;
+        }
+
+        public bool GetDataList<T>(int index, List<T> list)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool GetDataList<T>(string name, List<T> list)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool GetDataTree<T>(int index, out GH_Structure<T> tree) where T : IGH_Goo
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool GetDataTree<T>(string name, out GH_Structure<T> tree) where T : IGH_Goo
+        {
+            throw new NotImplementedException();
+        }
+
+        public void IncrementIteration()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int ParameterTargetIndex(int paramIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GH_Path ParameterTargetPath(int paramIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetData(int paramIndex, object data)
+        {
+            Access.SetItem(paramIndex, data);
+            return true;
+        }
+
+        public bool SetData(int paramIndex, object data, int itemIndexOverride)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool SetData(string paramName, object data)
+        {
+            for (var i = 0; i < _comp.Parameters.OutputCount; i++)
+            {
+                if (_comp.Parameters.Output(i).Nomen.Name == paramName)
+                {
+                    return SetData(i, data);
+                }
+            }
+
+            return false;
+        }
+
+        public bool SetDataList(int paramIndex, IEnumerable data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetDataList(int paramIndex, IEnumerable data, int listIndexOverride)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetDataList(string paramName, IEnumerable data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetDataTree(int paramIndex, IGH_DataTree tree)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetDataTree(int paramIndex, IGH_Structure tree)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Util_CountNonNullRefs<T>(List<T> L)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Util_CountNullRefs<T>(List<T> L)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Util_EnsureNonNullCount<T>(List<T> L, int N)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Util_FirstNonNullItem<T>(List<T> L)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<T> Util_RemoveNullRefs<T>(List<T> L)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     private readonly DataAccessWrapper _dataAccessWrapper;
