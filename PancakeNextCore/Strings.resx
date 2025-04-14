@@ -1,0 +1,2573 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="License" xml:space="preserve">
+    <value>1. As of the current version, Pancake is a freeware for both non-commercial and commercial use.
+2. The software is provided "As is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
+3. You may distribute Pancake freely, given that:
+    a. You do not modify the binary of Pancake,
+    b. And you do not prevent the end-user from knowing Pancake is installed and in effect,
+    c. And you do not prevent the end-user from knowing Pancake is included in a package if you are distributing Pancake as a part of a larger software pack,
+    d. And you do not charge the end-user for Pancake
+    e. And you do not distribute Pancake to conduct unlawful activities.
+4. You may communicate with the author for free or paid support. Free support is not guaranteed to be replied in a certain time.
+
+Wildcard matching string extension method
+MIT License
+
+Copyright(c) [2016]
+[H.A. Sullivan]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Windows, macos, Mac, Rhinoceros are property of their respective owners. All company, product and service names used in this website are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.
+
+PRIVACY STATEMENT
+
+https://makemove.gitbook.io/pancake/privacy-statement
+
+In compliance with GDPR and CCPA, although it is not required because we are a small software provider, we would like to share with you how Pancake (a.k.a. the plugin) and its related services collect and use your personal data. Extensions and modules may have different privacy policies if separately provided.
+Data collection of the plugin:
+1. The plugin itself does not collect any personal information.
+2. If the "Check New Version Automatically" feature is enabled, the plugin will send a request to Pancake's server every time you start Grasshopper and your computer is online.
+3. If you download the plugin from Pancake's web server directly, a request is made to Pancake's server.
+Data collection of Pancake's server.
+1. If a request is made to Pancake's server, either due to a file download or version check, the following personal information of the user will be logged.
+1. Public IP address
+2. UserAgent string, typically including browser type, system time, timezone, etc.
+2. The information is used for logging and anti-malicious-behavior only. It may be removed from our server regularly.
+3. You may write to us to ask whether your personal information is stored on our server, given that adequate information is provided to locate your request. If the information is still on our server, you may:
+1. Ask us to remove it,
+2. And/or retrieve a copy of it.
+4. We NEVER share/sell the information with/to any third party, UNLESS under a limited number of circumstances, specified later in this statement.
+Data collection of downloading Pancake from Food4Rhino
+1. If you download Pancake from Food4Rhino, Food4Rhino will share the following personal information with us:
+1. The E-Mail address you used to log onto Food4Rhino
+2. Food4Rhino will also share the following information with us:
+1. How many times you have downloaded Pancake
+2. Time of the last download
+3. We NEVER share/sell the information with/to any third party, UNLESS under a limited number of circumstances, specified later in this statement.
+4. The information is collected by Food4Rhino. Therefore: 
+1. You may write to us to check what information we have and retrieve a copy of it if available, given the necessary verification is satisfied. 
+2. We ARE NOT ABLE TO remove it, as the information is stored on Food4Rhino's server. For such purposes, you need to contact Food4Rhino.
+5. We will never send promotional emails to your email address UNLESS you explicitly have allowed us.
+6. We may send you emails if Pancake, or its related services, is involved in a security breach or possess security risks.
+7. Food4Rhino may collect personal information from you under certain circumstances. For their privacy policy, please refer to https://www.food4rhino.com/privacy
+Data collection of viewing manual on GitBook
+1. Gitbook does not share any personal information with us
+2. Gitbook may collect personal information from you under certain circumstances. For their privacy policy, please refer to https://policies.gitbook.com/privacy
+Data collection of email communication
+1. If you communicate with us via emails, all the related emails may be stored for informational and case-study purposes.
+2. You may write to us to check what is stored, given that adequate information is provided to locate your request. 
+1. If the information is still on our server, you may:
+1. Ask us to remove it,
+2. And/or retrieve a copy of it.
+3. We NEVER share/sell the information with/to any third party, UNLESS under a limited number of circumstances, specified later in this statement.
+4. We may send emails to your email address, if we later improve, change something, or have a solution regarding your past inquiries.
+Jurisdiction and law requirements
+1. Pancake's current server is under the jurisdiction of California, the United States, therefore regulated by CCPA.
+2. Food4Rhino is under the jurisdiction of Germany, the European Union, therefore regulated by GDPR.
+3. We may be asked to release the aforementioned information for legislation purposes. We will let you know unless we are forbidden to.</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_PrepareForExchange" xml:space="preserve">
+    <value>Prepare for Exchange</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_InternalizeReferencedGeometry" xml:space="preserve">
+    <value>Internalize Geometry...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_DowngradeComponentsToR5Version" xml:space="preserve">
+    <value>Downgrade...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_CheckPortabilityOfThisDocument" xml:space="preserve">
+    <value>Portability report...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_StateSnapshotAndVersion" xml:space="preserve">
+    <value>Snapshot and Version</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_VersionTrackingControl" xml:space="preserve">
+    <value>Version Tracking</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_EnableVersionWatermarkInGH" xml:space="preserve">
+    <value>Enable in Current Script</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_EnableVersionWatermarkInRhino" xml:space="preserve">
+    <value>Enable in Current Rhino File</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_RemoveVersionWatermarkInGH" xml:space="preserve">
+    <value>Remove from Current Script</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_RemoveVersionWatermarkInRhino" xml:space="preserve">
+    <value>Remove from Current Rhino File</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_ShowVersionHistory" xml:space="preserve">
+    <value>Version History...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Tweaks" xml:space="preserve">
+    <value>Enabled Tweaks</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_EnableHangProtection" xml:space="preserve">
+    <value>Hang Protection</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_EnableFileBlockMonitor" xml:space="preserve">
+    <value>File Block Monitor</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Utilities" xml:space="preserve">
+    <value>Utilities</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_SelectUpDownStreamOrBoth" xml:space="preserve">
+    <value>Pick Connected Objects</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Upstream" xml:space="preserve">
+    <value>Upstream</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Downstream" xml:space="preserve">
+    <value>Downstream</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_UpAndDown" xml:space="preserve">
+    <value>Up and Down</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_SourceParams" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_DestinationParams" xml:space="preserve">
+    <value>Sink</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_IncludeComponentsInParamSerach" xml:space="preserve">
+    <value>Include Components in Param Search</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_ClusterOperations" xml:space="preserve">
+    <value>Cluster Operations</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_MergeIdenticalInputs" xml:space="preserve">
+    <value>Merge Identical Inputs</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_RefreshNicknamesOfParameters" xml:space="preserve">
+    <value>Refresh Param Names</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_KeepReferencedFilesUnchanged" xml:space="preserve">
+    <value>Skip Referenced Clusters</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Pancake_for_GH__0_" xml:space="preserve">
+    <value>Pancake for GH {0}</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_License" xml:space="preserve">
+    <value>License &amp;&amp; Privacy Policy...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_OnlineManual" xml:space="preserve">
+    <value>Online Manual...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_CheckNewVersion" xml:space="preserve">
+    <value>Check Latest Version...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_DeveloperTools" xml:space="preserve">
+    <value>Developer tools</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_EnableDeveloperMode" xml:space="preserve">
+    <value>Enable developer mode</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_ListOfCoreComponents" xml:space="preserve">
+    <value>List of core components...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_DocObjectInformation" xml:space="preserve">
+    <value>DocObject information...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="CoreMenu_mnuAlwaysEnglish_Click_TheSettingWillTakeEffectAfterYouRestartRhino" xml:space="preserve">
+    <value>The setting will take effect after you restart Rhino.</value>
+  </data>
+  <data name="CoreMenu_mnuRemoveVersionWaterstampRhino_Click_WarningRemove" xml:space="preserve">
+    <value>All existing tracking will be lost and the feature will be disabled unless reenabled.
+</value>
+  </data>
+  <data name="CoreMenu_mnuEnableVersionWaterstampRhino_Click_WarningDisableRhino" xml:space="preserve">
+    <value>Disabling watermark for this file is only temporary. To remove watermark, use 'Remove version watermark in Rhino' instead.</value>
+  </data>
+  <data name="CoreMenu_mnuEnableVersionWaterstamp_Click_WarningDisableGH" xml:space="preserve">
+    <value>Disabling watermark for this file is only temporary. To remove watermark, use 'Remove version watermark in GH' instead.</value>
+  </data>
+  <data name="CoreMenu_mnuHangProtection_Click_HotSwitchingFail" xml:space="preserve">
+    <value>Failed on hot switching Hang Protection. It has been re-configured for the next Rhino session.</value>
+  </data>
+  <data name="CoreMenu_mnuHangProtection_Click_InfoDisableHang" xml:space="preserve">
+    <value>You are disabling Hang Protection. The process may take up to 15 seconds.</value>
+  </data>
+  <data name="UiHelper_PancakeTitle" xml:space="preserve">
+    <value>Pancake</value>
+  </data>
+  <data name="UiHelper_PancakeTitleError" xml:space="preserve">
+    <value>Pancake Error</value>
+  </data>
+  <data name="UiHelper_ErrorReport_Template" xml:space="preserve">
+    <value>{0}
+Please refer to the support with error code '{1}'</value>
+  </data>
+  <data name="UiHelper_ContinueWarning_Template" xml:space="preserve">
+    <value>{0}
+Are you sure to continue?</value>
+  </data>
+  <data name="UiHelper_UndoWarning_Template" xml:space="preserve">
+    <value>This action cannot be undone. 
+{0}</value>
+  </data>
+  <data name="UiHelper_ErrorReport_Default" xml:space="preserve">
+    <value>Pancake encounters an error and may not work properly.</value>
+  </data>
+  <data name="ClusterOp_RefreshNicknames_DocumentInvalid" xml:space="preserve">
+    <value>Document invalid.</value>
+  </data>
+  <data name="ClusterOp_MergeDuplicatedInputs_CannotFindAnyCluster" xml:space="preserve">
+    <value>Cannot find any cluster.</value>
+  </data>
+  <data name="ClusterOp_MergeDuplicatedInputs_AllClusters" xml:space="preserve">
+    <value>all clusters</value>
+  </data>
+  <data name="ClusterOp_MergeDuplicatedInputs_AllSelectedClusters" xml:space="preserve">
+    <value>all selected clusters</value>
+  </data>
+  <data name="ClusterOp_MergeDuplicatedInputs_AllReferencedClustersAreSkippedRN" xml:space="preserve">
+    <value>All referenced clusters are skipped.
+</value>
+  </data>
+  <data name="ClusterOp_MergeDuplicatedInputs_IfTheClusterIsLinkedWithAFileTheFileWillBeModifiedImmediatelyRN" xml:space="preserve">
+    <value>If the cluster is linked with a file, the file will be modified immediately.
+</value>
+  </data>
+  <data name="ClusterOp_MergeDuplicatedInputs_UndoWarning" xml:space="preserve">
+    <value>This operation will affect {0}.
+{1}</value>
+  </data>
+  <data name="ClusterOp_MergeDuplicatedInputs_InClusterOnly" xml:space="preserve">
+    <value>This command only works inside a cluster. Click the menu while holding Shift key to apply to all selected clusters.</value>
+  </data>
+  <data name="LibraryInfo_CheckLibInfo_HumanUI" xml:space="preserve">
+    <value>Human UI requires additional files than listed. Please refer to http://www.food4rhino.com/app/human-ui</value>
+  </data>
+  <data name="LibraryInfo_CheckLibInfo_Kangaroo2" xml:space="preserve">
+    <value>Kangaroo2 needs KangarooSolver.dll to run on Rhino 5, which, in Rhino 6, is considered a built-in library thus not listed. Please refer to http://www.food4rhino.com/app/kangaroo-physics</value>
+  </data>
+  <data name="LibraryInfo_CheckLibInfo_LunchBox" xml:space="preserve">
+    <value>LunchBox may need additional files. Please refer to http://www.food4rhino.com/app/lunchbox</value>
+  </data>
+  <data name="LibraryInfo_CheckLibInfo_Weaverbird" xml:space="preserve">
+    <value>Weaverbird usually need additional files in Program Files directory. Please refer to http://www.giuliopiacentino.com/weaverbird</value>
+  </data>
+  <data name="LibraryInfo_CheckLibInfo_Ameba" xml:space="preserve">
+    <value>Ameba requires installation and cloud key configuration. Please refer to http://www.food4rhino.com/app/ameba-rhino</value>
+  </data>
+  <data name="Presenter_UpdateVersionItemDispatch_New_version__0__is_available_" xml:space="preserve">
+    <value>New version {0} is available</value>
+  </data>
+  <data name="Downgrade_DowngradeComponents__0__successful___1__failed_" xml:space="preserve">
+    <value>{0} successful, {1} failed.</value>
+  </data>
+  <data name="HangDetector_EmergencySave_LostResponsiveness" xml:space="preserve">
+    <value>Grasshopper has lost responsiveness for more than 1 minute.
+An emergency save has been made.
+</value>
+  </data>
+  <data name="HangDetector_EmergencySave_EmptyStacktrace" xml:space="preserve">
+    <value>Stacktrace is empty. The problem might be associated with Rhinoceros solely. Refer to manual.
+</value>
+  </data>
+  <data name="HangDetector_EmergencySave_PossibleCause" xml:space="preserve">
+    <value>Problem might be caused by {0} in {1}.
+</value>
+  </data>
+  <data name="HangDetector_EmergencySave_NoPossible" xml:space="preserve">
+    <value>Pancake cannot determine which component leads to the problem.
+</value>
+  </data>
+  <data name="HangDetector_EmergencySave_StackTraceDiag" xml:space="preserve">
+    <value>
+A stack trace report is attached for diagnosis: 
+
+</value>
+    <comment>@MutedRule(WhiteSpaceTail)</comment>
+  </data>
+  <data name="Unblock_CheckGhaPath__COFFLoad" xml:space="preserve">
+    <value>{0}: COFF loaded. {1}, {2}</value>
+  </data>
+  <data name="Unblock_CheckGhaPath__NotLoaded" xml:space="preserve">
+    <value>{0}: Not loaded. {1}, {2}</value>
+  </data>
+  <data name="Unblock_CheckGhaPath__Native" xml:space="preserve">
+    <value>{0}: Native DLL, probably required by other libraries.</value>
+  </data>
+  <data name="Unblock_GenerateUnblockReport_SuccesfulUnblock" xml:space="preserve">
+    <value>Succesfully unblocked libraries:
+</value>
+  </data>
+  <data name="Unblock_GenerateUnblockReport_FailUnblock" xml:space="preserve">
+    <value>Failed to unblock these files:
+</value>
+  </data>
+  <data name="Unblock_GenerateUnblockReport_FailLoad" xml:space="preserve">
+    <value>Failed to load these libraries:
+</value>
+  </data>
+  <data name="Unblock_GenerateUnblockReport_You_may_need_to_restart_Rhinoceros_to_fully_enable_all_libraries_" xml:space="preserve">
+    <value>You may need to restart Rhinoceros to fully enable all libraries.</value>
+  </data>
+  <data name="Unblock_GenerateUnblockReport_CannotLoad" xml:space="preserve">
+    <value>Pancake cannot load these unblocked files automatically.
+It is possible your Grasshopper version is not supported.
+Try to drag-drop libraries manually or restart Rhinoceros.
+</value>
+  </data>
+  <data name="VersionTrack_AnalyzeVersionTree_NewerThanDisk" xml:space="preserve">
+    <value>    Your document is newer than the file on disk. Consider saving it.
+</value>
+  </data>
+  <data name="VersionTrack_AnalyzeVersionTree_NewerThanHistory" xml:space="preserve">
+    <value>   The file on disk is {0} newer than the tracking history.It is possible that someone without Pancake changed the document. 
+    Or the file is not saved in ten minutes since the last modification.
+</value>
+  </data>
+  <data name="VersionTrack_AnalyzeVersionTree_Synced" xml:space="preserve">
+    <value>    The tracking history is well synchorized with your document.
+</value>
+  </data>
+  <data name="VersionTrack_AnalyzeVersionTree_DontKnowModificationTime" xml:space="preserve">
+    <value>    Cannot determine file modification time.
+</value>
+  </data>
+  <data name="VersionTrack_ShowVersionHistory_HistoryGH" xml:space="preserve">
+    <value>Version history of GH file:
+    </value>
+  </data>
+  <data name="VersionTrack_ShowVersionHistory_HistoryRhino" xml:space="preserve">
+    <value>Version history of Rhino file:
+    </value>
+  </data>
+  <data name="VersionTrack_ShowVersionHistory_NoVerInfoFound" xml:space="preserve">
+    <value>No version information is found in active Rhino or Grasshopper document.
+
+</value>
+  </data>
+  <data name="VersionTrack_ShowVersionHistory_FinalNote" xml:space="preserve">
+    <value>All time is in your local timezone.
+
+Please notice that, due to cache mechanic, your latest modification may not be listed unless you save and re-open the document.
+
+And Pancake can only track changes when Pancake is installed on all users.</value>
+  </data>
+  <data name="HangInfo_QueryHangInfo_Rhino_hangs_when_creating_mesh_of_GH_geometry__Check_if_your_geometry_is_too_far_away_from_origin_point_" xml:space="preserve">
+    <value>Rhino hangs when creating mesh of GH geometry. Check if your geometry is too far away from origin point.</value>
+  </data>
+  <data name="HangInfo_QueryHangInfo_The_problem_is_related_to_Rhino_internal_implementation__Visit_https___discourse_mcneel_com" xml:space="preserve">
+    <value>The problem is related to Rhino internal implementation. Visit https://discourse.mcneel.com</value>
+  </data>
+  <data name="HangInfo_QueryHangInfo_The_problem_is_related_to_Grasshopper__Visit_https___discourse_mcneel_com" xml:space="preserve">
+    <value>The problem is related to Grasshopper. Visit https://discourse.mcneel.com</value>
+  </data>
+  <data name="HangInfo_QueryHangInfo_The_problem_is_related_to_RhinoCommon__the_interface_GH_used_to_communicate_with_Rhino__Visit_https___discourse_mcneel_com" xml:space="preserve">
+    <value>The problem is related to RhinoCommon, the interface GH used to communicate with Rhino. Visit https://discourse.mcneel.com</value>
+  </data>
+  <data name="HangInfo_QueryHangInfo_Contact_us__The_problem_is_related_to_a_Pancake_extension_" xml:space="preserve">
+    <value>Contact us. The problem is related to a Pancake extension.</value>
+  </data>
+  <data name="HangInfo_QueryHangInfo_Contact_us__The_problem_is_related_to_the_Pancake_core_" xml:space="preserve">
+    <value>Contact us. The problem is related to the Pancake core.</value>
+  </data>
+  <data name="FormPluginManager_FormPluginManager_Load_Search" xml:space="preserve">
+    <value>Search...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_ManageAddons" xml:space="preserve">
+    <value>Addon Manager...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Transfer_settings" xml:space="preserve">
+    <value>Transfer...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Undo_history" xml:space="preserve">
+    <value>Undo History...</value>
+  </data>
+  <data name="CannotRetrieveUndoHistory" xml:space="preserve">
+    <value>Cannot retrieve undo history.</value>
+  </data>
+  <data name="UndoRedoHistoryEmpty" xml:space="preserve">
+    <value>Undo/redo history is empty.</value>
+  </data>
+  <data name="Undone" xml:space="preserve">
+    <value>To be undone</value>
+  </data>
+  <data name="Redone" xml:space="preserve">
+    <value>To be redone</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="ExpireSolution" xml:space="preserve">
+    <value>Expire solution?</value>
+  </data>
+  <data name="ExpireDisplay" xml:space="preserve">
+    <value>Expire display?</value>
+  </data>
+  <data name="Guid" xml:space="preserve">
+    <value>Guid</value>
+  </data>
+  <data name="ActionCount" xml:space="preserve">
+    <value>Action count</value>
+  </data>
+  <data name="GrasshopperSettings" xml:space="preserve">
+    <value>Grasshopper settings</value>
+  </data>
+  <data name="GrasshopperAddOns" xml:space="preserve">
+    <value>Grasshopper add-ons</value>
+  </data>
+  <data name="GrasshopperProvider_TransferWarning" xml:space="preserve">
+    <value>You are transferring settings from a higher version. This *may* break your Grasshopper.</value>
+  </data>
+  <data name="GrasshopperLibProvider_LoadFromByteArray_CannotOverride" xml:space="preserve">
+    <value>The following files cannot be overrided:
+
+</value>
+  </data>
+  <data name="SavePackedSettings" xml:space="preserve">
+    <value>Save packed settings</value>
+  </data>
+  <data name="SettingsSuccesfullySaved" xml:space="preserve">
+    <value>Settings succesfully saved.</value>
+  </data>
+  <data name="CannotSaveSettings" xml:space="preserve">
+    <value>We cannot save settings. Please retry. If the problem persists, contact us.</value>
+  </data>
+  <data name="OpenPackedSettings" xml:space="preserve">
+    <value>Open packed settings</value>
+  </data>
+  <data name="NeedRestartRhinoGrasshopperApplyImportedSettings" xml:space="preserve">
+    <value>You may need to restart Rhino/Grasshopper to apply all imported settings.</value>
+  </data>
+  <data name="SettingsSuccesfullyApplied" xml:space="preserve">
+    <value>Settings succesfully applied.</value>
+  </data>
+  <data name="SettingsSuccesfullyAppliedShouldRestartRhinoThatChangesSaved" xml:space="preserve">
+    <value>Settings succesfully applied. But you should restart Rhino so that all changes are saved.</value>
+  </data>
+  <data name="CannotApplyCertainSettingsRestartRhinoAgainRNIfProblemPersistsContact" xml:space="preserve">
+    <value>We cannot apply certain settings. Restart Rhino and try again.
+If the problem persists, contact us.</value>
+  </data>
+  <data name="Performance_ShowObjectGroupTimeReport_Report1" xml:space="preserve">
+    <value>Performance report of {0} object(s):
+</value>
+  </data>
+  <data name="Performance_ShowObjectGroupTimeReport_Report2" xml:space="preserve">
+    <value>PancakeDev is required for detailed timing and monitoring.
+
+</value>
+  </data>
+  <data name="Performance_ShowObjectGroupTimeReport_Report3" xml:space="preserve">
+    <value>Computation time of the selected:
+    {0}
+</value>
+  </data>
+  <data name="Performance_ShowObjectGroupTimeReport_Report4" xml:space="preserve">
+    <value>Computation time of the document:
+    {0}
+</value>
+  </data>
+  <data name="Performance_ShowObjectGroupTimeReport_Report5" xml:space="preserve">
+    <value>Proportion:
+    {0:00.00}%
+</value>
+  </data>
+  <data name="Performance_ShowObjectGroupTimeReport_Report6" xml:space="preserve">
+    <value>Bottleneck (individual):
+</value>
+  </data>
+  <data name="Performance_ShowObjectGroupTimeReport_Report7" xml:space="preserve">
+    <value>Bottleneck (grouped):
+</value>
+  </data>
+  <data name="Performance_ProfileRepeated_Repeated" xml:space="preserve">
+    <value>Repeated:
+    {0} times</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="LicenseAddonMgr" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="LoadingOrder" xml:space="preserve">
+    <value>Loading order</value>
+  </data>
+  <data name="LoadingMechanism" xml:space="preserve">
+    <value>Loading mechanism</value>
+  </data>
+  <data name="CoreLibrary" xml:space="preserve">
+    <value>Core library?</value>
+  </data>
+  <data name="TargetGrasshopperVersion" xml:space="preserve">
+    <value>Target Grasshopper SDK version</value>
+  </data>
+  <data name="TargetRhinoCommonVersion" xml:space="preserve">
+    <value>Target RhinoCommon version</value>
+  </data>
+  <data name="RhinoOnly" xml:space="preserve">
+    <value>Rhino 6 only</value>
+  </data>
+  <data name="LoadHint" xml:space="preserve">
+    <value>Load hint</value>
+  </data>
+  <data name="Rhino5Only" xml:space="preserve">
+    <value>Rhino 5 only</value>
+  </data>
+  <data name="Unspecific" xml:space="preserve">
+    <value>Unspecific</value>
+  </data>
+  <data name="Found" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="FoundAddonMgr" xml:space="preserve">
+    <value>Found</value>
+  </data>
+  <data name="LoadBlock" xml:space="preserve">
+    <value>Load block</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="CannotLoadReferencedFiles" xml:space="preserve">
+    <value>Cannot load referenced files</value>
+  </data>
+  <data name="Referenced" xml:space="preserve">
+    <value>Referenced</value>
+  </data>
+  <data name="Hidden" xml:space="preserve">
+    <value> (hidden)</value>
+  </data>
+  <data name="DependencyWalker_ShowPluginManager__0__failed" xml:space="preserve">
+    <value>{0} failed</value>
+  </data>
+  <data name="ProcessFail" xml:space="preserve">
+    <value>Process fail</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>To source</value>
+  </data>
+  <data name="Target" xml:space="preserve">
+    <value>To target</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Set as normal</value>
+  </data>
+  <data name="Faint" xml:space="preserve">
+    <value>Set as faint</value>
+  </data>
+  <data name="SetAsHidden" xml:space="preserve">
+    <value>Set as hidden</value>
+  </data>
+  <data name="InputWiresNormal" xml:space="preserve">
+    <value>Set all input wires as normal</value>
+  </data>
+  <data name="InputWiresFaint" xml:space="preserve">
+    <value>Set all input wires as faint</value>
+  </data>
+  <data name="InputWiresHidden" xml:space="preserve">
+    <value>Set all input wires as hidden</value>
+  </data>
+  <data name="Inspect" xml:space="preserve">
+    <value>Inspect</value>
+  </data>
+  <data name="InspectComponent" xml:space="preserve">
+    <value>Inspect component</value>
+  </data>
+  <data name="InspectParameter" xml:space="preserve">
+    <value>Inspect parameter</value>
+  </data>
+  <data name="ProfileSelectedComponents" xml:space="preserve">
+    <value>Profile selected components (last run)</value>
+  </data>
+  <data name="ProfileSelectedComponentsRepeated" xml:space="preserve">
+    <value>Profile selected components (new run)</value>
+  </data>
+  <data name="ActionsDefinedThisKindObjectS" xml:space="preserve">
+    <value>No actions are defined for this kind of object(s).</value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_You_can_only_check_properties_of_one_DocObject_" xml:space="preserve">
+    <value>You can only check properties of one DocObject.</value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_CompId" xml:space="preserve">
+    <value>Comp ID : {0}
+</value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_InstId" xml:space="preserve">
+    <value>Inst ID : {0}
+</value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_Implement" xml:space="preserve">
+    <value>Implemented: 
+    {0}
+
+</value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_Inherited_from__" xml:space="preserve">
+    <value>Inherited from: </value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_InpParam" xml:space="preserve">
+    <value>Input parameter(s):
+</value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_OutParam" xml:space="preserve">
+    <value>Output parameter(s):
+</value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_ParamInfo" xml:space="preserve">
+    <value>Parameter info:
+</value>
+  </data>
+  <data name="DbgInfo_ShowDocObjInfo_Exception" xml:space="preserve">
+    <value>Uncaptured exception occured during interpretation.
+
+</value>
+  </data>
+  <data name="DbgInfo_GetParamDescription_ExpectedType" xml:space="preserve">
+    <value>    Expected type: {0}
+</value>
+  </data>
+  <data name="DbgInfo_GetParamDescription_SrcType" xml:space="preserve">
+    <value>    Source type(s):
+</value>
+  </data>
+  <data name="DbgInfo_GetParamDescription_Srcs" xml:space="preserve">
+    <value>    Sources:
+</value>
+  </data>
+  <data name="DbgInfo_GetParamDescription_OutType" xml:space="preserve">
+    <value>    Output type(s):
+</value>
+  </data>
+  <data name="DbgInfo_GetParamDescription_Recipients" xml:space="preserve">
+    <value>    Recipients:
+</value>
+  </data>
+  <data name="DbgInfo_GetTypeDescription_FullName" xml:space="preserve">
+    <value>{0}Fullname: {1}.{2}
+</value>
+  </data>
+  <data name="DbgInfo_GetTypeDescription_Generics" xml:space="preserve">
+    <value>{0}   Generics: &lt;{1}&gt;
+</value>
+  </data>
+  <data name="DbgInfo_GetTypeDescription_Defined" xml:space="preserve">
+    <value>{0}Defined : {1}
+</value>
+  </data>
+  <data name="DbgInfo_GetTypeDescription_DynLoad" xml:space="preserve">
+    <value>{0}Dynamically loaded
+</value>
+  </data>
+  <data name="DbgInfo_GetTypeDescription_Stored" xml:space="preserve">
+    <value>{0}Stored  : {1}
+</value>
+  </data>
+  <data name="UndoBlocker_Message" xml:space="preserve">
+    <value>The action {0} cannot be undone. Continuing to undo may break your script.</value>
+  </data>
+  <data name="BenchmarkSelectedComponents" xml:space="preserve">
+    <value>Run &amp;&amp; Measure Selected</value>
+  </data>
+  <data name="TheExportedFileMayContainSensitiveInformationNeverSendItToUntrustedRecipients" xml:space="preserve">
+    <value>The exported file may contain private and/or sensitive information. Never send it to untrusted recipients.</value>
+  </data>
+  <data name="AllExistingFilesAndSettingsWillBeOverridedOnlyTheChosenItemsWillBeAffected" xml:space="preserve">
+    <value>All existing files and settings will be overrided. Only the chosen items will be affected.</value>
+  </data>
+  <data name="EnableExtendedContextMenu" xml:space="preserve">
+    <value>Extended Context Menu</value>
+  </data>
+  <data name="RemoveHighlighting" xml:space="preserve">
+    <value>Remove All Highlights</value>
+  </data>
+  <data name="HighlightListedItems" xml:space="preserve">
+    <value>Highlight listed items</value>
+  </data>
+  <data name="EnableParamAccessOverlay" xml:space="preserve">
+    <value>Param Access Overlay</value>
+  </data>
+  <data name="LoadingDemand" xml:space="preserve">
+    <value>Loading Demand</value>
+  </data>
+  <data name="ShippedWithRhino" xml:space="preserve">
+    <value>Shipped with Rhino?</value>
+  </data>
+  <data name="LastModification" xml:space="preserve">
+    <value>Last modification</value>
+  </data>
+  <data name="FollowingQuantityInvolvedOperatorsWillOnlyWorkOnRhino6" xml:space="preserve">
+    <value>Rhino-6-only quantity operators</value>
+  </data>
+  <data name="FollowingPairsAreCoincidentOnTheCanvas" xml:space="preserve">
+    <value>Coincident components</value>
+  </data>
+  <data name="GHLibraries" xml:space="preserve">
+    <value>GH Libraries</value>
+  </data>
+  <data name="PancakeConfig" xml:space="preserve">
+    <value>Pancake config</value>
+  </data>
+  <data name="GHSettings" xml:space="preserve">
+    <value>GH Settings</value>
+  </data>
+  <data name="YouAreUsingTheLatestVersion" xml:space="preserve">
+    <value>You are using the latest version</value>
+  </data>
+  <data name="YouAreUsingAPreReleaseBuild" xml:space="preserve">
+    <value>You are using a pre-release build</value>
+  </data>
+  <data name="ThisFeatureWillInternalizeAllReferencedGeometryInYourScriptAsIfYouClickInternalizeInAllOfTheMenus" xml:space="preserve">
+    <value>Internalize all referenced geometry in your script, as if you click 'Internalize' in all of the menus.</value>
+  </data>
+  <data name="ThisFeatureDowngradesCertainBasicComponentsToTheirRhino5Equivalent" xml:space="preserve">
+    <value>Downgrades certain basic components to their Rhino 5 equivalent so that the script can run in Rhino 5.</value>
+  </data>
+  <data name="StudysWhatExternalResourcesTheCurrentScriptRequiresAndShowAReport" xml:space="preserve">
+    <value>Study what external resources the current script requires and show a report.</value>
+  </data>
+  <data name="PancakeWillDoAnEmergencySaveIf" xml:space="preserve">
+    <value>Pancake will do an emergency save if Grasshopper has been hanging for too long.</value>
+  </data>
+  <data name="ThisFeatureMonitorsIfAnyNewLibrary" xml:space="preserve">
+    <value>Monitor if any new library is blocked, and prompt for further actions.</value>
+  </data>
+  <data name="AddsAContextMenuWhenYouRightClickCertain" xml:space="preserve">
+    <value>Add a context menu when you right-click certain document objects with Ctrl+Shift keys pressed, which provides extended functionality.</value>
+  </data>
+  <data name="ShowsAnOverlayOnComponent" xml:space="preserve">
+    <value>Show an overlay on components, indicating whether their param accesses are Item, List or Tree.</value>
+  </data>
+  <data name="SelectAllComponentsThatAffectTheSelectedComponent" xml:space="preserve">
+    <value>Select all components that affect the selected component.</value>
+  </data>
+  <data name="SelectAllComponentsThatAreAffectedByTheSelectedComponent" xml:space="preserve">
+    <value>Select all components that are affected by the selected component.</value>
+  </data>
+  <data name="SelectAllComponentsThatAffectOrAreAffectedByTheSelectedComponent" xml:space="preserve">
+    <value>Select all components that affect or are affected by the selected component.</value>
+  </data>
+  <data name="SelectAllIndependentInputsThatAffectTheSelectedComponent" xml:space="preserve">
+    <value>Select all independent inputs that affect the selected component.</value>
+  </data>
+  <data name="SelectAllIndependentOutputsThatAffectTheSelectedComponent" xml:space="preserve">
+    <value>Select all independent outputs that are affected by the selected component.</value>
+  </data>
+  <data name="ControlIfComponentsContainingPersistentDataAreRegardedAsInpdendentInOutputs" xml:space="preserve">
+    <value>Control if components containing persistent data, are regarded as independent in/outputs.</value>
+  </data>
+  <data name="MergeExcessiveClusterInputOfIdenticalNamesAndPropertiesIntoOne" xml:space="preserve">
+    <value>Merge excessive cluster input of identical names and properties into one.</value>
+  </data>
+  <data name="RefreshNamesOfClusterInputInTheOuterDocumentIfYouHaveChangedThemInsideTheCluster" xml:space="preserve">
+    <value>Refresh names of cluster input in the outer document, if you have changed them inside the cluster.</value>
+  </data>
+  <data name="ControlIfPancakeWouldSkipClusterDefinedInExternalFilesDuringAnyClusterOperation" xml:space="preserve">
+    <value>Control if Pancake would skip cluster defined in external files during any cluster operation.</value>
+  </data>
+  <data name="ExportImportSettingsToFromABundleFile" xml:space="preserve">
+    <value>Export/import settings to/from a bundle file.</value>
+  </data>
+  <data name="ObjectAttributesDesc" xml:space="preserve">
+    <value>Object attributes. Layer in this structure isn't used by default, right click the component to change the behavior.
+You may use Object attributes from Elefront, or Human.
+See manual for supported attributes.</value>
+  </data>
+  <data name="Input" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="Output" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="Logic" xml:space="preserve">
+    <value>Flow</value>
+  </data>
+  <data name="QuantityCategory" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="DataOrganization" xml:space="preserve">
+    <value>Data Organization</value>
+  </data>
+  <data name="ConstructAssociativeArrayFromCSV" xml:space="preserve">
+    <value>CSV to Assoc</value>
+  </data>
+  <data name="CreateAListOfAssociativeArraysFromCSVLinesSeeExampleForMoreInformation" xml:space="preserve">
+    <value>Create a list of associative arrays from CSV lines. See example for more information.</value>
+  </data>
+  <data name="AssociativeArrayToDatatable" xml:space="preserve">
+    <value>Assoc to Datatable</value>
+  </data>
+  <data name="CreateADatatableASetOfHeadersAndValuesSoThatDataCanBeUsedByLunchBoxHumanUIEtcOrExportedOnlyNamedValueWillBeExtractedRNByDefaultEachColumnIsStoredAsOneBranchUseTheOptionInTheContextMenuToStoreEntriesAsBranches" xml:space="preserve">
+    <value>Create a datatable (a set of headers and values), so that data can be used by LunchBox, Human UI, etc, or exported. Only named value will be extracted.
+By default, each column is stored as one branch. Use the option in the context menu to store entries as branches.</value>
+  </data>
+  <data name="AssociativeArrayToString" xml:space="preserve">
+    <value>Assoc to String</value>
+  </data>
+  <data name="ConvertAnAssociativeArrayToAStringOfCertainStyleSuchAsJsonPythonEtcRightClickTheComponentToChooseStyle" xml:space="preserve">
+    <value>Convert an associative array to a string of certain style, such as Json, Python, etc. Right-click the component to choose style.</value>
+  </data>
+  <data name="Categorize" xml:space="preserve">
+    <value>Categorize</value>
+  </data>
+  <data name="CategorizeValuesByKeys" xml:space="preserve">
+    <value>Categorize values by keys.</value>
+  </data>
+  <data name="CategorizeByIndex" xml:space="preserve">
+    <value>Categorize By Index</value>
+  </data>
+  <data name="CategorizeValuesByIntegerKeysComparedToTheGenericVersionThisComponentHasBetterPerformance" xml:space="preserve">
+    <value>Categorize values by integer keys. Compared to the generic version, this component has better performance.</value>
+  </data>
+  <data name="ConstructAssociativeArray" xml:space="preserve">
+    <value>Construct Assoc</value>
+  </data>
+  <data name="CreateAnAssociativeArrayFromAListOfItemsAnAssociativeArrayWillBeTreatedAsOneSingleElementDuringGrasshopperTreeManipulationThereforeStructureManipulationWouldBeEasier" xml:space="preserve">
+    <value>Create an associative array from a list of items.</value>
+  </data>
+  <data name="FilepathSeries" xml:space="preserve">
+    <value>Filepath Series</value>
+  </data>
+  <data name="CalculateTheNextFilenameInAFilepathSeries" xml:space="preserve">
+    <value>Calculate the next filename in a filepath series.</value>
+  </data>
+  <data name="ConstructAssociativeArrayByKeys" xml:space="preserve">
+    <value>Key-values to Assoc</value>
+  </data>
+  <data name="ConstructOrAdjustAnAssociativeArrayByKeyAndValues" xml:space="preserve">
+    <value>Construct or adjust an associative array by key and values.</value>
+  </data>
+  <data name="ConstructQuantity" xml:space="preserve">
+    <value>Construct Quantity</value>
+  </data>
+  <data name="AddUnitToANumberToConvertItIntoAQuantityWhenTheUnitIsNotSuppliedDocumentUnitIsUsedRNUseParseStringComponentToCreateAFeetInchLengthQuantity" xml:space="preserve">
+    <value>Add unit to a number to convert it into a quantity. When the unit is not supplied, document unit is used.
+Use 'Parse String' component to create a feet &amp; inch length quantity.</value>
+  </data>
+  <data name="CountUnique" xml:space="preserve">
+    <value>Count Unique</value>
+  </data>
+  <data name="ExtractAllUniqueValuesFromAListAndCountTheirOccurences" xml:space="preserve">
+    <value>Extract all unique values from a list and count their occurences.</value>
+  </data>
+  <data name="DecomposeAnAssociativeArrayIntoItems" xml:space="preserve">
+    <value>Decompose an associative array into items.</value>
+  </data>
+  <data name="DeconstructAssociativeArray" xml:space="preserve">
+    <value>Deconstruct Assoc</value>
+  </data>
+  <data name="DeconstructAssociaitveArrayAsKeyValueList" xml:space="preserve">
+    <value>Assoc to Key-values</value>
+  </data>
+  <data name="DeconstructAnAssociativeArrayIntoListOfKeyPathsAndValues" xml:space="preserve">
+    <value>Deconstruct an associative array into list of key paths and values.</value>
+  </data>
+  <data name="DeconstructAssociativeArrayByKeys" xml:space="preserve">
+    <value>Extract from Assoc</value>
+  </data>
+  <data name="RetrieveDataFromAnAssociativeArrayByKeyPaths" xml:space="preserve">
+    <value>Extract data from an associative array by key paths.</value>
+  </data>
+  <data name="DeconstructFeetInchLength" xml:space="preserve">
+    <value>Deconstruct Feet-Inch Length</value>
+  </data>
+  <data name="DeconstructAFeetInchLengthQuantityToItsComponents" xml:space="preserve">
+    <value>Deconstruct a feet-inch length quantity to its components.</value>
+  </data>
+  <data name="DeconstructQuantity" xml:space="preserve">
+    <value>Deconstruct Quantity</value>
+  </data>
+  <data name="DeconstructQuantityToItsInsideAmountUnitAndUnitTypeFeetAndInchLengthWillBecomeADecimalAmountInFeetOtherwiseTheAmountIsNotConverted" xml:space="preserve">
+    <value>Deconstruct quantity to its inside amount, unit and unit type. Feet and inch length will become a decimal amount in feet. Otherwise the amount is not converted.</value>
+  </data>
+  <data name="DefaultValue" xml:space="preserve">
+    <value>Default Value</value>
+  </data>
+  <data name="OutputsDefaultValueDIfValueVIsNotProvidedSuchAsAnEmptyClusterInputOutputsTheProvidedValueOtherwiseTheComponentActsAsAFilterForOptionalClusterInput" xml:space="preserve">
+    <value>Outputs default value (D), if value (V) is not provided, such as an empty cluster input. Outputs the provided value otherwise. The component acts as a filter for optional cluster input.</value>
+  </data>
+  <data name="Deserialize" xml:space="preserve">
+    <value>Deserialize</value>
+  </data>
+  <data name="DeserializeAStringIntoItsOriginalObject" xml:space="preserve">
+    <value>Deserialize a string into its original object.</value>
+  </data>
+  <data name="Export3DMDescription" xml:space="preserve">
+    <value>This component exports geometries from GH to 3DM file directly
+This component doesn't rely on user interface operation in Rhino, therefore is faster and more reliable.
+However, not all geometry and attributes are supported.</value>
+  </data>
+  <data name="Export3DM" xml:space="preserve">
+    <value>Export 3DM</value>
+  </data>
+  <data name="ExportAsDesc" xml:space="preserve">
+    <value>Exports geometries from GH to any format supported by Rhino.
+This component depends on Rhino's user interface and cannot work if anthoer command is running.
+Right-click the component for more options.</value>
+  </data>
+  <data name="ExportAs" xml:space="preserve">
+    <value>Export As</value>
+  </data>
+  <data name="ExportSTL" xml:space="preserve">
+    <value>Export STL</value>
+  </data>
+  <data name="ExportSTLDesc" xml:space="preserve">
+    <value>This component exports geometries from GH to STL file directly
+This component doesn't rely on any user interface operation in Rhino.</value>
+  </data>
+  <data name="ExportTXT" xml:space="preserve">
+    <value>Export TXT</value>
+  </data>
+  <data name="ThisComponentExportsTextToAFile" xml:space="preserve">
+    <value>This component exports text to a file.</value>
+  </data>
+  <data name="GetMetadata" xml:space="preserve">
+    <value>Get Metadata</value>
+  </data>
+  <data name="RetrieveMetadataFromAnObject" xml:space="preserve">
+    <value>Retrieve metadata from an object.</value>
+  </data>
+  <data name="DefinitionPath" xml:space="preserve">
+    <value>Definition Path</value>
+  </data>
+  <data name="GetThePathOfCurrentGrasshopperDefinitionFileSoThatYouCanReferenceFilesWhereverTheyAre" xml:space="preserve">
+    <value>Get the path of current Grasshopper definition/file, so that you can reference files wherever they are.</value>
+  </data>
+  <data name="ImportFrom" xml:space="preserve">
+    <value>Import From</value>
+  </data>
+  <data name="ImportGeometriesFromARhinoSupportedFormatThisComponentRelysOnRhinoSImportCommand" xml:space="preserve">
+    <value>Import geometries from a Rhino-supported format. This component relys on Rhino's import command.</value>
+  </data>
+  <data name="ImportToDocument" xml:space="preserve">
+    <value>Import To Document</value>
+  </data>
+  <data name="ImportGeometriesToTheCurrentRhinoDocumentThisComponentRelysOnRhinoSImportCommand" xml:space="preserve">
+    <value>Import geometries to the current Rhino document. This component relys on Rhino's import command.</value>
+  </data>
+  <data name="MergeTwoOrMoreAssociativeArrays" xml:space="preserve">
+    <value>Merge two or more associative arrays.</value>
+  </data>
+  <data name="MergeAssociativeArray" xml:space="preserve">
+    <value>Merge Assoc</value>
+  </data>
+  <data name="NativeExportDesc" xml:space="preserve">
+    <value>This component exports geometries from GH to {0} file directly
+This component doesn't rely on Export command.</value>
+  </data>
+  <data name="NativeExport" xml:space="preserve">
+    <value>Export {0}</value>
+  </data>
+  <data name="NativeImport" xml:space="preserve">
+    <value>Import {0}</value>
+  </data>
+  <data name="ThisComponentImportsGeometriesDirectlyIntoGH" xml:space="preserve">
+    <value>This component imports geometries directly into GH.</value>
+  </data>
+  <data name="NullValues" xml:space="preserve">
+    <value>Null Values</value>
+  </data>
+  <data name="ProvideSpecialValuesSuchAsNullNaNInfinity" xml:space="preserve">
+    <value>Provide special values such as null, NaN, +/-Infinity.</value>
+  </data>
+  <data name="ParseString" xml:space="preserve">
+    <value>Parse String</value>
+  </data>
+  <data name="ParseFormattedStringToItsCorrectTypeCurrentlyThisComponentSupportsIntegerNumberBooleanGuidLengthQuantityDatetimePointDomain12DColourAndJsonSeeExamplesOrManualForMoreInformation" xml:space="preserve">
+    <value>Parse formatted string to its correct type. Currently this component supports Integer, Number, Boolean, Guid, Length Quantity, Datetime, Point, Domain(1/2D), Colour and Json. See examples or manual for more information.</value>
+  </data>
+  <data name="QuantityOperator" xml:space="preserve">
+    <value>Quantity Operator</value>
+  </data>
+  <data name="QtyOpDesc" xml:space="preserve">
+    <value>Fulfill arithmetic operator on quantities and numbers. Rhino 6 user may also use the built-in Add, Sub, Multiply and Mass Addition component to process quantities. For detailed information, see manual or examples.</value>
+  </data>
+  <data name="Serialize" xml:space="preserve">
+    <value>Serialize</value>
+  </data>
+  <data name="SerializeASerializableObjectIntoString" xml:space="preserve">
+    <value>Serialize a serializable object into string.</value>
+  </data>
+  <data name="SetPrincipleValue" xml:space="preserve">
+    <value>Set Principle Value</value>
+  </data>
+  <data name="SetPValDesc" xml:space="preserve">
+    <value>Set the principle value of an associative array. An assoc will behave like its principal value if the processing component doesn't support associative array. 
+By default, an assoc will take the first item as its principle value, unless the first item is a String/Text. 
+If unset and the first item is a String/Text, an assoc will not have a principle value. See example for more information.</value>
+  </data>
+  <data name="SetMetadata" xml:space="preserve">
+    <value>Set Metadata</value>
+  </data>
+  <data name="SetMetadataDesc" xml:space="preserve">
+    <value>Assign metadata to an object. The output is still a geometric object and metadata will be preserved after many injective operations, such as Move.</value>
+  </data>
+  <data name="Shuffle" xml:space="preserve">
+    <value>Shuffle</value>
+  </data>
+  <data name="UseFisherYatesAlgorithmToShuffleAList" xml:space="preserve">
+    <value>Use Fisher-Yates algorithm to shuffle a list.</value>
+  </data>
+  <data name="ToDecimalLength" xml:space="preserve">
+    <value>To Decimal Length</value>
+  </data>
+  <data name="ConvertAQuantityToADecimalLengthWithDesignatedUnit" xml:space="preserve">
+    <value>Convert a quantity to a decimal length with designated unit.</value>
+  </data>
+  <data name="ToFeetInchLength" xml:space="preserve">
+    <value>To Feet &amp; Inch Length</value>
+  </data>
+  <data name="ConvertAQuantityToAFeetInchLengthWithDesignatedUnit" xml:space="preserve">
+    <value>Convert a quantity to a feet-inch length with designated unit.</value>
+  </data>
+  <data name="UnwrapList" xml:space="preserve">
+    <value>Unwrap List</value>
+  </data>
+  <data name="UnwrappedAnAtomListToItsOriginalContent" xml:space="preserve">
+    <value>Unwrapped an atom list to its original content.</value>
+  </data>
+  <data name="WaitUntil" xml:space="preserve">
+    <value>Wait Until</value>
+  </data>
+  <data name="PostponeDataUntilSignalIsReceived" xml:space="preserve">
+    <value>Postpone data until signal is received</value>
+  </data>
+  <data name="WrapList" xml:space="preserve">
+    <value>Wrap List</value>
+  </data>
+  <data name="WrapAListToAnAtomListWhichIsAListButBeingTreatedAsOneSingleElement" xml:space="preserve">
+    <value>Wrap a list to an atom list, which is a list but being treated as one single element.</value>
+  </data>
+  <data name="SetPrecision" xml:space="preserve">
+    <value>Set Precision</value>
+  </data>
+  <data name="SetThePrecisionOfAQuantityPrecisionMayHaveDifferentMeaningsOnDifferentQuantitiesSeeManualOrExampleForMoreInformation" xml:space="preserve">
+    <value>Set the precision of a quantity. Precision may have different meanings on different quantities. See manual or example for more information.</value>
+  </data>
+  <data name="pcecExportOption" xml:space="preserve">
+    <value>{0} Export Option</value>
+  </data>
+  <data name="pcecExportOptionDesc" xml:space="preserve">
+    <value>Template of export options for {0}</value>
+  </data>
+  <data name="SetupTooltip_TrueOnlyButton" xml:space="preserve">
+    <value>True Only Button</value>
+  </data>
+  <data name="TrueOnlyBtn_WhenClickedTheButtonObjectOnlyRaisesRecomputationOneTime" xml:space="preserve">
+    <value>When clicked, the button object only raises recomputation one time.</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="RepresentAnAmountAndItsAssociatedLengthUnit" xml:space="preserve">
+    <value>Represent an amount and its associated length unit.</value>
+  </data>
+  <data name="LanguageTraits" xml:space="preserve">
+    <value>neutral</value>
+  </data>
+  <data name="NeutralName0RN1" xml:space="preserve">
+    <value>Neutral name: {0}
+{1}</value>
+  </data>
+  <data name="Data0" xml:space="preserve">
+    <value>Data 0</value>
+  </data>
+  <data name="Data1" xml:space="preserve">
+    <value>Data 1</value>
+  </data>
+  <data name="ConnectToExportAsComponent" xml:space="preserve">
+    <value>Connect to Export As component</value>
+  </data>
+  <data name="PositiveInfinityAsIn10" xml:space="preserve">
+    <value>Positive infinity, as in +1/0</value>
+  </data>
+  <data name="NeagtiveInfinityAsIn10" xml:space="preserve">
+    <value>Neagtive infinity, as in -1/0</value>
+  </data>
+  <data name="AdjustedQuantity" xml:space="preserve">
+    <value>Adjusted Quantity</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="AmountInside" xml:space="preserve">
+    <value>Amount inside</value>
+  </data>
+  <data name="EntireLengthInDecimalFeet" xml:space="preserve">
+    <value>Entire length in decimal feet</value>
+  </data>
+  <data name="AssociativeArray" xml:space="preserve">
+    <value>Associative array</value>
+  </data>
+  <data name="InputListOnlyNamedValuesWillBeExtracted" xml:space="preserve">
+    <value>Input list. Only named values will be extracted.</value>
+  </data>
+  <data name="IfEmptyANewAssocWillBeCreated" xml:space="preserve">
+    <value>If empty, a new assoc will be created, rather than modifying an existing assoc.</value>
+  </data>
+  <data name="AssocToSet" xml:space="preserve">
+    <value>Metadata to Assign</value>
+  </data>
+  <data name="TheInputAtomListYouMayAlsoUseTheDataWrapperFromMetahopper" xml:space="preserve">
+    <value>The input atom list. You may also use the DataWrapper from Metahopper.</value>
+  </data>
+  <data name="TheOutputAtomList" xml:space="preserve">
+    <value>The output atom list</value>
+  </data>
+  <data name="TheTextYouWantToExport" xml:space="preserve">
+    <value>The text you want to export</value>
+  </data>
+  <data name="CountOfEachKeyInAccordanceToKL" xml:space="preserve">
+    <value>Count of each key, in accordance to KL</value>
+  </data>
+  <data name="CounterOfFirstFile" xml:space="preserve">
+    <value>Counter of first file</value>
+  </data>
+  <data name="CSVLinesReadByReadFileEtc" xml:space="preserve">
+    <value>CSV Lines. Read by 'Read File', etc.</value>
+  </data>
+  <data name="DefaultTrue" xml:space="preserve">
+    <value>Default true.</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="PostponedData" xml:space="preserve">
+    <value>Postponed data</value>
+  </data>
+  <data name="WhetherTheDefaultValueIsUsed" xml:space="preserve">
+    <value>Whether the default value is returned</value>
+  </data>
+  <data name="DefaultValueIfTheClusterInputIsEmpty" xml:space="preserve">
+    <value>Default value if the cluster input is empty</value>
+  </data>
+  <data name="DelimiterByDefault" xml:space="preserve">
+    <value>Delimiter. By default ','</value>
+  </data>
+  <data name="DelimiterByDefaultSlash" xml:space="preserve">
+    <value>Delimiter. By default '/'</value>
+  </data>
+  <data name="TheComponentWillNotTryAnythingElseOtherThanDesiredTypes" xml:space="preserve">
+    <value>The component will not try anything else other than desired types. See manual for full list. By default there is no limitation.</value>
+  </data>
+  <data name="DirectoryOfWhereTheCurrentDefinitionIsStored" xml:space="preserve">
+    <value>Directory of where the current definition is stored. The value doesn't have trailing directory separator.</value>
+  </data>
+  <data name="DirectorySeparatorOfCurrentOperatingSystem" xml:space="preserve">
+    <value>Directory separator of current operating system</value>
+  </data>
+  <data name="ControlWhetherToDropPreviewMeshWithoutPreviewMesh" xml:space="preserve">
+    <value>Control whether to drop preview mesh. Without preview mesh, the file can be smaller but it takes longer to open it next time. Default false.</value>
+  </data>
+  <data name="DifferenceBetweenFractionRepresentationAndActualValueInFeet" xml:space="preserve">
+    <value>Difference between fraction representation and actual value, in feet. It may be because converting a decimal quantity to a feet-inch quantity.</value>
+  </data>
+  <data name="SetToTrueToConductTheExportUseTrueOnlyButton" xml:space="preserve">
+    <value>Set to True to conduct the export. Use True - only button or Toggle button. Do not use the vanilla button.</value>
+  </data>
+  <data name="TheFinalCommandExecuted" xml:space="preserve">
+    <value>The final command to be executed</value>
+  </data>
+  <data name="DefaultFalse" xml:space="preserve">
+    <value>Default false.</value>
+  </data>
+  <data name="DefaultTrueOtherwisePlanarRegionsWillBeConvertedIntoMesh" xml:space="preserve">
+    <value>Default true. Otherwise planar regions will be converted into mesh.</value>
+  </data>
+  <data name="IntegerPartOfFeet" xml:space="preserve">
+    <value>Integer part of feet</value>
+  </data>
+  <data name="FileToBeImported" xml:space="preserve">
+    <value>File to be imported</value>
+  </data>
+  <data name="WhereToStoreTheFileFilenameAndExtensionShouldBeIncluded" xml:space="preserve">
+    <value>Where to store the file. Filename and extension should be included.</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>File Path</value>
+  </data>
+  <data name="SetToTrueToGenerateTheNextFilepath" xml:space="preserve">
+    <value>Set to true to generate the next filepath</value>
+  </data>
+  <data name="ImportedGeometry" xml:space="preserve">
+    <value>Imported geometry</value>
+  </data>
+  <data name="GUIDsOfImportedGeometry" xml:space="preserve">
+    <value>GUIDs of imported geometry</value>
+  </data>
+  <data name="TheGeometryYouWantToExport" xml:space="preserve">
+    <value>The geometry you want to export</value>
+  </data>
+  <data name="HeadersOfTheTable" xml:space="preserve">
+    <value>Headers of the table</value>
+  </data>
+  <data name="DecimalInch" xml:space="preserve">
+    <value>Decimal inch</value>
+  </data>
+  <data name="DenominatorOfInchFraction" xml:space="preserve">
+    <value>Denominator of inch fraction</value>
+  </data>
+  <data name="NumeratorOfInchFraction" xml:space="preserve">
+    <value>Numerator of inch fraction</value>
+  </data>
+  <data name="IntegerPartOfInch" xml:space="preserve">
+    <value>Integer part of inch</value>
+  </data>
+  <data name="IndexAsTheNewPrincipleValueYouMustProvideANameOrAnIndex" xml:space="preserve">
+    <value>Index as the new principle value. You must provide a name or an index.</value>
+  </data>
+  <data name="ItemsExtracted" xml:space="preserve">
+    <value>Items extracted</value>
+  </data>
+  <data name="ItemsToBeComposedAsAList" xml:space="preserve">
+    <value>Items to be composed as a list</value>
+  </data>
+  <data name="Keys" xml:space="preserve">
+    <value>Keys</value>
+  </data>
+  <data name="ListOfCategorizedKeys" xml:space="preserve">
+    <value>List of categorized keys</value>
+  </data>
+  <data name="LayerToPutTheGeometriesByDefaultThisInputWillOverrideObjAttr" xml:space="preserve">
+    <value>Layer to put the geometries. By default, this input will override ObjAttr.</value>
+  </data>
+  <data name="LayerPaths" xml:space="preserve">
+    <value>Layer paths</value>
+  </data>
+  <data name="OnlyGeometriesOnTheDesignatedLayersWillBeImported" xml:space="preserve">
+    <value>Only geometries on the designated layers will be imported.</value>
+  </data>
+  <data name="ListToBeShuffled" xml:space="preserve">
+    <value>List to be shuffled</value>
+  </data>
+  <data name="ShuffledList" xml:space="preserve">
+    <value>Shuffled list</value>
+  </data>
+  <data name="FilePathList" xml:space="preserve">
+    <value>File Path (List)</value>
+  </data>
+  <data name="LogIfAvailable" xml:space="preserve">
+    <value>Log, if available</value>
+  </data>
+  <data name="ReturnIfInternalAccuracyHasLostDuringPrecisionResettingRN" xml:space="preserve">
+    <value>Return if internal accuracy has lost during precision resetting.
+If the accuracy is not lost, you can fully return to the original value by raising the precision of the adjusted quantity (use this component again). Otherwise you cannot.</value>
+  </data>
+  <data name="MapYAxisToZAxisByDefaultFalse" xml:space="preserve">
+    <value>Map Y axis to Z axis. By default false.</value>
+  </data>
+  <data name="MapRhinoZAxisToFBXYAxisDefaultFalse" xml:space="preserve">
+    <value>Map Rhino Z axis to FBX Y axis. By default false.</value>
+  </data>
+  <data name="WhetherToExportMaterialAsPhongMaterialDefaultTrueOtherwiseTheyWillBeExportedAsLambert" xml:space="preserve">
+    <value>Whether to export material as Phong material. Otherwise they will be exported as lambert. Default true.</value>
+  </data>
+  <data name="MeshToBeExported" xml:space="preserve">
+    <value>Mesh to be exported</value>
+  </data>
+  <data name="Default2Must2" xml:space="preserve">
+    <value>Default 2. Must &gt;= 2.</value>
+  </data>
+  <data name="FileNameOfCurrentDefinition" xml:space="preserve">
+    <value>File name of current definition</value>
+  </data>
+  <data name="NamedValueAsTheNewPrincipleValueYouMustProvideANameOrAnIndex" xml:space="preserve">
+    <value>Named value as the new principle value. You must provide a name or an index.</value>
+  </data>
+  <data name="NaNAsIn00" xml:space="preserve">
+    <value>NaN, as in 0/0</value>
+  </data>
+  <data name="NullTheDefaultEmptyRepresentationOfNETFramework" xml:space="preserve">
+    <value>Null, the default empty representation of .NET framework</value>
+  </data>
+  <data name="WhetherToExportNURBSAsNURBSOtherwiseAsMeshDefaultFalse" xml:space="preserve">
+    <value>Whether to export NURBS as NURBS, otherwise as Mesh. Default false.</value>
+  </data>
+  <data name="ObjectDeserialized" xml:space="preserve">
+    <value>Object deserialized</value>
+  </data>
+  <data name="Object" xml:space="preserve">
+    <value>Object</value>
+  </data>
+  <data name="ObjectToSerialize" xml:space="preserve">
+    <value>Object to serialize</value>
+  </data>
+  <data name="ReturnsIfTheActionIsSuccessful" xml:space="preserve">
+    <value>Returns if the action is successful</value>
+  </data>
+  <data name="SetTrueToConductTheImport" xml:space="preserve">
+    <value>Set true to conduct the import</value>
+  </data>
+  <data name="OmitColorsOfBlackObjects" xml:space="preserve">
+    <value>Omit Colors of Black Objects</value>
+  </data>
+  <data name="FirstOperand" xml:space="preserve">
+    <value>First operand</value>
+  </data>
+  <data name="SecondOperand" xml:space="preserve">
+    <value>Second operand</value>
+  </data>
+  <data name="OperatorWhichCanBeOrOrOrOrOr" xml:space="preserve">
+    <value>Operator, which can be + or - or * or / or \ or % or max or min.</value>
+  </data>
+  <data name="OptionsOfImport" xml:space="preserve">
+    <value>Options of import</value>
+  </data>
+  <data name="OptionsOfExportYouCanFeedItWithOtherComponentsOrManualData" xml:space="preserve">
+    <value>Options of export. You can either feed it with option templates, or manual input, or leave it unset.</value>
+  </data>
+  <data name="OutputValue" xml:space="preserve">
+    <value>Output value</value>
+  </data>
+  <data name="DefaultFalseControlIfPancakeShouldOverwriteTheDestinationFile" xml:space="preserve">
+    <value>Default false. Control if Pancake should overwrite the destination file.</value>
+  </data>
+  <data name="ParsedResultIfSomethingCannotBeDeterminedTheResultWillBeNull" xml:space="preserve">
+    <value>Parsed result. If something cannot be determined, the result will be Null.</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="Paths" xml:space="preserve">
+    <value>Paths</value>
+  </data>
+  <data name="ForExampleDSTLExport0StlWithoutQuoteWillResultInDSTLExport" xml:space="preserve">
+    <value>For example, 'D:\STLExport\{0}.stl' (without quote) will result in 'D:\STLExport\1.stl', '2.stl', etc. Follows 'String.Format' format. Please read manual for detailed information.</value>
+  </data>
+  <data name="OptionalByDefault4" xml:space="preserve">
+    <value>Optional. By default 4.</value>
+  </data>
+  <data name="PrecisionRNForDecimalQuantitiesThePrecisionIsHowManyDigits" xml:space="preserve">
+    <value>Precision.
+For decimal quantities, the precision is how many digits are preserved after the decimal point.
+For feet and inch length, the precision is the minimal fraction to be preserved. e.g. Precision = 64 will yield 1 / 64 as the smallest stepping. Precision doesn't need to be a power of two.</value>
+  </data>
+  <data name="GeneralOptionsOfExportConnectRhinoFileOptionsToThisInputIfNeeded" xml:space="preserve">
+    <value>General options of export. Connect Rhino file options to this input if needed.</value>
+  </data>
+  <data name="ConstructedQuantity" xml:space="preserve">
+    <value>Constructed Quantity</value>
+  </data>
+  <data name="TheFeetInchQuantityToBeDecomposed" xml:space="preserve">
+    <value>The feet-inch quantity to be decomposed</value>
+  </data>
+  <data name="QuantityToBeDeconstructed" xml:space="preserve">
+    <value>Quantity to be deconstructed</value>
+  </data>
+  <data name="QuantityToBeConverted" xml:space="preserve">
+    <value>Quantity to be converted</value>
+  </data>
+  <data name="OutputQuantity" xml:space="preserve">
+    <value>Output quantity</value>
+  </data>
+  <data name="QuantityToBeConvertedRNIfTheInputIsNotAnQuantityButANumberTheDocument" xml:space="preserve">
+    <value>Quantity to be converted.
+If the input is not an quantity but a number, the document modelling unit will be used.</value>
+  </data>
+  <data name="Default1DoesnTOutputMultipleNames" xml:space="preserve">
+    <value>Default -1 (doesn't output multiple names)</value>
+  </data>
+  <data name="PancakeWillMoveTheBasePointOfMeshToOriginWhichHelpsPostprocessing" xml:space="preserve">
+    <value>Pancake will move the base point of mesh to origin, which helps postprocessing. Disable it if you need to assemble multiple parts.</value>
+  </data>
+  <data name="SetToTrueToResetInternalCounterResettingWonTBypass" xml:space="preserve">
+    <value>Set to true to reset internal counter. Resetting won't bypass file existence check. We recommend to use the menu entry in the context menu as it doesn't trigger recomputation.</value>
+  </data>
+  <data name="Result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="TrueForBinaryOutputAndFalseForASCIIOutput" xml:space="preserve">
+    <value>True for binary output and false for ASCII output.</value>
+  </data>
+  <data name="ControlIfOnlyGeometryIsSavedDefaultFalse" xml:space="preserve">
+    <value>Control if only geometry is saved. Default false</value>
+  </data>
+  <data name="ControlIfNoteIsSavedDefaultTrue" xml:space="preserve">
+    <value>Control if note is saved. Default true</value>
+  </data>
+  <data name="SetToTrueToSaveTheFile" xml:space="preserve">
+    <value>Set to true to save the file</value>
+  </data>
+  <data name="ThePlaceWhereSTLFileWillBeSaved" xml:space="preserve">
+    <value>The place where STL file will be saved</value>
+  </data>
+  <data name="ControlIfPluginDataIsSavedDefaultTrue" xml:space="preserve">
+    <value>Control if plugin data is saved. Default true</value>
+  </data>
+  <data name="ControlIfTextureIsSavedDefaultTrue" xml:space="preserve">
+    <value>Control if texture is saved. Default true</value>
+  </data>
+  <data name="SchemaOfSTEPExportAvailableValuesAreAP203ConfigControlDesignAP214AutomotiveDesignAndAP214AutomotiveDesignCC2" xml:space="preserve">
+    <value>Schema of STEP export. Available values are AP203ConfigControlDesign, AP214AutomotiveDesign and AP214AutomotiveDesignCC2.</value>
+  </data>
+  <data name="DefaultDefaultSeeTheDefinitionInRhinoExportDialog" xml:space="preserve">
+    <value>Default 'default'. See the definition in Rhino Export dialog.</value>
+  </data>
+  <data name="TheTypeOfIGESExportDefinedInIGESExportDialogByDefaultItUsesTheOneFromLastTime" xml:space="preserve">
+    <value>The type of IGES export defined in IGES export dialog. By default, it uses the one from last time.</value>
+  </data>
+  <data name="TheTypeOfSATExportByDefaultItUsesTheOneFromLastTime" xml:space="preserve">
+    <value>The type of SAT Export. By default, it uses the one from last time.</value>
+  </data>
+  <data name="RandomSeed" xml:space="preserve">
+    <value>Random seed</value>
+  </data>
+  <data name="SerializedObjectInBase64Format" xml:space="preserve">
+    <value>Serialized object</value>
+  </data>
+  <data name="SignalData" xml:space="preserve">
+    <value>Signal data</value>
+  </data>
+  <data name="Default1" xml:space="preserve">
+    <value>Default 1</value>
+  </data>
+  <data name="OutputString" xml:space="preserve">
+    <value>Output string</value>
+  </data>
+  <data name="InputString" xml:space="preserve">
+    <value>Input string</value>
+  </data>
+  <data name="ByDefaultDeterminedByRhinoceros" xml:space="preserve">
+    <value>By default determined by Rhinoceros</value>
+  </data>
+  <data name="TypeOfParsedResultSeeExampleForMoreInformation" xml:space="preserve">
+    <value>Type of parsed result. See example for more information.</value>
+  </data>
+  <data name="IfOptionalOrEmptyCurrentDocumentUnitWillBeUsed" xml:space="preserve">
+    <value>If optional or empty, current document unit will be used.</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="TheDesiredUnitToConvertToAFeetInchLengthUseToFeetInchLengthComponentInstead" xml:space="preserve">
+    <value>The desired unit. To convert to a feet-inch length, use 'To Feet &amp; Inch Length' component instead.</value>
+  </data>
+  <data name="DefaultDecidedByRhinocerosTheProcedureCannotBeAutomatic" xml:space="preserve">
+    <value>Default decided by Rhinoceros. It is not recommended not to adjust this.</value>
+  </data>
+  <data name="TypeOfUnit" xml:space="preserve">
+    <value>Type of unit</value>
+  </data>
+  <data name="ValueS" xml:space="preserve">
+    <value>Value(s)</value>
+  </data>
+  <data name="TheValueFromClusterInput" xml:space="preserve">
+    <value>The value from cluster input</value>
+  </data>
+  <data name="ValuesOfTheTable" xml:space="preserve">
+    <value>Values of the table</value>
+  </data>
+  <data name="CategorizedValuesInAccordanceToKL" xml:space="preserve">
+    <value>Categorized values, in accordance to KL</value>
+  </data>
+  <data name="TheVersionOfRhinoFileYouWantToExport" xml:space="preserve">
+    <value>The version of Rhino file you want to export. Default current version. Don't use this input if you are connecting this component to PreOpt.</value>
+  </data>
+  <data name="LeaveEmptyForDefaultAvailableChoicesAreVersion7" xml:space="preserve">
+    <value>Leave empty for default. Available choices are Version7Binary, Version7Ascii, Version6Binary and Version6Ascii.</value>
+  </data>
+  <data name="VersionOfTheSketchupExportAvailableOnesAre" xml:space="preserve">
+    <value>Version of the Sketchup to be exported. Available ones are 3, 4, 5, 6, 7, 8, 2013, 2014, 2015. Leave 0 for default.</value>
+  </data>
+  <data name="TheVersionOf3dmFile" xml:space="preserve">
+    <value>The version of 3dm file. Can be 2 to the current version, or 0 as the latest version. 0 by default.</value>
+  </data>
+  <data name="LocalName0RN1" xml:space="preserve">
+    <value>Localized name: {0}
+{1}</value>
+  </data>
+  <data name="ThisComponentIsDeprecatedClickTheMenuSolutionUpgradeToUpgrade" xml:space="preserve">
+    <value>This component is deprecated. Click the menu 'Solution' -&gt; 'Upgrade' to upgrade.</value>
+  </data>
+  <data name="RefreshLocalizedNamesYesNo" xml:space="preserve">
+    <value>This file contains Pancake components in another language. Do you want to refresh so they would show local language?
+You may disable this check in Menu -&gt; Settings -&gt; Multi-language.</value>
+  </data>
+  <data name="DisablePancakeComponents" xml:space="preserve">
+    <value>Disable Pancake components</value>
+  </data>
+  <data name="DisablePancakeComponentsWarning" xml:space="preserve">
+    <value>By disabling, any Grasshopper definition containing Pancake components won't work, and you cannot insert Pancake components to definitions.</value>
+  </data>
+  <data name="VersionIsUnsupported" xml:space="preserve">
+    <value>Version is unsupported.</value>
+  </data>
+  <data name="pcecSKP_SolveInstance_MinimumFaceCountMustBeGreaterOrEqualThan2" xml:space="preserve">
+    <value>Minimum face count must be greater or equal than 2.</value>
+  </data>
+  <data name="pcneIges_CustomInvoke_UnexpectedErrorInLocatingIgesExportFunction" xml:space="preserve">
+    <value>Unexpected error in locating IgesExport function</value>
+  </data>
+  <data name="pcneIges_RegisterAdditionalInputParams_YouNeedToUseSetIGESLayerLevelMap" xml:space="preserve">
+    <value> You need to use Rhino's SetIGESLayerLevelMap command first to map the layers into IGES 'level's.</value>
+  </data>
+  <data name="pcneIges_RegisterAdditionalInputParams_TheIGESExportOptionComponent" xml:space="preserve">
+    <value>The 'IGES Export Option' component cannot be used on this component.</value>
+  </data>
+  <data name="RhinoVersionNotSupported" xml:space="preserve">
+    <value>Rhino version not supported.</value>
+  </data>
+  <data name="InputGeometryHasDifferentAmountOfBranchesFromThatOfFile" xml:space="preserve">
+    <value>Input Geometry has different amount of branches from that of File. This may lead to unexpected behavior.
+Geometry input is expected to be lists (or one single item), for one single file. Try grafting the File input.</value>
+  </data>
+  <data name="DonTCopyAttributes" xml:space="preserve">
+    <value>Don't copy attributes</value>
+  </data>
+  <data name="CopyAttributesRNfromRHRef" xml:space="preserve">
+    <value>Copy attributes
+from RH ref</value>
+  </data>
+  <data name="CopyAttributesRNfromRHGHRef" xml:space="preserve">
+    <value>Copy attributes
+from RH &amp; GH ref</value>
+  </data>
+  <data name="RNOverrideLayer" xml:space="preserve">
+    <value>,
+Override layer</value>
+  </data>
+  <data name="OverrideLayerWithComponentInput" xml:space="preserve">
+    <value>Override layer with component input</value>
+  </data>
+  <data name="OverrideLayerDesc" xml:space="preserve">
+    <value>Once enabled, regardless attributes provided, or copied from the document,
+the layer designation follows the Layer input of this component.</value>
+  </data>
+  <data name="CopyAttributesDesc" xml:space="preserve">
+    <value>Once enabled, attributes will be copied from the actual object,
+if the input is a Referenced Grasshopper Geometry.</value>
+  </data>
+  <data name="AlsoCopyAttributesFromGHReferences" xml:space="preserve">
+    <value>Copy attributes from GH references</value>
+  </data>
+  <data name="CopyAttributesFromRhinoReferences" xml:space="preserve">
+    <value>Copy attributes from Rhino references</value>
+  </data>
+  <data name="CopyFromRhinoDesc" xml:space="preserve">
+    <value>Once enabled, attributes will be copied from the actual object,
+if the input is a Guid or a RhinoObject. Grasshopper reference isn't included by default.</value>
+  </data>
+  <data name="_0ObjectSCannotBeExported" xml:space="preserve">
+    <value>{0} object(s) cannot be exported.</value>
+  </data>
+  <data name="InvalidObjectAttributes" xml:space="preserve">
+    <value>Invalid object attributes</value>
+  </data>
+  <data name="CannotDeleteTheTargetFile" xml:space="preserve">
+    <value>Cannot delete the target file.</value>
+  </data>
+  <data name="Nonstandard" xml:space="preserve">
+    <value>Nonstandard</value>
+  </data>
+  <data name="ObjectAttributesAreNotSupported" xml:space="preserve">
+    <value>{0} attributes are not supported. Consider the CreateAttributes from Human instead.</value>
+  </data>
+  <data name="ObjectAttributes" xml:space="preserve">
+    <value>Object Attributes</value>
+  </data>
+  <data name="Layer" xml:space="preserve">
+    <value>Layer</value>
+  </data>
+  <data name="LayerIsIgnoredDueToRhino5Limitations" xml:space="preserve">
+    <value>Layer is ignored due to Rhino 5 limitations.</value>
+  </data>
+  <data name="SomeGeometryAreNotSupported" xml:space="preserve">
+    <value>Some geometry are not supported.</value>
+  </data>
+  <data name="TargetFileExistsAndOverwriteIsFalse" xml:space="preserve">
+    <value>Target file exists and Overwrite is False.</value>
+  </data>
+  <data name="ListLengthMismatch" xml:space="preserve">
+    <value>List {0} length mismatch. Check if the input follows the requirement.</value>
+  </data>
+  <data name="DelimiterIsEmpty" xml:space="preserve">
+    <value>Delimiter is empty.</value>
+  </data>
+  <data name="RecognizeTypeIfPossible" xml:space="preserve">
+    <value>Recognize type if possible</value>
+  </data>
+  <data name="ParseAsQuantityIfPossible" xml:space="preserve">
+    <value>Parse as quantity if possible</value>
+  </data>
+  <data name="NoValidNamesAreFoundThisComponentWillOnlyExportNamedValues" xml:space="preserve">
+    <value>No valid names are found. This component will only export named values.</value>
+  </data>
+  <data name="FlipTheOutput" xml:space="preserve">
+    <value>Flip the output</value>
+  </data>
+  <data name="ByDefaultEachEntryIsStoredAsOneBranchNotFlippedIfTheOutputIsFlippedEachColumnIsStoredAsOneBranch" xml:space="preserve">
+    <value>By default, each entry is stored as one branch (not flipped). If the output is flipped, each column is stored as one branch.</value>
+  </data>
+  <data name="KeyAndValueListMustHaveTheSameLength" xml:space="preserve">
+    <value>Key and value list must have the same length.</value>
+  </data>
+  <data name="TheListCannotBeEmpty" xml:space="preserve">
+    <value>The list cannot be empty.</value>
+  </data>
+  <data name="KeyCannotBeNull" xml:space="preserve">
+    <value>Key cannot be null.</value>
+  </data>
+  <data name="SomeOfTheKeysAreNotValueTypeTheResultMayBeWrongCheckCarefully" xml:space="preserve">
+    <value>Some of the keys are not value type. The result may be wrong. Check carefully.</value>
+  </data>
+  <data name="SortKeysIfPossible" xml:space="preserve">
+    <value>Sort keys if possible</value>
+  </data>
+  <data name="KeysWillBeSortedIfAllAreComparableAndBelongToASameTypeWhichWillSlowTheComputation" xml:space="preserve">
+    <value>Keys will be sorted if all are comparable and belong to a same type.</value>
+  </data>
+  <data name="DisableOptimization" xml:space="preserve">
+    <value>Disable Optimization</value>
+  </data>
+  <data name="DisablingOptimizationMayReduceMemoryUsage" xml:space="preserve">
+    <value>Disabling optimization will reduce memory usage and increase computation time.</value>
+  </data>
+  <data name="LengthOfNamesMustBeEqualToThatOfValues" xml:space="preserve">
+    <value>Length of names must be equal to that of values.</value>
+  </data>
+  <data name="InputTypeNotSupported" xml:space="preserve">
+    <value>Input type not supported</value>
+  </data>
+  <data name="InvalidPathAt0" xml:space="preserve">
+    <value>Invalid path at {0}</value>
+  </data>
+  <data name="FailToSet0" xml:space="preserve">
+    <value>Fail to set {0}</value>
+  </data>
+  <data name="Unit0IsNotSupported" xml:space="preserve">
+    <value>Unit {0} is not supported.</value>
+  </data>
+  <data name="NoActiveRhinoDocument" xml:space="preserve">
+    <value>No active Rhino document</value>
+  </data>
+  <data name="ConversionError" xml:space="preserve">
+    <value>Conversion error.</value>
+  </data>
+  <data name="Key0DoesnTExist" xml:space="preserve">
+    <value>Key {0} doesn't exist.</value>
+  </data>
+  <data name="Index0DoesnTExist" xml:space="preserve">
+    <value>Index {0} doesn't exist.</value>
+  </data>
+  <data name="NoValidNamesAreFound" xml:space="preserve">
+    <value>No valid names are found.</value>
+  </data>
+  <data name="MatchOutputWithNamedValues" xml:space="preserve">
+    <value>Match output with named values</value>
+  </data>
+  <data name="ThisOperationWouldDisconnectAllExistingRecipients" xml:space="preserve">
+    <value>This operation would disconnect all existing recipients.</value>
+  </data>
+  <data name="IncorrectPathFormat" xml:space="preserve">
+    <value>Incorrect path format</value>
+  </data>
+  <data name="Path0NotFound" xml:space="preserve">
+    <value>Path {0} not found.</value>
+  </data>
+  <data name="WrongType" xml:space="preserve">
+    <value>Wrong type.</value>
+  </data>
+  <data name="WrongGHSerializationFormat" xml:space="preserve">
+    <value>Wrong GH Serialization format.</value>
+  </data>
+  <data name="AssemblyNotFound" xml:space="preserve">
+    <value>Assembly "{0}" not found.</value>
+  </data>
+  <data name="TypeNotFound" xml:space="preserve">
+    <value>Type "{0}" not found</value>
+  </data>
+  <data name="TypeNotSerializable" xml:space="preserve">
+    <value>Type not serializable.</value>
+  </data>
+  <data name="CannotCreateType" xml:space="preserve">
+    <value>Cannot create type.</value>
+  </data>
+  <data name="DeserializationFailed" xml:space="preserve">
+    <value>Deserialization failed.</value>
+  </data>
+  <data name="ReadFailed" xml:space="preserve">
+    <value>Read failed.</value>
+  </data>
+  <data name="ErrorDuringDeserialization" xml:space="preserve">
+    <value>Error during deserialization.</value>
+  </data>
+  <data name="UnrecognizedType0" xml:space="preserve">
+    <value>Unrecognized type {0}</value>
+  </data>
+  <data name="Adding0Failed" xml:space="preserve">
+    <value>Adding {0} failed</value>
+  </data>
+  <data name="Rhino5DoesnTSupportExportWithGroups" xml:space="preserve">
+    <value>Rhino 5 doesn't support export with groups.</value>
+  </data>
+  <data name="InputContainsBlocksBlocksWereReconstructedAndNestedBlocksWereExplodedIfExistCarefullyCheckTheOutputFile" xml:space="preserve">
+    <value>Input contains blocks. Blocks were reconstructed and nested blocks were exploded (if exist). Check the output file to ensure style doesn't change.</value>
+  </data>
+  <data name="InputContainsTextsTheyWereReconstructedDueToAPILimitationCarefullyCheckTheOutputFile" xml:space="preserve">
+    <value>Input contains texts. They were reconstructed due to API limitation. Check the output file to ensure style doesn't change.</value>
+  </data>
+  <data name="InputContainsReferencedGeometriesTheirAttributesAreErasedIfYouDLikeToPreserveAttributesRightClickAndClickCopyAttributes" xml:space="preserve">
+    <value>Input contains referenced geometries, and their attributes are erased. If you'd like to preserve attributes, right-click and click 'Copy attributes'.</value>
+  </data>
+  <data name="InputContainsReferencedGeometriesNotAllAttributesAreSupportedCarefullyCheckTheOutputFile" xml:space="preserve">
+    <value>Input contains referenced geometries. Not all attributes are supported. Check the output file to ensure style doesn't change.</value>
+  </data>
+  <data name="DoNotOperateGrasshopperOrRhinoDuringExportOtherwiseTheProgramMayBeFreezed" xml:space="preserve">
+    <value>Do not operate Grasshopper or Rhino during export. Otherwise the program may be freezed.</value>
+  </data>
+  <data name="MultipleTargetExportCannotBeUsedInCompatibleMode" xml:space="preserve">
+    <value>Multiple-target export cannot be used in compatible mode.</value>
+  </data>
+  <data name="WhenExportingRhinoFileYouCannotUsePreOptAndOptAtTheSameTime" xml:space="preserve">
+    <value>When exporting Rhino file, you cannot use PreOpt and Opt at the same time.</value>
+  </data>
+  <data name="AnotherRhinoCommandIsRunningExportAborted" xml:space="preserve">
+    <value>Another Rhino command is running. Export aborted.</value>
+  </data>
+  <data name="ExportFailedSeeRhinoCommandHistoryForMoreInformation" xml:space="preserve">
+    <value>Export failed. See Rhino command history for more information.</value>
+  </data>
+  <data name="CompatibleModeIsOnPancakeCannotDetermineIfTheExportIsSuccessfulSeeCommandHistoryForMoreInfoCheckYourOutputFileCarefully" xml:space="preserve">
+    <value>Compatible mode is on. Pancake cannot determine if the export is successful. See command history for more info.</value>
+  </data>
+  <data name="GuidReferencesCannotBeUsedInCompatibleMode" xml:space="preserve">
+    <value>Guid references are not supported in compatible mode.</value>
+  </data>
+  <data name="CompatibleMode" xml:space="preserve">
+    <value>Compatible mode</value>
+  </data>
+  <data name="OnceEnabledThereWillBeNoChanceExportFreezingGrasshopper" xml:space="preserve">
+    <value>Once enabled, there will be no chance Export freezing Grasshopper.
+But the OK output is unavailable and you cannot do multi-target export.</value>
+  </data>
+  <data name="CurrentlyBinarySTLExportingCanOnlyWorkOnLittleEndianSystems" xml:space="preserve">
+    <value>Binary STL exporting can only work on little-endian systems.</value>
+  </data>
+  <data name="ThePathParameterShouldnTBeAFolder" xml:space="preserve">
+    <value>The Path parameter shouldn't be a folder. Designate a fixed filename like 'D:\Export\1.stl' (without quote), or consider use 'Filepath Series' component to generate one.</value>
+  </data>
+  <data name="TargetFileAlreadyExistsSTL" xml:space="preserve">
+    <value>Target file already exists. If you want to export a series of STL files, consider using 'Filepath Series' component.</value>
+  </data>
+  <data name="NoExtensionIsIncludedInThePath" xml:space="preserve">
+    <value>No extension is included in the path. It should be STL. This might be intended but we recommend to check the path.</value>
+  </data>
+  <data name="TheMeshIsNotClosed" xml:space="preserve">
+    <value>The mesh is not closed.</value>
+  </data>
+  <data name="FailToTriangulateTheMesh" xml:space="preserve">
+    <value>Fail to triangulate the mesh.</value>
+  </data>
+  <data name="FailToRelocateTheMesh" xml:space="preserve">
+    <value>Fail to relocate the mesh.</value>
+  </data>
+  <data name="SaveSTLTo" xml:space="preserve">
+    <value>Save STL to...</value>
+  </data>
+  <data name="CannotWriteToTheFile" xml:space="preserve">
+    <value>Cannot write to the file.</value>
+  </data>
+  <data name="InvalidStartingIndex" xml:space="preserve">
+    <value>Invalid starting index</value>
+  </data>
+  <data name="InvalidPattern" xml:space="preserve">
+    <value>Invalid pattern</value>
+  </data>
+  <data name="IllegalPatternFormat" xml:space="preserve">
+    <value>Illegal pattern format</value>
+  </data>
+  <data name="CannotDetermineTheNextIndexAfter10000SearchEs" xml:space="preserve">
+    <value>Cannot determine the next index.</value>
+  </data>
+  <data name="ResetInternalCounter" xml:space="preserve">
+    <value>Reset internal counter</value>
+  </data>
+  <data name="TreatGHReferenceGeometryAsRhinoObject" xml:space="preserve">
+    <value>Treat GH reference geometry as Rhino object</value>
+  </data>
+  <data name="UserdataNotFound" xml:space="preserve">
+    <value>Userdata not found.</value>
+  </data>
+  <data name="UnknownGeometryType" xml:space="preserve">
+    <value>Unknown geometry type.</value>
+  </data>
+  <data name="FileHasnTBeenSavedOrTheComponentIsInsideACluster" xml:space="preserve">
+    <value>File hasn't been saved or the component is inside a cluster.</value>
+  </data>
+  <data name="ExperimentalModeDoesnTSupportImportOptions" xml:space="preserve">
+    <value>Experimental mode doesn't support import options.</value>
+  </data>
+  <data name="ImportObjectAttributes" xml:space="preserve">
+    <value>Import Object Attributes</value>
+  </data>
+  <data name="OnceEnabledLayersCreatedByPancakeWillBeRemovedAfterTheExport" xml:space="preserve">
+    <value>Once enabled, layers created by Pancake will be removed after the export. And the current layer will be preserved.</value>
+  </data>
+  <data name="CleanUpLayers" xml:space="preserve">
+    <value>Maintain layer states</value>
+  </data>
+  <data name="SomeObjectsCannotBeRemovedDuringCleanupAndMayRemainInTheDocument" xml:space="preserve">
+    <value>Some objects cannot be removed during cleanup and may remain in the document.</value>
+  </data>
+  <data name="DoNotUseTheVanillaButtonUseTrueOnlyButtonFromPancakeOrToggleButton" xml:space="preserve">
+    <value>Do not use the vanilla button. Use True-only button from Pancake, or Toggle button.</value>
+  </data>
+  <data name="LessObjectsAreSelected" xml:space="preserve">
+    <value>Less objects are selected. They may have visibility issues.</value>
+  </data>
+  <data name="UnexpectedErrorNothingToExport" xml:space="preserve">
+    <value>Unexpected error. Nothing to export.</value>
+  </data>
+  <data name="CopyAttributesAndOverrideLayerCannotBeEnabledAtTheSameTimeInThisComponentOverridenLayersAreIgnored" xml:space="preserve">
+    <value>Copy Attributes and Override Layer cannot be enabled at the same time in this component. Overriden layers are ignored.</value>
+  </data>
+  <data name="ReferencedInstanceObjectsMustHaveAttributesCopiedFromTheDocument" xml:space="preserve">
+    <value>Referenced instance objects must have attributes copied from the document.</value>
+  </data>
+  <data name="DueToPancakeSMethodVisibilityHiddenLockedCannotBeExportedWithThisComponent" xml:space="preserve">
+    <value>Due to Pancake's method, visibility (hidden/locked) cannot be exported with this component.</value>
+  </data>
+  <data name="TheExporterPluginFor0DoesnTExist" xml:space="preserve">
+    <value>The exporter plugin for {0} doesn't exist. Please check if your Rhino installation is complete.</value>
+  </data>
+  <data name="UnexpectedErrorWhenLoadingTheExporterFor0" xml:space="preserve">
+    <value>Unexpected error when loading the exporter for {0}.</value>
+  </data>
+  <data name="CannotLoadTheExporterPluginFor0" xml:space="preserve">
+    <value>Cannot load the exporter plugin for {0}. Please check if your Rhino installation is complete.</value>
+  </data>
+  <data name="ErrorDuringInvocation" xml:space="preserve">
+    <value>Error during invocation.</value>
+  </data>
+  <data name="FileDoesnTExist" xml:space="preserve">
+    <value>File doesn't exist.</value>
+  </data>
+  <data name="InitializationErrorMakeSureYouAreUsingTheLatestSROfRhino6" xml:space="preserve">
+    <value>Initialization error. Make sure you are using the latest SR of Rhino.</value>
+  </data>
+  <data name="ErrorDuringImport" xml:space="preserve">
+    <value>Error during import.</value>
+  </data>
+  <data name="SomeObjectsCannotBeDeletedYouMaySeeLeftoverInTheCurrentRhinoDocument" xml:space="preserve">
+    <value>Some objects cannot be deleted. You may see leftover in the current Rhino document.</value>
+  </data>
+  <data name="BlocksCannotBeImportedInExperimentalMode" xml:space="preserve">
+    <value>Blocks cannot be imported in experimental mode.</value>
+  </data>
+  <data name="OnceEnabledLayersCreatedByPancakeWillBeRemovedAfterTheImport" xml:space="preserve">
+    <value>Once enabled, layers created by Pancake will be removed after the import.</value>
+  </data>
+  <data name="ExperimentalMode" xml:space="preserve">
+    <value>Experimental mode</value>
+  </data>
+  <data name="UseExperimentalHeadlessModeIntroducedInRhinoWIPRNThisMayCauseFailureOrMakeRhinoStuckInCommandLineYouNeedToTypeEnterToRemoveTheFreeze" xml:space="preserve">
+    <value>Use the experimental headless mode introduced in Rhino WIP.
+This may cause failure or make Rhino stuck in command-line (you need to type enter to remove the freeze).</value>
+  </data>
+  <data name="TheImporterPluginFor0DoesnTExist" xml:space="preserve">
+    <value>The importer plugin for {0} doesn't exist. Please check if your Rhino installation is complete.</value>
+  </data>
+  <data name="UnexpectedErrorWhenLoadingTheImporterFor0" xml:space="preserve">
+    <value>Unexpected error when loading the importer for {0}.</value>
+  </data>
+  <data name="CannotLoadTheImporterPluginFor0PleaseCheckIfYourRhinoInstallationIsComplete" xml:space="preserve">
+    <value>Cannot load the importer plugin for {0}. Please check if your Rhino installation is complete.</value>
+  </data>
+  <data name="CannotDetermineTheDataType" xml:space="preserve">
+    <value>Cannot determine the data type.</value>
+  </data>
+  <data name="InvalidOperand" xml:space="preserve">
+    <value>Invalid operand</value>
+  </data>
+  <data name="OperatorNotSupported" xml:space="preserve">
+    <value>Operator not supported</value>
+  </data>
+  <data name="GenericTypeIsNotSupportedAsOfNow" xml:space="preserve">
+    <value>Generic type is not supported as of now.</value>
+  </data>
+  <data name="ErrorDuringSerialization" xml:space="preserve">
+    <value>Error during serialization.</value>
+  </data>
+  <data name="TheObjectCannotBeSerialized" xml:space="preserve">
+    <value>The object cannot be serialized.</value>
+  </data>
+  <data name="InputIsNotAnAssoc" xml:space="preserve">
+    <value>Input is not an assoc</value>
+  </data>
+  <data name="YouShouldProvideEitherIndexOrNameInsteadOfNoneOrBoth" xml:space="preserve">
+    <value>You should provide either Index or Name, instead of none or both.</value>
+  </data>
+  <data name="Index0IsOutOfRange" xml:space="preserve">
+    <value>Index {0} is out of range.</value>
+  </data>
+  <data name="_0IsNotAValidName" xml:space="preserve">
+    <value>{0} is not a valid name.</value>
+  </data>
+  <data name="PointIsNotSupported" xml:space="preserve">
+    <value>Point is not supported.</value>
+  </data>
+  <data name="MetadataMustBeAnAssocOrAnWrappedList" xml:space="preserve">
+    <value>Metadata must be an Assoc, an Wrapped List or a String/Text.</value>
+  </data>
+  <data name="TypeIsNotSupportedTryConvertIntoBRepFirst" xml:space="preserve">
+    <value>Type is not supported, try convert into BRep first.</value>
+  </data>
+  <data name="ErrorOccuredDuringAssigningMetadata" xml:space="preserve">
+    <value>Error occured during assigning metadata.</value>
+  </data>
+  <data name="PrecisionMustBeGreaterThan0" xml:space="preserve">
+    <value>Precision must be greater than 0</value>
+  </data>
+  <data name="PrecisionMustBeGreaterThanOrEqualTo0" xml:space="preserve">
+    <value>Precision must be greater than or equal to 0</value>
+  </data>
+  <data name="PrecisionIsHigherThanTheInternalPrecisionYouMayNotSeeAnyChangesWithThisValue" xml:space="preserve">
+    <value>Designated precision is higher than the internal precision. You may not see any changes with this value.</value>
+  </data>
+  <data name="InvalidQuantity" xml:space="preserve">
+    <value>Invalid quantity</value>
+  </data>
+  <data name="ABindedGroupOfNamesAndValues" xml:space="preserve">
+    <value>A binded group of names (keys) and values</value>
+  </data>
+  <data name="EmptyTuple" xml:space="preserve">
+    <value>Empty assoc</value>
+  </data>
+  <data name="AtomList" xml:space="preserve">
+    <value>Atom List</value>
+  </data>
+  <data name="AnOrderedListOfItemsButBeingTreatedLikeOneSingleItem" xml:space="preserve">
+    <value>An ordered list of items, but being treated like one single item</value>
+  </data>
+  <data name="DecimalLength" xml:space="preserve">
+    <value>Decimal Length</value>
+  </data>
+  <data name="RepresentADecimalLength" xml:space="preserve">
+    <value>Represent a decimal length</value>
+  </data>
+  <data name="FeetAndInchLength" xml:space="preserve">
+    <value>Feet and inch length</value>
+  </data>
+  <data name="RepresentAnFeetInchLength" xml:space="preserve">
+    <value>Represent an feet-inch length</value>
+  </data>
+  <data name="ClickHereToRaiseRecomputation" xml:space="preserve">
+    <value>Click here to raise recomputation.</value>
+  </data>
+  <data name="NormalState" xml:space="preserve">
+    <value>Normal state</value>
+  </data>
+  <data name="PressedState" xml:space="preserve">
+    <value>Pressed state</value>
+  </data>
+  <data name="UnblockNotice" xml:space="preserve">
+    <value>Please notice that Pancake will always unblock files without confirmation of safety. 
+This feature works at your own risk. You can disable this feature by turning off File Block Monitor.
+Do you still want to turn on Automatic Unblock?</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="FilePathContainsNewLine" xml:space="preserve">
+    <value>File path contains new-line, which is highly unlikely intended. If you want to export multiple files with Panel,/ remember to uncheck 'Multiline Data'.</value>
+  </data>
+  <data name="InvalidCharactersInTheFilepath" xml:space="preserve">
+    <value>Invalid characters in the filepath. If you are exporting multiple files, make sure the input is a list of names, rather than a string containing multiple names.</value>
+  </data>
+  <data name="AdjustFontSizes" xml:space="preserve">
+    <value>Adjust Font Sizes...</value>
+  </data>
+  <data name="AdjustAllFontSizesOfAnnotativeObjects" xml:space="preserve">
+    <value>Adjust all font sizes of annotative objects (such as Panel), especially for docs migrated from another system with different DPI settings.</value>
+  </data>
+  <data name="MaintainVisualAppearance" xml:space="preserve">
+    <value>Maintain Visual Appearance</value>
+  </data>
+  <data name="MaintainTheSameVisualAppearanceOfYourDefinition" xml:space="preserve">
+    <value>Maintain the same visual appearance of your definition across computers with different Dpi settings. Put the component into the definition and it would work.</value>
+  </data>
+  <data name="CurrentLayer" xml:space="preserve">
+    <value>Current Layer</value>
+  </data>
+  <data name="RetrieveTheNameAndFullpathOfTheCurrentLayer" xml:space="preserve">
+    <value>Retrieve the name and fullpath of the current layer. Raise re-computation if the current layer changes.</value>
+  </data>
+  <data name="CurrentLayerDoesnTExist" xml:space="preserve">
+    <value>Current layer doesn't exist, as a situation that shouldn't happen. It's possible the current file is malformed.</value>
+  </data>
+  <data name="NameOfTheCurrentLayer" xml:space="preserve">
+    <value>Name of the current layer</value>
+  </data>
+  <data name="FullpathOfTheCurrentLayer" xml:space="preserve">
+    <value>Fullpath of the current layer</value>
+  </data>
+  <data name="PancakeIsSafeModeWillNotTriggerRecomputation" xml:space="preserve">
+    <value>Pancake is in Safe Mode. The component will not trigger recomputation automatically.</value>
+  </data>
+  <data name="HighlightingChanges" xml:space="preserve">
+    <value>Highlighting Changes</value>
+  </data>
+  <data name="AutoUpdate" xml:space="preserve">
+    <value>Miscellaneous</value>
+  </data>
+  <data name="MultiLanguage" xml:space="preserve">
+    <value>Multi-language</value>
+  </data>
+  <data name="MoreSettings" xml:space="preserve">
+    <value>More settings...</value>
+  </data>
+  <data name="CannotOpenTheSettingWindowTryNavigateThroughTheMenu" xml:space="preserve">
+    <value>Cannot open the setting window. Try navigate through the menu: File -&gt; Preferences..., and find Pancake in the left-sided bar.</value>
+  </data>
+  <data name="ManageSettingsRelatedToPancakeAndRelatedExtensions" xml:space="preserve">
+    <value>Manage settings related to Pancake and related extensions.</value>
+  </data>
+  <data name="ChooseAFolderToSaveEmergencyFiles" xml:space="preserve">
+    <value>Choose a folder to save emergency files</value>
+  </data>
+  <data name="TheCurrentLayerIsNotPreservedWhichMayLeadToIssuesInCurrentLayer" xml:space="preserve">
+    <value>The current layer is not preserved, which may lead to issues in Current Layer component. Pancake recommends you to right-click the component and enable 'Maintain layer states'.</value>
+  </data>
+  <data name="NameOfXMLRootTag" xml:space="preserve">
+    <value>Name of XML root tag</value>
+  </data>
+  <data name="AssocToXML" xml:space="preserve">
+    <value>Assoc to XML</value>
+  </data>
+  <data name="ExportAnAssocToXMLSeeExampleForMoreInformation" xml:space="preserve">
+    <value>Export an Assoc to XML. See example for more information.</value>
+  </data>
+  <data name="Headless" xml:space="preserve">
+    <value>Headless</value>
+  </data>
+  <data name="ControlIfTheXMLHeaderIsOmitted" xml:space="preserve">
+    <value>Control if the XML header is omitted.</value>
+  </data>
+  <data name="InputMustBeAnAssociativeArray" xml:space="preserve">
+    <value>Input must be an associative array.</value>
+  </data>
+  <data name="_0IsABadName" xml:space="preserve">
+    <value>{0} is an invalid name.</value>
+  </data>
+  <data name="XMLToAssoc" xml:space="preserve">
+    <value>XML to Assoc</value>
+  </data>
+  <data name="ReadXMLFileIntoAssocYouMayNeedAssocToKeyValuesToConvert" xml:space="preserve">
+    <value>Read XML file into Assoc. You may need 'Assoc to Key-values' to convert the result so that it can be more easily processed. See example for more information.</value>
+  </data>
+  <data name="FailToParseXML" xml:space="preserve">
+    <value>Fail to parse XML.</value>
+  </data>
+  <data name="HowDeepTheDataIsUnwrappedByDefault0ZeroMeansAssocIs" xml:space="preserve">
+    <value>How deep the data is unwrapped. By default 0. Zero means Assoc is deconstructed to every single element, one means only the first level is extracted and so on. See example for more information.</value>
+  </data>
+  <data name="Append" xml:space="preserve">
+    <value>Append</value>
+  </data>
+  <data name="Modify" xml:space="preserve">
+    <value>Modify</value>
+  </data>
+  <data name="AppendMode" xml:space="preserve">
+    <value>Append mode</value>
+  </data>
+  <data name="WhenThereReDuplicatedEntriesAppendToTheAssocRatherThanModifySeeExampleForMoreInformation" xml:space="preserve">
+    <value>When there're duplicated entries, append to the Assoc rather than modify. See example for more information.</value>
+  </data>
+  <data name="JsonTemplate" xml:space="preserve">
+    <value>&lt;!DOCTYPE html&gt;
+&lt;!--This webpage uses json-tree library from Leonardo Menezes, which is licensed under MIT License.
+json-tree library is modified to adapt the single-file scheme.
+
+The MIT License (MIT)
+
+Copyright (c) 2013 Leonardo Menezes
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+This page is generated by Pancake, a plugin for Grasshopper.--&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;&lt;title&gt;JSON Tree Represenation&lt;/title&gt;&lt;style&gt;.jstValue{white-space:pre-wrap;font-size:10px;font-weight:400;font-family:"Lucida Console",Monaco,monospace}.jstComma{white-space:pre-wrap}.jstProperty{color:#666;word-wrap:break-word}.jstBracket{white-space:pre-wrap}.jstBool{color:#2525cc}.jstNum{color:#d036d0}.jstNull{color:gray}.jstStr{color:#2db669}.jstFold:after{content:' -';cursor:pointer}.jstExpand{white-space:normal}.jstExpand:after{content:' +';cursor:pointer}.jstFolded{white-space:normal!important}.jstHiddenBlock{display:none}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div id="jsonContainer"&gt;&lt;/div&gt;&lt;script&gt;var JSONTree=function(){var n={"&amp;":"&amp;amp;","&lt;":"&amp;lt;","&gt;":"&amp;gt;",'"':"&amp;quot;","'":"&amp;#x27;","/":"&amp;#x2F;"},t=0,r=0;this.create=function(n,t){return r+=1,N(u(n,0,!1),{class:"jstValue"})};var e=function(t){return t.replace(/[&amp;&lt;&gt;'"]/g,function(t){return n[t]})},s=function(){return r+"_"+t++},u=function(n,t,r){if(null===n)return f(r?t:0);switch(typeof n){case"boolean":return l(n,r?t:0);case"number":return i(n,r?t:0);case"string":return o(n,r?t:0);default:return n instanceof Array?a(n,t,r):c(n,t,r)}},c=function(n,t,r){var e=s(),u=Object.keys(n).map(function(r){return j(r,n[r],t+1,!0)}).join(m()),c=[g("{",r?t:0,e),N(u,{id:e}),p("}",t)].join("\n");return N(c,{})},a=function(n,t,r){var e=s(),c=n.map(function(n){return u(n,t+1,!0)}).join(m());return[g("[",r?t:0,e),N(c,{id:e}),p("]",t)].join("\n")},o=function(n,t){var r=e(JSON.stringify(n));return N(v(r,t),{class:"jstStr"})},i=function(n,t){return N(v(n,t),{class:"jstNum"})},l=function(n,t){return N(v(n,t),{class:"jstBool"})},f=function(n){return N(v("null",n),{class:"jstNull"})},j=function(n,t,r){var s=v(e(JSON.stringify(n))+": ",r),c=N(u(t,r,!1),{});return N(s+c,{class:"jstProperty"})},m=function(){return N(",\n",{class:"jstComma"})},N=function(n,t){return d("span",t,n)},d=function(n,t,r){return"&lt;"+n+Object.keys(t).map(function(n){return" "+n+'="'+t[n]+'"'}).join("")+"&gt;"+r+"&lt;/"+n+"&gt;"},g=function(n,t,r){return N(v(n,t),{class:"jstBracket"})+N("",{class:"jstFold",onclick:"JSONTree.toggle('"+r+"')"})};this.toggle=function(n){var t=document.getElementById(n),r=t.parentNode,e=t.previousElementSibling;""===t.className?(t.className="jstHiddenBlock",r.className="jstFolded",e.className="jstExpand"):(t.className="",r.className="",e.className="jstFold")};var p=function(n,t){return N(v(n,t),{})},v=function(n,t){return Array(2*t+1).join(" ")+n};return this}();var json=[PLACE_JSON_HERE];document.getElementById("jsonContainer").innerHTML=JSONTree.create(json);&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</value>
+  </data>
+  <data name="JsonTemplateMask" xml:space="preserve">
+    <value>[PLACE_JSON_HERE]</value>
+  </data>
+  <data name="CannotWriteFile" xml:space="preserve">
+    <value>Cannot write file.</value>
+  </data>
+  <data name="CannotConvertIntoJSON" xml:space="preserve">
+    <value>Cannot convert into JSON.</value>
+  </data>
+  <data name="NoDataIsAvailable" xml:space="preserve">
+    <value>No data is available.</value>
+  </data>
+  <data name="ShowAssoc" xml:space="preserve">
+    <value>Show Assoc</value>
+  </data>
+  <data name="ShowAssocInBrowser" xml:space="preserve">
+    <value>Show Assoc in Browser</value>
+  </data>
+  <data name="FillOutputsAutomaticallyGlobal" xml:space="preserve">
+    <value>Fill outputs automatically (Global)</value>
+  </data>
+  <data name="FillOutputsAutomaticallyCurrent" xml:space="preserve">
+    <value>Fill outputs automatically (Current)</value>
+  </data>
+  <data name="ItSNotRecommendedToUseParseString" xml:space="preserve">
+    <value>It's not recommended to use Parse String as it lacks advanced options. Use 'XML to Assoc' instead.</value>
+  </data>
+  <data name="CopyAttributes" xml:space="preserve">
+    <value>Copy attributes</value>
+  </data>
+  <data name="CopyObjectAttributesFromImportedGeometry" xml:space="preserve">
+    <value>Copy object attributes from imported geometry. Please notice that the output are Assocs containing basic information, rather than ObjectAttributes that can be used by Human and Elefront. This is to prevent memory leak.</value>
+  </data>
+  <data name="AssocToCSV" xml:space="preserve">
+    <value>Assoc To CSV</value>
+  </data>
+  <data name="ConvertANumberOfAssocsIntoCSVContentYouMayUseExportTXTComponentToWriteTheCSVContentIntoFile" xml:space="preserve">
+    <value>Convert a number of Assocs into CSV content. You may use 'Export TXT' component to write the CSV content into file.</value>
+  </data>
+  <data name="DelimiterCannotBeEmpty" xml:space="preserve">
+    <value>Delimiter cannot be empty.</value>
+  </data>
+  <data name="CompactAttributes" xml:space="preserve">
+    <value>Compact attributes</value>
+  </data>
+  <data name="FormattingMayBeLostRNIfEnabledXMLNodesWithTextContent" xml:space="preserve">
+    <value>Do NOT enable if the Assoc will be re-exported to XML again (formatting may be lost).
+If enabled, XML nodes with text content and no attributes will be merged into its parent node. See examples for more information.</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>Compact</value>
+  </data>
+  <data name="CannotFindTheEncoding0" xml:space="preserve">
+    <value>Cannot find the encoding: {0}.</value>
+  </data>
+  <data name="ReadTextFileWithASpecificEncoding" xml:space="preserve">
+    <value>Read text file, possibly with a specific encoding.</value>
+  </data>
+  <data name="MultiSort" xml:space="preserve">
+    <value>Multi Sort</value>
+  </data>
+  <data name="SortDataByNonNumericOrMultipleKeys" xml:space="preserve">
+    <value>Sort data by non-numeric or multiple keys. If first keys of two entries are same, the second keys are compared, and so on. This component uses stable sort.</value>
+  </data>
+  <data name="KeysToBeUsedAsSortingCriteriaOneByOne" xml:space="preserve">
+    <value>Keys to be used as sorting criteria, one by one</value>
+  </data>
+  <data name="DataToBeSortedAccordingToKeys" xml:space="preserve">
+    <value>Data to be sorted according to keys</value>
+  </data>
+  <data name="SortedKeys" xml:space="preserve">
+    <value>Sorted keys</value>
+  </data>
+  <data name="DataInAccordanceToTheSortedKeys" xml:space="preserve">
+    <value>Data in accordance to the sorted keys</value>
+  </data>
+  <data name="KeysMustHaveTheSameLength" xml:space="preserve">
+    <value>Keys must have the same length.</value>
+  </data>
+  <data name="_0HasDifferentAmountOfDataFromKeysThereforeItSSkipped" xml:space="preserve">
+    <value>{0} has different amount of data from keys. Therefore it's omitted.</value>
+  </data>
+  <data name="OnlyTheseDesignatedNamesAreImportedByDefaultAllNamesAreImported" xml:space="preserve">
+    <value>If designated, only columns with these names are processed. By default all columns are processed.</value>
+  </data>
+  <data name="EncodingThatTheFileShouldBeTreatedAs" xml:space="preserve">
+    <value>Encoding expected in the file. By default utf-8 is used. You may use "default" (without quotes) to utilize the default ASCII codepage on the computer.</value>
+  </data>
+  <data name="ImportedText" xml:space="preserve">
+    <value>Imported text</value>
+  </data>
+  <data name="KeyPathsToBeImportedByDefaultAllPathsAreImported" xml:space="preserve">
+    <value>Key paths to be imported. By default all paths are imported.</value>
+  </data>
+  <data name="ImportTXT" xml:space="preserve">
+    <value>Import TXT</value>
+  </data>
+  <data name="ExpandAttributes" xml:space="preserve">
+    <value>Expand attributes</value>
+  </data>
+  <data name="ExpandAttributesToSubNodesSeeExampleForMoreInformation" xml:space="preserve">
+    <value>Store data in sub-nodes instead of attributes. See example for more information.</value>
+  </data>
+  <data name="BasicAttributesOfTheImportedGeometry" xml:space="preserve">
+    <value>Basic attributes of the imported geometry</value>
+  </data>
+  <data name="PathCannotBeEmpty" xml:space="preserve">
+    <value>Path cannot be empty.</value>
+  </data>
+  <data name="TheDestinationDirectoryDoesnTExist" xml:space="preserve">
+    <value>The destination directory doesn't exist.</value>
+  </data>
+  <data name="NewerVersionsOfPancakeSerializesObjectsBetter" xml:space="preserve">
+    <value>Newer versions of Pancake serializes objects better and can preserve objects in assocs and other types of data.
+But the appended metadata cannot be read by lower versions. If you need the data to be read by lower versions, turn this on.
+This mode automatically switched on for components created before this Pancake version.</value>
+  </data>
+  <data name="SaveMetadataIntoRhinoObjects" xml:space="preserve">
+    <value>Save metadata into Rhino objects, rather than into Grasshopper geometry.</value>
+  </data>
+  <data name="NewerVersionsOfPancakeSerializesObjectsBetterAnd" xml:space="preserve">
+    <value>Newer versions of Pancake serializes objects better and can preserve objects in assocs and other types of data.
+However it has a different serialization strategy than former versions and may break your script. Turn this on to simulate the old behavior.
+This mode automatically switched on for components created before this Pancake version.</value>
+  </data>
+  <data name="MeshIsNotSupportedByTheTargetFormat" xml:space="preserve">
+    <value>Mesh is not supported by the target format.</value>
+  </data>
+  <data name="CannotDeserializeTheElefrontObject" xml:space="preserve">
+    <value>Cannot deserialize the Elefront object. It's probably because Elefront isn't installed.</value>
+  </data>
+  <data name="ChooseAFolderToInclude" xml:space="preserve">
+    <value>Choose a folder to include</value>
+  </data>
+  <data name="Examples" xml:space="preserve">
+    <value>Examples...</value>
+  </data>
+  <data name="CannotFindTheExampleFolder" xml:space="preserve">
+    <value>Cannot find the example folder. Please check if your Pancake installation is complete.</value>
+  </data>
+  <data name="ExtraLocations" xml:space="preserve">
+    <value>Additional Locations</value>
+  </data>
+  <data name="SelectASubitemForMoreInformation" xml:space="preserve">
+    <value>Select a subitem for more information.</value>
+  </data>
+  <data name="DetailedInformationUnavailable" xml:space="preserve">
+    <value>Detailed information unavailable</value>
+  </data>
+  <data name="TheObjectIsNotInTheActiveDocumentItMayBeInACluster" xml:space="preserve">
+    <value>The object is not in the active document. It may be in a cluster.</value>
+  </data>
+  <data name="SelectAFolderToCopyReferencedFiles" xml:space="preserve">
+    <value>Select a folder to copy referenced files...</value>
+  </data>
+  <data name="CannotCopyFilesPleaseEnsureTheFolderIsWritable" xml:space="preserve">
+    <value>Cannot copy files. Please ensure the folder is writable.</value>
+  </data>
+  <data name="RemoveReference" xml:space="preserve">
+    <value>Remove Reference</value>
+  </data>
+  <data name="ConvertReferencedGeometryToStandaloneGeomtryAndLeaveEverythingElseUnchanged" xml:space="preserve">
+    <value>Unreference geometry, and leave everything else unchanged.
+This component is to tackle different behaviors of some other components
+between referenced and unreferenced geometry.</value>
+  </data>
+  <data name="GeometryToBeUnReferenced" xml:space="preserve">
+    <value>Geometry to be un-referenced</value>
+  </data>
+  <data name="GeometryWithoutReferences" xml:space="preserve">
+    <value>Geometry without references</value>
+  </data>
+  <data name="AnalyzePerformance" xml:space="preserve">
+    <value>Analyze Performance</value>
+  </data>
+  <data name="EntireDocument" xml:space="preserve">
+    <value>Entire Document...</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Selected...</value>
+  </data>
+  <data name="NoIssuesAreDetected" xml:space="preserve">
+    <value>No issues are detected.</value>
+  </data>
+  <data name="QuantityIssues" xml:space="preserve">
+    <value>Quantity issues</value>
+  </data>
+  <data name="ComponentsUnavailableIn0" xml:space="preserve">
+    <value>Components unavailable in {0}</value>
+  </data>
+  <data name="ExternalFiles" xml:space="preserve">
+    <value>External Files</value>
+  </data>
+  <data name="OtherReferences" xml:space="preserve">
+    <value>Other references</value>
+  </data>
+  <data name="FileReference" xml:space="preserve">
+    <value>File reference</value>
+  </data>
+  <data name="ImageFile" xml:space="preserve">
+    <value>Image file</value>
+  </data>
+  <data name="DataFile" xml:space="preserve">
+    <value>Data file</value>
+  </data>
+  <data name="OrderOfBRepElementsIsNotGuaranteed" xml:space="preserve">
+    <value>Order of BRep elements is not guaranteed</value>
+  </data>
+  <data name="PotentialUnexpectedBehavior" xml:space="preserve">
+    <value>Potential unexpected behavior</value>
+  </data>
+  <data name="UsesReferencedGeometry" xml:space="preserve">
+    <value>Uses referenced geometry</value>
+  </data>
+  <data name="ThirdPartyLibraries" xml:space="preserve">
+    <value>Third-party libraries</value>
+  </data>
+  <data name="_3rdPartyComponents" xml:space="preserve">
+    <value>3rd-party components</value>
+  </data>
+  <data name="FromThirdParty" xml:space="preserve">
+    <value>From third-party: </value>
+  </data>
+  <data name="_3rdPartyLibraries" xml:space="preserve">
+    <value>3rd-party libraries</value>
+  </data>
+  <data name="ReferencedFiles" xml:space="preserve">
+    <value>Referenced files</value>
+  </data>
+  <data name="VersionWatermark" xml:space="preserve">
+    <value>Version Watermark</value>
+  </data>
+  <data name="VersionTracking" xml:space="preserve">
+    <value>Version tracking</value>
+  </data>
+  <data name="WatermarkExistsInGrasshopper" xml:space="preserve">
+    <value>Watermark exists in Grasshopper</value>
+  </data>
+  <data name="WatermarkExistsInTheGrasshopperDefinitionItMayContainSensitiveDataAndShouldBeRemovedIfTheDefinitonIsSharedOutsideYourTeam" xml:space="preserve">
+    <value>Watermark exists in the Grasshopper definition. It may contain sensitive data and should be removed if the definiton is shared outside your team.</value>
+  </data>
+  <data name="OtherComponents" xml:space="preserve">
+    <value>Other components</value>
+  </data>
+  <data name="ParamContentHint" xml:space="preserve">
+    <value>Param Content Hint</value>
+  </data>
+  <data name="ShowTheContentOfFloatingParamsBelow" xml:space="preserve">
+    <value>Show the content of floating params below.</value>
+  </data>
+  <data name="InvalidPrecision" xml:space="preserve">
+    <value>Invalid precision</value>
+  </data>
+  <data name="SizeAdjustment" xml:space="preserve">
+    <value>Size adjustment</value>
+  </data>
+  <data name="ResetAll" xml:space="preserve">
+    <value>Reset all</value>
+  </data>
+  <data name="ReferencedGeometryInDataOutput" xml:space="preserve">
+    <value>Referenced geometry in Data Output</value>
+  </data>
+  <data name="DataOutputCannotProcessReferencedGeometryCorrectly" xml:space="preserve">
+    <value>Data Output cannot process referenced geometry correctly.
+If you want to export references, you may convert data to Guid and take it as input.
+If you want to export the geometry, you may utilize the Remove Reference component.</value>
+  </data>
+  <data name="DisconnectAllInputs" xml:space="preserve">
+    <value>Disconnect all inputs</value>
+  </data>
+  <data name="DisconnectAllOutputs" xml:space="preserve">
+    <value>Disconnect all outputs</value>
+  </data>
+  <data name="Resources" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="CurrentDocument" xml:space="preserve">
+    <value>Current Rhino</value>
+  </data>
+  <data name="GetTheCurrentDocument" xml:space="preserve">
+    <value>Get the current Rhino document. If the active document is changed, this component will trigger recomputation.</value>
+  </data>
+  <data name="Abort" xml:space="preserve">
+    <value>Abort</value>
+  </data>
+  <data name="AbortTheComputationIfTheFirstInputIsFalse" xml:space="preserve">
+    <value>Abort the computation if the first input is true.</value>
+  </data>
+  <data name="SetToTrueToAbortTheCurrentDefinition" xml:space="preserve">
+    <value>Set to true to abort the current definition</value>
+  </data>
+  <data name="DataToPassThroughOptional" xml:space="preserve">
+    <value>Data to pass through. Optional.</value>
+  </data>
+  <data name="NameOfTheCurrentRhinoFileMayBeEmpty" xml:space="preserve">
+    <value>Name of the current Rhino file. May be empty.</value>
+  </data>
+  <data name="PathOfTheCurrentRhinoFileMayBeEmpty" xml:space="preserve">
+    <value>Path of the current Rhino file. May be empty.</value>
+  </data>
+  <data name="RecomputeOnSaveAs" xml:space="preserve">
+    <value>Recompute on SaveAs</value>
+  </data>
+  <data name="DocServerAddEvent_OpenRecoveryWarning" xml:space="preserve">
+    <value>You are opening a Pancake recovery file, which is saved due to unresponsiveness.
+Do you want to lock the solver to prevent the file from freezing Grasshopper again?
+You can disable this warning in the setting.</value>
+  </data>
+</root>

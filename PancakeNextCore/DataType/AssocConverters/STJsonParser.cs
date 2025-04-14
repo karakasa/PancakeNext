@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 using PancakeNextCore.DataType.AssocConverters;
 using PancakeNextCore.DataType;
 
-
-
 #if NET
 using System.Text.Json;
 using System.Text.Json.Nodes;
 #endif
 
-namespace PancakeNextCore.DataTypes.Converters;
+namespace PancakeNextCore.DataType.AssocConverters;
 #if NET
 internal sealed class STJsonParser : IJsonParser
 {

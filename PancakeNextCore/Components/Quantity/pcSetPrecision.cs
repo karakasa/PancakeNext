@@ -1,81 +1,70 @@
 ﻿using System;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.DataType;
 
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.GH.Params;
+namespace PancakeNextCore.Components.Quantity;
 
-namespace Pancake.Component;
-
-[ComponentCategory("qty", 1)]
+[IoId("dc2e77c7-9bbb-4fe3-b046-088ed67d1f16")]
 public class pcSetPrecision : PancakeComponent
 {
-    public override string LocalizedName => Strings.SetPrecision;
-    public override string LocalizedDescription => Strings.SetThePrecisionOfAQuantityPrecisionMayHaveDifferentMeaningsOnDifferentQuantitiesSeeManualOrExampleForMoreInformation;
+    public pcSetPrecision(IReader reader) : base(reader) { }
+    public pcSetPrecision() : base(typeof(pcSetPrecision)) { }
     protected override void RegisterInputs()
     {
-        AddParam<GhParamQuantity>("quantity4");
-        AddParam<Param_Integer>("precision2");
+        AddParam<QuantityParameter>("quantity4");
+        AddParam<IntegerParameter>("precision2");
     }
     protected override void RegisterOutputs()
     {
-        AddParam<GhParamQuantity>("adjustedquantity");
-        AddParam<Param_Boolean>("lostaccuracy?");
+        AddParam<QuantityParameter>("adjustedquantity");
+        AddParam<BooleanParameter>("lostaccuracy?");
     }
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        object obj = null;
-        DA.GetData(0, ref obj);
+        access.GetItem(0, out DataType.Quantity obj);
+        access.GetItem(1, out int precision);
 
-        if (obj is GhLengthFeetInch len)
+        if (obj is FeetInchLength len)
         {
-            var precision = 0;
-
-            DA.GetData(1, ref precision);
             if (precision <= 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.PrecisionMustBeGreaterThan0);
+                access.AddError("Wrong precision", Strings.PrecisionMustBeGreaterThan0);
                 return;
             }
 
-            var len2 = (GhLengthFeetInch)len.Duplicate();
+            var len2 = (FeetInchLength)len.Duplicate();
             var oldPrecise = len.Precise;
 
             len2.UpdatePrecision(precision);
 
-            DA.SetData(0, len2);
-            DA.SetData(1, oldPrecise && !len2.Precise);
+            access.SetItem(0, len2);
+            access.SetItem(1, oldPrecise && !len2.Precise);
             return;
         }
 
-        if(obj is GhLengthDecimal mlen)
+        if (obj is DecimalLength mlen)
         {
-            var precision = 0;
-            DA.GetData(1, ref precision);
-
             if (precision < 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.PrecisionMustBeGreaterThanOrEqualTo0);
+                access.AddError("Wrong precision", Strings.PrecisionMustBeGreaterThanOrEqualTo0);
                 return;
             }
 
             if (precision >= 10)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, Strings.PrecisionIsHigherThanTheInternalPrecisionYouMayNotSeeAnyChangesWithThisValue);
+                access.AddWarning("Wrong precision", Strings.PrecisionIsHigherThanTheInternalPrecisionYouMayNotSeeAnyChangesWithThisValue);
             }
 
             if (precision > 99)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.InvalidPrecision);
+                access.AddError("Wrong precision", Strings.InvalidPrecision);
                 return;
             }
 
-            var mlen2 = (GhLengthDecimal)(mlen.Duplicate());
+            var mlen2 = (DecimalLength)mlen.Duplicate();
 
             if (precision > 0)
                 mlen2.KeepDecimal = true;
@@ -84,32 +73,11 @@ public class pcSetPrecision : PancakeComponent
                 mlen2.KeepDecimal = false;
 
             mlen2.Precision = precision;
-            DA.SetData(0, mlen2);
-            DA.SetData(1, false);
+            access.SetItem(0, mlen2);
+            access.SetItem(1, false);
             return;
         }
 
-        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.InvalidQuantity);
-    }
-
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon
-    {
-        get
-        {
-            //You can add image files to your project resources and access them like this:
-            // return Resources.IconForThisComponent;
-            return ComponentIcon.SetPrecision;
-        }
-    }
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("dc2e77c7-9bbb-4fe3-b046-088ed67d1f16"); }
+        access.AddError("Unknown quantity", "The quantity is not a known type.");
     }
 }

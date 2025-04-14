@@ -1,71 +1,39 @@
 ﻿using System;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Dataset;
+using PancakeNextCore.DataType;
 
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.Dataset;
-using Pancake.GH.Params;
+namespace PancakeNextCore.Components.Quantity;
 
-namespace Pancake.Component;
-
-[ComponentCategory("qty", 1)]
+[IoId("1332c8a7-f118-4319-b63d-374c5ac589a6")]
 public class pcToDecimalLen : PancakeComponent
 {
-    public override string LocalizedName => Strings.ToDecimalLength;
-    public override string LocalizedDescription => Strings.ConvertAQuantityToADecimalLengthWithDesignatedUnit;
+    public pcToDecimalLen(IReader reader) : base(reader) { }
+    public pcToDecimalLen() : base(typeof(pcToDecimalLen)) { }
     protected override void RegisterInputs()
     {
-        AddParam<GhParamQuantity>("quantity5");
-        AddParam<Param_String>("unit3");
+        AddParam<QuantityParameter>("quantity5");
+        AddParam<TextParameter>("unit3");
     }
     protected override void RegisterOutputs()
     {
-        AddParam<GhParamQuantity>("quantity6");
+        AddParam<QuantityParameter>("quantity6");
     }
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        object obj = null;
-        string unit = null;
-        DA.GetData(0, ref obj);
-        DA.GetData(1, ref unit);
+        access.GetItem(0, out DataType.Quantity quantity);
+        access.GetItem(1, out string unit);
 
-        if (!(obj is GhQuantity quantity))
-            return;
-
-        if (!GhDecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
+        if (!DecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, string.Format(Strings.Unit0IsNotSupported, unit));
+            access.AddError("Wrong unit", string.Format(Strings.Unit0IsNotSupported, unit));
             return;
         }
 
         var len = quantity.ConvertToDecimalUnit(internalUnit);
-
-        DA.SetData(0, len);
-    }
-
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon
-    {
-        get
-        {
-            //You can add image files to your project resources and access them like this:
-            // return Resources.IconForThisComponent;
-            return ComponentIcon.ToDecimalUnit;
-        }
-    }
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("1332c8a7-f118-4319-b63d-374c5ac589a6"); }
+        access.SetItem(0, len);
     }
 }

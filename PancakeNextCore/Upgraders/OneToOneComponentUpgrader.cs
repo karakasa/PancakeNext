@@ -12,6 +12,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PancakeNextCore.Upgraders;
+/// <summary>
+/// Provides an one-to-one component upgrader. They must have same ComponentGuid/IoId, same inputs & outputs.
+/// Support of variable components is to be done.
+/// </summary>
+/// <typeparam name="T">Type of the new component</typeparam>
 public abstract class OneToOneComponentUpgrader<T> : IUpgradeGh1Component where T : Component, new()
 {
     public Guid Grasshopper1Id { get; } = (typeof(T).GetCustomAttribute<IoIdAttribute>() ?? throw new ArgumentException("Component must have an IoIdAttribute")).Id;
@@ -52,4 +57,3 @@ public abstract class OneToOneComponentUpgrader<T> : IUpgradeGh1Component where 
         return arr;
     }
 }
-public sealed class Upgrader_ExportSTL : OneToOneComponentUpgrader<pcExportSTL> { }

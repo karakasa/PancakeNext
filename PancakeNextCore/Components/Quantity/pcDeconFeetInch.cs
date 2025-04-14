@@ -1,74 +1,47 @@
 ﻿using System;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.DataType;
 
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.GH.Params;
+namespace PancakeNextCore.Components.Quantity;
 
-namespace Pancake.Component;
-
-[ComponentCategory("qty", 1)]
+[IoId("c8e25bce-58d5-4feb-9cd1-9f77ee40c065")]
 public class pcDeconFeetInch : PancakeComponent
 {
-    public override string LocalizedName => Strings.DeconstructFeetInchLength;
-    public override string LocalizedDescription => Strings.DeconstructAFeetInchLengthQuantityToItsComponents;
+    public pcDeconFeetInch(IReader reader) : base(reader) { }
+    public pcDeconFeetInch() : base(typeof(pcDeconFeetInch)) { }
     protected override void RegisterInputs()
     {
-        AddParam<GhParamQuantity>("quantity2");
+        AddParam<QuantityParameter>("quantity2");
     }
 
     protected override void RegisterOutputs()
     {
-        AddParam<Param_Number>("amountinfeet");
-        AddParam<Param_Integer>("feetinteger");
-        AddParam<Param_Number>("inch");
-        AddParam<Param_Integer>("inchinteger");
-        AddParam<Param_Integer>("inchfractionnumerator");
-        AddParam<Param_Integer>("inchfractiondenominator");
-        AddParam<Param_Number>("error");
+        AddParam<NumberParameter>("amountinfeet");
+        AddParam<IntegerParameter>("feetinteger");
+        AddParam<NumberParameter>("inch");
+        AddParam<IntegerParameter>("inchinteger");
+        AddParam<IntegerParameter>("inchfractionnumerator");
+        AddParam<IntegerParameter>("inchfractiondenominator");
+        AddParam<NumberParameter>("error");
     }
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        GhLengthFeetInch q = null;
-        DA.GetData(0, ref q);
+        access.GetItem(0, out FeetInchLength q);
         if (q == null)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.WrongType);
+            access.AddError("Wrong type", "The fed data is not a quantity.");
             return;
         }
 
-        DA.SetData(0, q.Value);
-        DA.SetData(1, q.FeetIntegerPart * (q.Negative ? (-1) : 1));
-        DA.SetData(2, (Math.Abs(q.Value) - q.FeetIntegerPart) * 12);
-        DA.SetData(3, q.InchIntegerPart);
-        DA.SetData(4, q.InchFractionPartFirst);
-        DA.SetData(5, q.InchFractionPartSecond);
-        DA.SetData(6, q.Error);
-    }
-
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon
-    {
-        get
-        {
-            //You can add image files to your project resources and access them like this:
-            // return Resources.IconForThisComponent;
-            return ComponentIcon.DeconFtInch;
-        }
-    }
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("c8e25bce-58d5-4feb-9cd1-9f77ee40c065"); }
+        access.SetItem(0, q.RawValue);
+        access.SetItem(1, q.FeetIntegerPart * (q.IsNegative ? -1 : 1));
+        access.SetItem(2, (Math.Abs(q.RawValue) - q.FeetIntegerPart) * 12);
+        access.SetItem(3, q.InchIntegerPart);
+        access.SetItem(4, q.InchFractionPartFirst);
+        access.SetItem(5, q.InchFractionPartSecond);
+        access.SetItem(6, q.Error);
     }
 }
