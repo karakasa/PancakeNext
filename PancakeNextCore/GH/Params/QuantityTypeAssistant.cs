@@ -9,25 +9,25 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PancakeNextCore.DataType;
-public sealed class QuantityTypeAssistant : TypeAssistant<Quantity>
+public sealed class QuantityTypeAssistant : TypeAssistant<GhQuantity>
 {
     internal static readonly QuantityTypeAssistant Instance = new();
     public QuantityTypeAssistant() : base("Quantity")
     {
     }
-    public override Quantity Copy(Quantity instance) => instance.Duplicate();
-    public override string DescribePrimary(Pear<Quantity> pear) => pear.Item?.ToString() ?? "<empty>";
-    public override bool Same(Quantity a, Quantity b)
+    public override GhQuantity Copy(GhQuantity instance) => instance.Duplicate();
+    public override string DescribePrimary(Pear<GhQuantity> pear) => pear.Item?.ToString() ?? "<empty>";
+    public override bool Same(GhQuantity a, GhQuantity b)
     {
         return a.Equals(b);
     }
-    public override int Sort(Quantity a, Quantity b)
+    public override int Sort(GhQuantity a, GhQuantity b)
     {
         if (a is not null && b is not null) return a.CompareTo(b);
         return SortRareNull(a, b);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static int SortRareNull(Quantity? a, Quantity? b) 
+    private static int SortRareNull(GhQuantity? a, GhQuantity? b) 
         => a is null ? b is null ? 0 : -1 : 1;
 }

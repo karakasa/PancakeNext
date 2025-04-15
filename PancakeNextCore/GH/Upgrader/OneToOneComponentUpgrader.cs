@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.Upgraders;
+namespace PancakeNextCore.GH.Upgrader;
 /// <summary>
 /// Provides an one-to-one component upgrader. They must have same ComponentGuid/IoId, same inputs & outputs.
 /// Support of variable components is to be done.

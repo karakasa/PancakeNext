@@ -34,17 +34,17 @@ public sealed class pcConQty : PancakeComponent
         if (string.IsNullOrEmpty(unit))
             unitAvailable = false;
 
-        DecimalLength len;
+        GhLengthDecimal len;
 
         if (unitAvailable)
         {
-            if (!DecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
+            if (!GhDecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
             {
                 access.AddError("Unsupported unit", $"{unit} is not supported.");
                 return;
             }
 
-            len = new DecimalLength(amount, internalUnit, precision);
+            len = new GhLengthDecimal(amount, internalUnit, precision);
         }
         else
         {
@@ -56,12 +56,12 @@ public sealed class pcConQty : PancakeComponent
             }
             var docUnit = doc.ModelUnitSystem;
 
-            if (!DecimalLengthInfo.TryDetermineUnit(docUnit, out var rhinoUnit))
+            if (!GhDecimalLengthInfo.TryDetermineUnit(docUnit, out var rhinoUnit))
             {
-                rhinoUnit = DecimalLengthInfo.NeutralUnit;
+                rhinoUnit = GhDecimalLengthInfo.NeutralUnit;
             }
 
-            len = new DecimalLength(rhinoUnit, precision);
+            len = new GhLengthDecimal(rhinoUnit, precision);
             len.FromDocumentUnit(amount);
         }
 

@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.GhInterop;
+namespace PancakeNextCore.GH;
 
-public sealed class PluginInfo : Plugin
+public sealed class PancakeInfo : Plugin
 {
     public static readonly Guid PluginId = new("{4B8EE19F-878C-4B9A-BFF3-DD5CC938B9B3}");
-    public static readonly Version CoreVersion = typeof(PluginInfo).Assembly.GetName().Version;
-    public PluginInfo()
+    public static readonly Version CoreVersion = typeof(PancakeInfo).Assembly.GetName().Version;
+    public PancakeInfo()
         : base(PluginId,
               new("Pancake", "Provides tools for teamworking"),
               CoreVersion)

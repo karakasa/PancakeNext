@@ -47,7 +47,7 @@ internal sealed class XmlIo
     public bool Headless = false;
 
     private readonly StringBuilder builder = new();
-    public string CreateXml(string rootTag, Association node)
+    public string CreateXml(string rootTag, GhAssocBase node)
     {
         builder.Clear();
 
@@ -84,7 +84,7 @@ internal sealed class XmlIo
             str.EscapeForXml(builder);
         }
     }
-    private void CreateXmlFromNode(string tagName, Association node)
+    private void CreateXmlFromNode(string tagName, GhAssocBase node)
     {
         var realName = tagName;
 
@@ -97,20 +97,20 @@ internal sealed class XmlIo
 
         CheckTagName(realName);
 
-        if (node is AtomList list)
+        if (node is GhAtomList list)
         {
             CreateXmlFromNode(realName, list);
         }
-        else if (node is NamedAssociation na)
+        else if (node is GhAssoc na)
         {
             CreateXmlFromNode(realName, na);
         }
     }
-    private void CreateXmlFromNode(string realName, AtomList list)
+    private void CreateXmlFromNode(string realName, GhAtomList list)
     {
         foreach (var innerObj in list.GetFlattenInnerListUnwrapped())
         {
-            if (innerObj is Association subnode)
+            if (innerObj is GhAssocBase subnode)
             {
                 CreateXmlFromNode(realName, subnode);
             }
@@ -124,7 +124,7 @@ internal sealed class XmlIo
         }
     }
 
-    private void CreateXmlFromNode(string realName, NamedAssociation na)
+    private void CreateXmlFromNode(string realName, GhAssoc na)
     {
         builder.Append($"<{realName}");
 
@@ -132,7 +132,7 @@ internal sealed class XmlIo
         var attributes = na.GetAttributes().Where(attr => !AllowForMagicContent || attr.Key != MagicContentMarker);
 
         object? content = null;
-        var hasInnerContentDefined = AllowForMagicContent && na.TryGetContent(MagicContentMarker, out content) && content is not Association;
+        var hasInnerContentDefined = AllowForMagicContent && na.TryGetContent(MagicContentMarker, out content) && content is not GhAssocBase;
         var nodeListArray = na.GetNodes().ToArray();
 
         if (Expand && !hasInnerContentDefined && nodeListArray.Length == 0)
@@ -237,7 +237,7 @@ internal sealed class XmlIo
         return firstChar == '-' || firstChar == '.' || (firstChar >= '0' && firstChar <= '9');
     }
 
-    public static Association ReadXml(string content, out string? root, ICollection<string>? interested = null)
+    public static GhAssocBase ReadXml(string content, out string? root, ICollection<string>? interested = null)
     {
         var file = FileIo.IsValidPath(content);
 
@@ -252,8 +252,8 @@ internal sealed class XmlIo
         using var xml = file ? XmlReader.Create(content, settings) : XmlReader.Create(sreader, settings);
 
         var path = new Stack<string>();
-        var storage = new Stack<NamedAssociation>();
-        var rootAssoc = new NamedAssociation();
+        var storage = new Stack<GhAssoc>();
+        var rootAssoc = new GhAssoc();
         var filter = ProcessTree.CreateFrom(interested);
 
         root = null;
@@ -297,10 +297,10 @@ internal sealed class XmlIo
         return rootAssoc;
     }
 
-    private static bool ReadXmlElement(Stack<string> path, Stack<NamedAssociation> storage, NamedAssociation rootAssoc, ProcessTree filter,
+    private static bool ReadXmlElement(Stack<string> path, Stack<GhAssoc> storage, GhAssoc rootAssoc, ProcessTree filter,
         XmlReader xml, ref string? root)
     {
-        NamedAssociation? cur = null;
+        GhAssoc? cur = null;
 
         if (path.Count == 0)
         {
@@ -315,7 +315,7 @@ internal sealed class XmlIo
                 return true;
             }
 
-            var assoc = new NamedAssociation();
+            var assoc = new GhAssoc();
             cur = assoc;
 
             var currentAssoc = storage.Peek();
@@ -338,13 +338,13 @@ internal sealed class XmlIo
                 if (found)
                 {
                     var insideObj = currentAssoc.Get(index);
-                    if (insideObj is AtomList atomList)
+                    if (insideObj is GhAtomList atomList)
                     {
                         atomList.Add(assoc);
                     }
                     else
                     {
-                        currentAssoc.Set(index, new AtomList([insideObj, assoc]));
+                        currentAssoc.Set(index, new GhAtomList([insideObj, assoc]));
                     }
                 }
                 else
@@ -458,13 +458,13 @@ internal sealed class XmlIo
         }
     }
 
-    public static void CollapseXmlAssoc(Association obj)
+    public static void CollapseXmlAssoc(GhAssocBase obj)
     {
         for (var i = 0; i < obj.Length; i++)
         {
             switch (obj.Values![i])
             {
-                case NamedAssociation subAssoc:
+                case GhAssoc subAssoc:
                     if (subAssoc.Length == 1 && string.Equals(subAssoc.Names?.FirstOrDefault(), MagicContentMarker))
                     {
                         var val = subAssoc.Values![0];
@@ -483,7 +483,7 @@ internal sealed class XmlIo
                     }
                     break;
 
-                case AtomList alist2:
+                case GhAtomList alist2:
                     CollapseXmlAssoc(alist2);
                     break;
 

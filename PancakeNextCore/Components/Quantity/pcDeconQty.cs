@@ -25,7 +25,7 @@ public class pcDeconQty : PancakeComponent
 
     protected override void Process(IDataAccess access)
     {
-        access.GetItem(0, out DataType.Quantity quantity);
+        access.GetItem(0, out DataType.GhQuantity quantity);
 
         access.SetItem(0, quantity.GetRawValue());
         access.SetItem(1, quantity.UnitName);

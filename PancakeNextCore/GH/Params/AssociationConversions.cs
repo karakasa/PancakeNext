@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.DataType;
 public sealed class AssociationConversions : ConversionRepository
 {
-    public static Merit AssocToNTuple(Association assoc, out NTuple? tuple, out string message)
+    public static Merit AssocToNTuple(GhAssocBase assoc, out NTuple? tuple, out string message)
     {
         if (assoc.Length == 0)
         {
@@ -21,7 +21,7 @@ public sealed class AssociationConversions : ConversionRepository
 
         tuple = null;
 
-        if (assoc is not NamedAssociation kv)
+        if (assoc is not GhAssoc kv)
         {
             message = "Only named Association can be converted.";
             return Merit.Zilch;
@@ -51,9 +51,9 @@ public sealed class AssociationConversions : ConversionRepository
         return Merit.Direct;
     }
 
-    public static Merit NTupleToAssoc(NTuple tuple, out Association? assoc, out string message)
+    public static Merit NTupleToAssoc(NTuple tuple, out GhAssocBase? assoc, out string message)
     {
-        var n = new NamedAssociation();
+        var n = new GhAssoc();
 
         foreach (var (name, pear) in tuple.Elements)
         {

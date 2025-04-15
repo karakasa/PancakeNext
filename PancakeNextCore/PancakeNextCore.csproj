@@ -8,7 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DataType\AssociationStringifier.cs" />
+    <Compile Remove="Parameters\**" />
+    <EmbeddedResource Remove="Parameters\**" />
+    <None Remove="Parameters\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="GH\AssociationStringifier.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,7 +57,6 @@
 
   <ItemGroup>
     <Folder Include="Components\Association\" />
-    <Folder Include="Parameters\" />
   </ItemGroup>
 
   <ItemGroup>

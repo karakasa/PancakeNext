@@ -8,9 +8,9 @@ using Rhino;
 
 namespace PancakeNextCore.DataType;
 
-public sealed class DecimalLength : Quantity
+public sealed class GhLengthDecimal : GhQuantity
 {
-    public DecimalLength() { }
+    public GhLengthDecimal() { }
     public override string UnitName => _currentUnit;
 
     public override QuantityType UnitType => QuantityType.Length;
@@ -24,9 +24,9 @@ public sealed class DecimalLength : Quantity
     public double RawValue { get; set; }
     public bool KeepDecimal { get; set; } = false;
 
-    private readonly DecimalLengthInfo.DecimalUnit _unit;
+    private readonly GhDecimalLengthInfo.DecimalUnit _unit;
 
-    internal DecimalLength(DecimalLength metric)
+    internal GhLengthDecimal(GhLengthDecimal metric)
     {
         RawValue = metric.RawValue;
         Precision = metric.Precision;
@@ -37,13 +37,13 @@ public sealed class DecimalLength : Quantity
         KeepDecimal = metric.KeepDecimal;
     }
 
-    private static void FindUnit(string symbol, out DecimalLengthInfo.DecimalUnit unit)
+    private static void FindUnit(string symbol, out GhDecimalLengthInfo.DecimalUnit unit)
     {
-        if (!DecimalLengthInfo.UnitList.TryGetValue(symbol, out unit))
+        if (!GhDecimalLengthInfo.UnitList.TryGetValue(symbol, out unit))
             throw new ArgumentOutOfRangeException(nameof(symbol));
     }
 
-    public DecimalLength(double amount, string symbol, int precision = 4)
+    public GhLengthDecimal(double amount, string symbol, int precision = 4)
     {
         RawValue = amount;
         _currentUnit = symbol;
@@ -54,7 +54,7 @@ public sealed class DecimalLength : Quantity
         _isSet = true;
     }
 
-    public DecimalLength(double amount, DecimalLengthInfo.DecimalUnit unit, int precision = 4)
+    public GhLengthDecimal(double amount, GhDecimalLengthInfo.DecimalUnit unit, int precision = 4)
     {
         RawValue = amount;
         _currentUnit = unit.Symbol;
@@ -64,7 +64,7 @@ public sealed class DecimalLength : Quantity
         _isSet = true;
     }
 
-    public DecimalLength(DecimalLengthInfo.DecimalUnit unit, int precision = 4)
+    public GhLengthDecimal(GhDecimalLengthInfo.DecimalUnit unit, int precision = 4)
     {
         _currentUnit = unit.Symbol;
         Precision = precision;
@@ -74,7 +74,7 @@ public sealed class DecimalLength : Quantity
         _isSet = false;
     }
 
-    public DecimalLength(string symbol, int precision = 4)
+    public GhLengthDecimal(string symbol, int precision = 4)
     {
         _currentUnit = symbol;
         Precision = precision;
@@ -114,19 +114,19 @@ public sealed class DecimalLength : Quantity
 
     public override double ToDocumentUnit()
     {
-        return DecimalLengthInfo.ConvertToRhinoUnit(ToNeutralUnit(), RhinoDocServer.ModelUnitSystem);
+        return GhDecimalLengthInfo.ConvertToRhinoUnit(ToNeutralUnit(), RhinoDocServer.ModelUnitSystem);
     }
 
     public override void FromDocumentUnit(double quantity)
     {
         var unit = RhinoDocServer.ActiveDoc?.ModelUnitSystem ?? UnitSystem.None;
 
-        FromNeutralUnit(DecimalLengthInfo.ConvertFromRhinoUnit(quantity, unit));
+        FromNeutralUnit(GhDecimalLengthInfo.ConvertFromRhinoUnit(quantity, unit));
     }
 
-    public static bool TryParse(string str, [NotNullWhen(true)] out DecimalLength? quantity)
+    public static bool TryParse(string str, [NotNullWhen(true)] out GhLengthDecimal? quantity)
     {
-        if (!DecimalLengthInfo.TryDetermineUnit(str, out var unit))
+        if (!GhDecimalLengthInfo.TryDetermineUnit(str, out var unit))
         {
             quantity = null;
             return false;
@@ -139,15 +139,15 @@ public sealed class DecimalLength : Quantity
             return false;
         }
 
-        quantity = new DecimalLength(amount, unit);
+        quantity = new GhLengthDecimal(amount, unit);
         return true;
     }
 
     public override bool SupportDocumentUnitConversion => true;
-    public override Quantity Duplicate() => new DecimalLength(this);
-    public override Quantity DuplicateAndNegate()
+    public override GhQuantity Duplicate() => new GhLengthDecimal(this);
+    public override GhQuantity DuplicateAndNegate()
     {
-        var obj = new DecimalLength(this);
+        var obj = new GhLengthDecimal(this);
         obj.RawValue = -obj.RawValue;
         return obj;
     }

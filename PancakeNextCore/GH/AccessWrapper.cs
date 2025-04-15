@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.GhInterop;
+namespace PancakeNextCore.GH;
 
 internal static class AccessWrapper
 {
@@ -85,23 +85,23 @@ internal static class AccessWrapper
         var type = typeof(TParam);
         if (type == typeof(IntegerParameter))
         {
-            return (TParam)(object)(new IntegerParameter(name, nickname, desc, access) { Requirement = requirement });
+            return (TParam)(object)new IntegerParameter(name, nickname, desc, access) { Requirement = requirement };
         }
         if (type == typeof(NumberParameter))
         {
-            return (TParam)(object)(new NumberParameter(name, nickname, desc, access) { Requirement = requirement });
+            return (TParam)(object)new NumberParameter(name, nickname, desc, access) { Requirement = requirement };
         }
         if (type == typeof(TextParameter))
         {
-            return (TParam)(object)(new TextParameter(name, nickname, desc, access) { Requirement = requirement });
+            return (TParam)(object)new TextParameter(name, nickname, desc, access) { Requirement = requirement };
         }
         if (type == typeof(BooleanParameter))
         {
-            return (TParam)(object)(new BooleanParameter(name, nickname, desc, access) { Requirement = requirement });
+            return (TParam)(object)new BooleanParameter(name, nickname, desc, access) { Requirement = requirement };
         }
         if (type == typeof(GenericParameter))
         {
-            return (TParam)(object)(new GenericParameter(name, nickname, desc, access) { Requirement = requirement });
+            return (TParam)(object)new GenericParameter(name, nickname, desc, access) { Requirement = requirement };
         }
 
         return null;

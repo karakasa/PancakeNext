@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using Grasshopper2.UI.Icon;
 using Grasshopper2.UI.Canvas;
 using System.Diagnostics.CodeAnalysis;
-using PancakeNextCore.GhInterop;
+using PancakeNextCore.GH;
 
 namespace PancakeNextCore.Components;
 
@@ -232,7 +232,7 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
     {
         base.Store(writer);
 
-        writer.String(CfgSaveVersion, PluginInfo.CoreVersion?.ToString() ?? "unknown");
+        writer.String(CfgSaveVersion, PancakeInfo.CoreVersion?.ToString() ?? "unknown");
     }
 
     private void ReadVersion(IReader reader)
@@ -259,15 +259,5 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
         Document?.Solution?.Stop();
         access?.AddError("Access violation", "This feature is disabled in the untrusted mode.");
         throw new InvalidOperationException();
-    }
-
-    protected virtual IIcon? ActualIcon { get; }
-    protected sealed override IIcon? IconInternal
-    {
-        get
-        {
-            PluginLifetime.HandleIconEvent();
-            return ActualIcon;
-        }
     }
 }

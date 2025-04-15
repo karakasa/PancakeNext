@@ -22,10 +22,10 @@ public class pcToFtInLen : PancakeComponent
     }
     protected override void Process(IDataAccess access)
     {
-        access.GetItem(0, out DataType.Quantity quantity);
+        access.GetItem(0, out DataType.GhQuantity quantity);
         access.GetItem(1, out int precision);
 
-        var len = new FeetInchLength(quantity.ToNeutralUnit(), precision);
+        var len = new GhLengthFeetInch(quantity.ToNeutralUnit(), precision);
         access.SetItem(0, len);
     }
 }

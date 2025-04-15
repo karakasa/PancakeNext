@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PancakeNextCore.DataType;
-public abstract class Association : IStorable, ICloneable
+public abstract class GhAssocBase : IStorable, ICloneable
 {
     private sealed class TemporaryPear : IPear
     {
@@ -22,11 +22,11 @@ public abstract class Association : IStorable, ICloneable
         public MetaData? Meta => null;
     }
 
-    public Association()
+    public GhAssocBase()
     {
     }
 
-    public Association(int capacity)
+    public GhAssocBase(int capacity)
     {
         if (capacity < 0)
         {
@@ -40,7 +40,7 @@ public abstract class Association : IStorable, ICloneable
     private const string IoLabelData = "Data";
     private static readonly Name IoLabelPrincipleVal = new("PrincipleVal");
 
-    public Association(IReader reader)
+    public GhAssocBase(IReader reader)
     {
         var count = reader.Integer32(IoLabelDataCount);
         if (count <= 0)
@@ -193,9 +193,9 @@ public abstract class Association : IStorable, ICloneable
         return unchecked(-940306134
             + EqualityComparer<List<object?>>.Default.GetHashCode(Values) * 13);
     }
-    internal abstract Association GenericClone();
+    internal abstract GhAssocBase GenericClone();
     object ICloneable.Clone() => GenericClone();
     public abstract IEnumerable<string> GetNamesForExport();
-    public virtual bool DeepEquals(Association? another) => throw new NotSupportedException();
+    public virtual bool DeepEquals(GhAssocBase? another) => throw new NotSupportedException();
     internal virtual List<string?>? GetRawNames() => throw new NotSupportedException();
 }

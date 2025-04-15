@@ -6,9 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.GhInterop;
+namespace PancakeNextCore.GH;
 internal static class PluginLifetime
 {
+    public static event EventHandler? PreUiLoaded;
+    public static event EventHandler? PostUiLoaded;
+    public static event EventHandler? UiClosing;
+
     static bool _iconLoaded = false;
     public static void HandleIconEvent()
     {
@@ -26,19 +30,18 @@ internal static class PluginLifetime
 
     public static void PreUiLoad()
     {
-        // Eto.Forms.MessageBox.Show("PreUiLoad");
+        PreUiLoaded?.Invoke(null, EventArgs.Empty);
     }
 
     public static void PostUiLoad()
     {
         RegisterCloseEvent();
-
-        // Eto.Forms.MessageBox.Show("PostUiLoad");
+        CoreMenu.Instance.RegisterMenu();
+        PostUiLoaded?.Invoke(null, EventArgs.Empty);
     }
     public static void BeforeUiClose()
     {
+        UiClosing?.Invoke(null, EventArgs.Empty);
         Config.SaveToFile();
-
-        // Eto.Forms.MessageBox.Show("BeforeUiClose");
     }
 }

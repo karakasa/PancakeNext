@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace PancakeNextCore.DataType;
 
-public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
+public abstract class GhQuantity : IEquatable<GhQuantity>, IComparable<GhQuantity>
 {
     public abstract string UnitName { get; }
     public abstract QuantityType UnitType { get; }
@@ -16,20 +16,20 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
     public abstract void FromDocumentUnit(double quantity);
     public abstract bool IsNegative { get; }
     internal abstract double GetRawValue();
-    public virtual Quantity DuplicateAndNegate()
+    public virtual GhQuantity DuplicateAndNegate()
     {
         throw new InvalidOperationException("The quantity cannot be negative.");
     }
     public virtual bool SupportDocumentUnitConversion => false;
-    public static bool TryParseString(string str, [NotNullWhen(true)] out Quantity? qty)
+    public static bool TryParseString(string str, [NotNullWhen(true)] out GhQuantity? qty)
     {
-        if (DecimalLength.TryParse(str, out var qty1))
+        if (GhLengthDecimal.TryParse(str, out var qty1))
         {
             qty = qty1;
             return true;
         }
 
-        if (FeetInchLength.TryParse(str, out var qty2))
+        if (GhLengthFeetInch.TryParse(str, out var qty2))
         {
             qty = qty2;
             return true;
@@ -39,9 +39,9 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
         return false;
     }
 
-    public abstract Quantity Duplicate();
+    public abstract GhQuantity Duplicate();
     
-    public Quantity ConvertToUnit(string unit)
+    public GhQuantity ConvertToUnit(string unit)
     {
         if (unit.StartsWith("ftin", StringComparison.OrdinalIgnoreCase))
         {
@@ -50,17 +50,17 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
             if (index != -1)
                 precision = Convert.ToInt32(unit.Substring(index + 1));
 
-            var len = new FeetInchLength(ToNeutralUnit(), precision);
+            var len = new GhLengthFeetInch(ToNeutralUnit(), precision);
             return len;
         }
         else
         {
-            if (!DecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
+            if (!GhDecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
                 throw new ArgumentOutOfRangeException(nameof(unit));
 
-            var len = new DecimalLength(internalUnit);
+            var len = new GhLengthDecimal(internalUnit);
             len.FromNeutralUnit(ToNeutralUnit());
-            if (this is DecimalLength dec)
+            if (this is GhLengthDecimal dec)
             {
                 len.Precision = dec.Precision;
             }
@@ -68,11 +68,11 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
             return len;
         }
     }
-    public Quantity ConvertToDecimalUnit(DecimalLengthInfo.DecimalUnit internalUnit)
+    public GhQuantity ConvertToDecimalUnit(GhDecimalLengthInfo.DecimalUnit internalUnit)
     {
-        var len = new DecimalLength(internalUnit);
+        var len = new GhLengthDecimal(internalUnit);
         len.FromNeutralUnit(ToNeutralUnit());
-        if (this is DecimalLength dec)
+        if (this is GhLengthDecimal dec)
         {
             len.Precision = dec.Precision;
         }
@@ -80,7 +80,7 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
         return len;
     }
 
-    public static Quantity operator +(Quantity a, Quantity b)
+    public static GhQuantity operator +(GhQuantity a, GhQuantity b)
     {
         a.ThrowWhenIncompatible(b);
 
@@ -89,12 +89,12 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
         return c;
     }
 
-    public static Quantity operator -(Quantity a)
+    public static GhQuantity operator -(GhQuantity a)
     {
         return a.DuplicateAndNegate();
     }
 
-    public static Quantity operator -(Quantity a, Quantity b)
+    public static GhQuantity operator -(GhQuantity a, GhQuantity b)
     {
         a.ThrowWhenIncompatible(b);
 
@@ -103,48 +103,48 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
         return c;
     }
 
-    public static Quantity operator *(Quantity a, int b)
+    public static GhQuantity operator *(GhQuantity a, int b)
     {
         var c = a.Duplicate();
         c.FromNeutralUnit(a.ToNeutralUnit() * b);
         return c;
     }
 
-    public static Quantity operator *(Quantity a, double b)
+    public static GhQuantity operator *(GhQuantity a, double b)
     {
         var c = a.Duplicate();
         c.FromNeutralUnit(a.ToNeutralUnit() * b);
         return c;
     }
 
-    public static Quantity operator *(int b, Quantity a)
+    public static GhQuantity operator *(int b, GhQuantity a)
     {
         return a * b;
     }
 
-    public static Quantity operator *(double b, Quantity a)
+    public static GhQuantity operator *(double b, GhQuantity a)
     {
         return a * b;
     }
 
-    public static Quantity operator /(Quantity a, int b)
+    public static GhQuantity operator /(GhQuantity a, int b)
     {
         return a * (1.0 / b);
     }
 
-    public static Quantity operator /(Quantity a, double b)
+    public static GhQuantity operator /(GhQuantity a, double b)
     {
         return a * (1.0 / b);
     }
 
-    public static double operator /(Quantity a, Quantity b)
+    public static double operator /(GhQuantity a, GhQuantity b)
     {
         a.ThrowWhenIncompatible(b);
 
         return a.ToNeutralUnit() / b.ToNeutralUnit();
     }
 
-    public static Quantity operator %(Quantity a, Quantity b)
+    public static GhQuantity operator %(GhQuantity a, GhQuantity b)
     {
         a.ThrowWhenIncompatible(b);
 
@@ -153,19 +153,19 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
         return c;
     }
 
-    public static bool operator >(Quantity a, Quantity b)
+    public static bool operator >(GhQuantity a, GhQuantity b)
     {
         a.ThrowWhenIncompatible(b);
         return a.ToNeutralUnit() > b.ToNeutralUnit();
     }
 
-    public static bool operator <(Quantity a, Quantity b)
+    public static bool operator <(GhQuantity a, GhQuantity b)
     {
         a.ThrowWhenIncompatible(b);
         return a.ToNeutralUnit() < b.ToNeutralUnit();
     }
 
-    public static bool operator ==(Quantity? a, Quantity? b)
+    public static bool operator ==(GhQuantity? a, GhQuantity? b)
     {
         if (a is null) return b is null;
         if (b is null) return a is null;
@@ -174,29 +174,29 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
         return a.ToNeutralUnit() == b.ToNeutralUnit();
     }
 
-    public static bool operator !=(Quantity? a, Quantity? b)
+    public static bool operator !=(GhQuantity? a, GhQuantity? b)
     {
         return !(a == b);
     }
 
-    public static bool operator >=(Quantity a, Quantity b)
+    public static bool operator >=(GhQuantity a, GhQuantity b)
     {
         a.ThrowWhenIncompatible(b);
         return a.ToNeutralUnit() >= b.ToNeutralUnit();
     }
 
-    public static bool operator <=(Quantity a, Quantity b)
+    public static bool operator <=(GhQuantity a, GhQuantity b)
     {
         a.ThrowWhenIncompatible(b);
         return a.ToNeutralUnit() <= b.ToNeutralUnit();
     }
 
-    private bool IsCompatibleWith(Quantity another)
+    private bool IsCompatibleWith(GhQuantity another)
     {
         return UnitType == another.UnitType;
     }
 
-    internal void ThrowWhenIncompatible(Quantity another)
+    internal void ThrowWhenIncompatible(GhQuantity another)
     {
         if (!IsCompatibleWith(another))
             ThrowIncompatible(UnitType, another.UnitType);
@@ -210,7 +210,7 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
 
     public override bool Equals(object? obj)
     {
-        return obj is Quantity other && Equals(other);
+        return obj is GhQuantity other && Equals(other);
     }
 
     public override int GetHashCode()
@@ -218,7 +218,7 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
         throw new NotImplementedException();
     }
 
-    public bool Equals(Quantity? other)
+    public bool Equals(GhQuantity? other)
     {
         if (other is null) return false;
         return UnitType == other.UnitType && 
@@ -226,7 +226,7 @@ public abstract class Quantity : IEquatable<Quantity>, IComparable<Quantity>
             ToNeutralUnit() == other.ToNeutralUnit();
     }
 
-    public int CompareTo(Quantity? other)
+    public int CompareTo(GhQuantity? other)
     {
         if (other is null) return 1;
         ThrowWhenIncompatible(other);

@@ -15,8 +15,8 @@ internal sealed class BuiltinJsonParser : IJsonParser
     }
 
     public static readonly BuiltinJsonParser Instance = new();
-    public bool TryParseJson(string json, out Association? assoc) => TryParseJsonLight(json, out assoc);
-    public static bool TryParseJsonLight(string json, out Association? assoc)
+    public bool TryParseJson(string json, out GhAssocBase? assoc) => TryParseJsonLight(json, out assoc);
+    public static bool TryParseJsonLight(string json, out GhAssocBase? assoc)
     {
         var str = json.Trim();
 
@@ -67,7 +67,7 @@ internal sealed class BuiltinJsonParser : IJsonParser
     }
 
     private static bool TryParseJsonIndex(ref string json, int startIndex,
-        [NotNullWhen(true)] out NamedAssociation? assoc, out int processedChars)
+        [NotNullWhen(true)] out GhAssoc? assoc, out int processedChars)
     {
         int whitespace;
 
@@ -81,7 +81,7 @@ internal sealed class BuiltinJsonParser : IJsonParser
             return false;
         }
 
-        assoc = new NamedAssociation();
+        assoc = new GhAssoc();
         var index = newStart;
 
         ++index;
@@ -170,7 +170,7 @@ internal sealed class BuiltinJsonParser : IJsonParser
     }
 
     private static bool TryParseJsonList(ref string json, int startIndex,
-        [NotNullWhen(true)] out AtomList? assoc, out int processedChars)
+        [NotNullWhen(true)] out GhAtomList? assoc, out int processedChars)
     {
         int whitespace;
 
@@ -184,7 +184,7 @@ internal sealed class BuiltinJsonParser : IJsonParser
             return false;
         }
 
-        assoc = new AtomList();
+        assoc = new GhAtomList();
         var index = newStart;
 
         ++index;

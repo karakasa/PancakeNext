@@ -16,13 +16,13 @@ namespace PancakeNextCore.DataType.AssocConverters;
 internal sealed class STJsonParser : IJsonParser
 {
     public static readonly STJsonParser Instance = new();
-    public bool TryParseJson(string json, out Association? assoc) => TryParseJsonLight(json, out assoc);
-    public static bool TryParseJsonLight(string json, out Association? assoc)
+    public bool TryParseJson(string json, out GhAssocBase? assoc) => TryParseJsonLight(json, out assoc);
+    public static bool TryParseJsonLight(string json, out GhAssocBase? assoc)
     {
         try
         {
             var node = JsonNode.Parse(json);
-            assoc = (Association?)CreateObjectFromExternalObject(node);
+            assoc = (GhAssocBase?)CreateObjectFromExternalObject(node);
             return true;
         }
         catch (JsonException)
@@ -51,9 +51,9 @@ internal sealed class STJsonParser : IJsonParser
         };
     }
 
-    static AtomList CreateListFromArray(JsonArray array)
+    static GhAtomList CreateListFromArray(JsonArray array)
     {
-        var list = new AtomList();
+        var list = new GhAtomList();
         foreach (var token in array)
         {
             list.Add(CreateObjectFromExternalObject(token));
@@ -61,9 +61,9 @@ internal sealed class STJsonParser : IJsonParser
         return list;
     }
 
-    static NamedAssociation CreateNamedAssocFromObject(JsonObject obj)
+    static GhAssoc CreateNamedAssocFromObject(JsonObject obj)
     {
-        var list = new NamedAssociation();
+        var list = new GhAssoc();
         foreach (var token in obj)
         {
             list.Add(token.Key, CreateObjectFromExternalObject(token.Value));

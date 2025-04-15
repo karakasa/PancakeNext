@@ -1,7 +1,7 @@
 ﻿using PancakeNextCore.Components.Io;
 using PancakeNextCore.Components.Quantity;
 
-namespace PancakeNextCore.Upgraders;
+namespace PancakeNextCore.GH.Upgrader;
 
 public sealed class Upgrader_ExportSTL : OneToOneComponentUpgrader<pcExportSTL> { }
 public sealed class Upgrader_ConQty : OneToOneComponentUpgrader<pcConQty> { }

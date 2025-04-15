@@ -18,12 +18,12 @@ using System.Xml.Linq;
 namespace PancakeNextCore.DataType;
 
 [IoId("22B79783-C674-4BC4-AFBA-014C94D727BD")]
-public sealed class NamedAssociation : Association
+public sealed class GhAssoc : GhAssocBase
 {
-    public NamedAssociation()
+    public GhAssoc()
     {
     }
-    public NamedAssociation(int capacity)
+    public GhAssoc(int capacity)
     {
         if (capacity < 0)
         {
@@ -35,7 +35,7 @@ public sealed class NamedAssociation : Association
 
     private static readonly Name IoLabelName = new("Name");
 
-    public NamedAssociation(IReader reader) : base(reader)
+    public GhAssoc(IReader reader) : base(reader)
     {
         var count = Length;
         if (count > 0)
@@ -88,7 +88,7 @@ public sealed class NamedAssociation : Association
             Values ??= [];
         }
     }
-    public void MergeWith(NamedAssociation? another)
+    public void MergeWith(GhAssoc? another)
     {
         if (another is null)
         {
@@ -223,11 +223,11 @@ public sealed class NamedAssociation : Association
         }
     }
 
-    public NamedAssociation(IEnumerable<object?> list) : this(null, list)
+    public GhAssoc(IEnumerable<object?> list) : this(null, list)
     {
     }
 
-    public NamedAssociation(IEnumerable<string?>? names, IEnumerable<object?> list)
+    public GhAssoc(IEnumerable<string?>? names, IEnumerable<object?> list)
     {
         Values = [.. list];
 
@@ -246,14 +246,14 @@ public sealed class NamedAssociation : Association
         }
     }
 
-    public NamedAssociation Clone()
+    public GhAssoc Clone()
     {
-        var tuple = new NamedAssociation();
+        var tuple = new GhAssoc();
         tuple.MergeWith(this);
         return tuple;
     }
 
-    internal override Association GenericClone() => Clone();
+    internal override GhAssocBase GenericClone() => Clone();
 
     public override string ToString()
     {
@@ -308,7 +308,7 @@ public sealed class NamedAssociation : Association
         if (ReferenceEquals(obj, this))
             return true;
 
-        if (obj is not NamedAssociation assoc)
+        if (obj is not GhAssoc assoc)
             return false;
 
         return Equals(assoc);
@@ -323,7 +323,7 @@ public sealed class NamedAssociation : Association
         Values = null;
     }
 
-    public bool Equals(NamedAssociation another)
+    public bool Equals(GhAssoc another)
     {
         if (another is null) 
             return false;
@@ -351,12 +351,12 @@ public sealed class NamedAssociation : Association
             + EqualityComparer<List<object?>>.Default.GetHashCode(Values) * 13);
     }
 
-    public static bool operator ==(NamedAssociation assoc1, NamedAssociation assoc2)
+    public static bool operator ==(GhAssoc assoc1, GhAssoc assoc2)
     {
         return assoc1.Equals(assoc2);
     }
 
-    public static bool operator !=(NamedAssociation assoc1, NamedAssociation assoc2)
+    public static bool operator !=(GhAssoc assoc1, GhAssoc assoc2)
     {
         return !(assoc1 == assoc2);
     }
@@ -441,9 +441,9 @@ public sealed class NamedAssociation : Association
 
     [MemberNotNullWhen(true, nameof(Names))]
     public bool HasNames => Names is not null;
-    public static NamedAssociation CreateFromDictionary(IDictionary dict, bool translateList = false)
+    public static GhAssoc CreateFromDictionary(IDictionary dict, bool translateList = false)
     {
-        var assoc = new NamedAssociation(dict.Count);
+        var assoc = new GhAssoc(dict.Count);
         foreach (DictionaryEntry it in dict)
         {
             if (it.Key is not string name)
@@ -488,15 +488,15 @@ public sealed class NamedAssociation : Association
         }
     }
 
-    internal IEnumerable<KeyValuePair<string, Association>> GetNodes()
+    internal IEnumerable<KeyValuePair<string, GhAssocBase>> GetNodes()
     {
         if (!HasNames || !HasValues) yield break;
 
         for (var i = 0; i < Names.Count; i++)
         {
             var name = Names[i];
-            if (Values[i] is Association inode && name is not null)
-                yield return new KeyValuePair<string, Association>(name, inode);
+            if (Values[i] is GhAssocBase inode && name is not null)
+                yield return new KeyValuePair<string, GhAssocBase>(name, inode);
         }
     }
 
@@ -507,7 +507,7 @@ public sealed class NamedAssociation : Association
         for (var i = 0; i < Names.Count; i++)
         {
             var name = Names[i];
-            if (Values[i] is not Association && name != null)
+            if (Values[i] is not GhAssocBase && name != null)
                 yield return new KeyValuePair<string, object?>(name, Values[i]);
         }
     }
@@ -531,7 +531,7 @@ public sealed class NamedAssociation : Association
         for (var i = 0; i < Length; i++)
         {
             var name = Names[i];
-            if (name is not null && Values[i] is Association)
+            if (name is not null && Values[i] is GhAssocBase)
                 yield return name;
         }
     }
@@ -543,7 +543,7 @@ public sealed class NamedAssociation : Association
         for (var i = 0; i < Length; i++)
         {
             var name = Names[i];
-            if (name is not null && Values[i] is not Association)
+            if (name is not null && Values[i] is not GhAssocBase)
                 yield return name;
         }
     }

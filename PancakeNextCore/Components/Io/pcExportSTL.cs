@@ -192,5 +192,5 @@ public sealed class pcExportSTL : PancakeComponent
         writer.Write("endsolid PancakeGHSTLMaker\n");
     }
 
-    protected override IIcon? ActualIcon => SvgGhIcon.CreateFromSvgResource("ExportSTL", 32, 32);
+    protected override IIcon IconInternal => SvgGhIcon.CreateFromSvgResource("ExportSTL", 32, 32);
 }

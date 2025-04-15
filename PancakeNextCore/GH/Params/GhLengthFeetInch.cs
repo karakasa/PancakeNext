@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace PancakeNextCore.DataType;
 
-public sealed class FeetInchLength : Quantity
+public sealed class GhLengthFeetInch : GhQuantity
 {
     internal override double GetRawValue() => RawValue;
     public double RawValue { get; private set; }
@@ -120,7 +120,7 @@ public sealed class FeetInchLength : Quantity
         return b == 0 ? a : b;
     }
 
-    public FeetInchLength(int feet = 0, int inchInteger = 0, int inchFracFirst = 0,
+    public GhLengthFeetInch(int feet = 0, int inchInteger = 0, int inchFracFirst = 0,
         int inchFracSecond = 1, int precision = 64)
     {
         FeetIntegerPart = feet;
@@ -144,14 +144,14 @@ public sealed class FeetInchLength : Quantity
         UpdateRawValue();
     }
 
-    public FeetInchLength() : this(0)
+    public GhLengthFeetInch() : this(0)
     {
 
     }
 
     private static bool AllDigits(string str) => str.All(c => c >= '0' && c <= '9');
 
-    internal FeetInchLength(string feet, string inchInteger, string inchFracFirst,
+    internal GhLengthFeetInch(string feet, string inchInteger, string inchFracFirst,
         string inchFracSecond)
     {
         Precision = DefaultPrecision;
@@ -204,12 +204,12 @@ public sealed class FeetInchLength : Quantity
         }
     }
 
-    public FeetInchLength(double meter)
+    public GhLengthFeetInch(double meter)
     {
         FromNeutralUnit(meter);
     }
 
-    public FeetInchLength(double meter, int precision)
+    public GhLengthFeetInch(double meter, int precision)
     {
         Precision = precision;
         FromNeutralUnit(meter);
@@ -217,7 +217,7 @@ public sealed class FeetInchLength : Quantity
 
     public override void FromDocumentUnit(double quantity)
     {
-        FromNeutralUnit(DecimalLengthInfo.ConvertFromRhinoUnit(quantity, RhinoDocServer.ModelUnitSystem));
+        FromNeutralUnit(GhDecimalLengthInfo.ConvertFromRhinoUnit(quantity, RhinoDocServer.ModelUnitSystem));
     }
 
     public override void FromNeutralUnit(double neutralAmount)
@@ -229,7 +229,7 @@ public sealed class FeetInchLength : Quantity
 
     public override double ToDocumentUnit()
     {
-        return DecimalLengthInfo.ConvertToRhinoUnit(ToNeutralUnit(), RhinoDocServer.ModelUnitSystem);
+        return GhDecimalLengthInfo.ConvertToRhinoUnit(ToNeutralUnit(), RhinoDocServer.ModelUnitSystem);
     }
 
     public override double ToNeutralUnit()
@@ -280,7 +280,7 @@ public sealed class FeetInchLength : Quantity
     public const string Feet = "'";
     public const string Inch = "\"";
 
-    public static bool TryParse(string strData, [NotNullWhen(true)] out FeetInchLength? quantity)
+    public static bool TryParse(string strData, [NotNullWhen(true)] out GhLengthFeetInch? quantity)
     {
         var str = ReplaceUnicodeFraction(strData.Trim()).Replace("''", "\"");
 
@@ -346,7 +346,7 @@ public sealed class FeetInchLength : Quantity
         return true;
     }
 
-    private static FeetInchLength? TryParseBlock1(List<string> blocks, List<int> position)
+    private static GhLengthFeetInch? TryParseBlock1(List<string> blocks, List<int> position)
     {
         // 1"
         // 2'
@@ -360,16 +360,16 @@ public sealed class FeetInchLength : Quantity
         if (feetSymbol)
         {
             // Feet
-            return new FeetInchLength(blocks[position[0]], "0", "0", "1");
+            return new GhLengthFeetInch(blocks[position[0]], "0", "0", "1");
         }
         else
         {
             // Inch
-            return new FeetInchLength("0", blocks[position[0]], "0", "1");
+            return new GhLengthFeetInch("0", blocks[position[0]], "0", "1");
         }
     }
 
-    private static FeetInchLength? TryParseBlock2(List<string> blocks, List<int> position)
+    private static GhLengthFeetInch? TryParseBlock2(List<string> blocks, List<int> position)
     {
         // 1' 1"
         // 1' - 1"
@@ -381,16 +381,16 @@ public sealed class FeetInchLength : Quantity
         if (blocks[position[0] + 1] == "/")
         {
             if (blocks[position[1]] == "0") return null;
-            return new FeetInchLength("0", "0", blocks[position[0]], blocks[position[1]]);
+            return new GhLengthFeetInch("0", "0", blocks[position[0]], blocks[position[1]]);
         }
         else
         {
             if (!JudgeFeetSymbol(blocks[position[0] + 1])) return null;
-            return new FeetInchLength(blocks[position[0]], blocks[position[1]], "0", "1");
+            return new GhLengthFeetInch(blocks[position[0]], blocks[position[1]], "0", "1");
         }
     }
 
-    private static FeetInchLength? TryParseBlock3(List<string> blocks, List<int> position)
+    private static GhLengthFeetInch? TryParseBlock3(List<string> blocks, List<int> position)
     {
         // 1 2/3"
 
@@ -399,11 +399,11 @@ public sealed class FeetInchLength : Quantity
         if (blocks[position[2] + 1] != Inch || blocks[position[1] + 1] != "/") return null;
         if (blocks[position[2]] == "0") return null;
 
-        return new FeetInchLength("0", blocks[position[0]],
+        return new GhLengthFeetInch("0", blocks[position[0]],
             blocks[position[1]], blocks[position[2]]);
     }
 
-    private static FeetInchLength? TryParseBlock4(List<string> blocks, List<int> position)
+    private static GhLengthFeetInch? TryParseBlock4(List<string> blocks, List<int> position)
     {
         // 1' 2 3/4"
         // 1' - 2 3/4"
@@ -414,7 +414,7 @@ public sealed class FeetInchLength : Quantity
             || blocks[position[3] + 1] != Inch
             || position[2] != position[1] + 1) return null;
 
-        return new FeetInchLength(blocks[position[0]], blocks[position[1]],
+        return new GhLengthFeetInch(blocks[position[0]], blocks[position[1]],
             blocks[position[2]], blocks[position[3]]);
     }
 
@@ -451,11 +451,11 @@ public sealed class FeetInchLength : Quantity
             .Replace("⅞", " 7/8");
     }
 
-    public override Quantity Duplicate()
+    public override GhQuantity Duplicate()
     {
         if (Precise)
         {
-            var obj2 = new FeetInchLength(FeetIntegerPart, InchIntegerPart,
+            var obj2 = new GhLengthFeetInch(FeetIntegerPart, InchIntegerPart,
             InchFractionPartFirst, InchFractionPartSecond, Precision)
             {
                 Precise = true
@@ -465,17 +465,17 @@ public sealed class FeetInchLength : Quantity
         }
         else
         {
-            var obj2 = new FeetInchLength();
+            var obj2 = new GhLengthFeetInch();
             obj2.FromFeetAmount(RawValue);
             return obj2;
         }
     }
 
-    public override Quantity DuplicateAndNegate()
+    public override GhQuantity DuplicateAndNegate()
     {
         if (Precise)
         {
-            var obj2 = new FeetInchLength(FeetIntegerPart, InchIntegerPart,
+            var obj2 = new GhLengthFeetInch(FeetIntegerPart, InchIntegerPart,
             InchFractionPartFirst, InchFractionPartSecond, Precision)
             {
                 Negative = !Negative,
@@ -486,7 +486,7 @@ public sealed class FeetInchLength : Quantity
         }
         else
         {
-            var obj2 = new FeetInchLength();
+            var obj2 = new GhLengthFeetInch();
             obj2.FromFeetAmount(-RawValue);
             return obj2;
         }
@@ -497,12 +497,12 @@ public sealed class FeetInchLength : Quantity
         return RawValue.GetHashCode();
     }
     public override bool IsNegative => Negative;
-    public (FeetInchLength Whole, FeetInchLength Remainder) GetWholeAndRemainderPart()
+    public (GhLengthFeetInch Whole, GhLengthFeetInch Remainder) GetWholeAndRemainderPart()
     {
-        var wholePart = new FeetInchLength(FeetIntegerPart, InchIntegerPart, precision: Precision);
-        var remainder = new FeetInchLength(0, 0, InchFractionPartFirst, InchFractionPartSecond, precision: Precision);
+        var wholePart = new GhLengthFeetInch(FeetIntegerPart, InchIntegerPart, precision: Precision);
+        var remainder = new GhLengthFeetInch(0, 0, InchFractionPartFirst, InchFractionPartSecond, precision: Precision);
         if (IsNegative)
-            remainder = (FeetInchLength)(-remainder);
+            remainder = (GhLengthFeetInch)(-remainder);
 
         return (wholePart, remainder);
     }

@@ -24,10 +24,10 @@ public class pcToDecimalLen : PancakeComponent
 
     protected override void Process(IDataAccess access)
     {
-        access.GetItem(0, out DataType.Quantity quantity);
+        access.GetItem(0, out DataType.GhQuantity quantity);
         access.GetItem(1, out string unit);
 
-        if (!DecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
+        if (!GhDecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
         {
             access.AddError("Wrong unit", string.Format(Strings.Unit0IsNotSupported, unit));
             return;

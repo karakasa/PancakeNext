@@ -14,12 +14,12 @@ internal static class AssociationStringifier
         if (pancakeObj == null)
             return null;
 
-        if (pancakeObj is AtomList list)
+        if (pancakeObj is GhAtomList list)
         {
             return ListToJson(list, style);
         }
 
-        if (pancakeObj is Association assoc)
+        if (pancakeObj is GhAssocBase assoc)
         {
             return AssocToString(assoc, style);
         }
@@ -63,7 +63,7 @@ internal static class AssociationStringifier
         };
     }
 
-    public static string AssocToString(Association? assoc, StringConversionType type)
+    public static string AssocToString(GhAssocBase? assoc, StringConversionType type)
     {
         if (assoc is null) return "null";
 
@@ -78,7 +78,7 @@ internal static class AssociationStringifier
         };
     }
 
-    public static string ListToJson(AtomList list, StringConversionType style)
+    public static string ListToJson(GhAtomList list, StringConversionType style)
     {
         if (list.HasValues)
         {
@@ -113,10 +113,10 @@ internal static class AssociationStringifier
                 : StyleKeywords[style][Keyword.FalseVal];
         }
 
-        if (obj is Association assoc)
+        if (obj is GhAssocBase assoc)
             return ToStringJsonLike(assoc, style);
 
-        if (obj is AtomList list)
+        if (obj is GhAtomList list)
         {
             return ListToJson(list, style);
         }
@@ -125,7 +125,7 @@ internal static class AssociationStringifier
             + StringUtility.EscapeForJson(obj?.ToString() ?? "null", MapEscapeStyle(style))
             + StyleKeywords[style][Keyword.StrValR];
     }
-    private static string ToStringJsonLike(Association assoc, StringConversionType style)
+    private static string ToStringJsonLike(GhAssocBase assoc, StringConversionType style)
     {
         if (!assoc.HasValues)
         {
@@ -142,7 +142,7 @@ internal static class AssociationStringifier
             + StyleKeywords[style][Keyword.ObjValR];
     }
 
-    private static string ToStringAllString(Association assoc)
+    private static string ToStringAllString(GhAssocBase assoc)
     {
         if (!assoc.HasValues) return "{}";
 
@@ -153,7 +153,7 @@ internal static class AssociationStringifier
         return "{" + innerStr + "}";
     }
 
-    private static string ToStringQuery(Association assoc)
+    private static string ToStringQuery(GhAssocBase assoc)
     {
         if (!assoc.HasValues) return "";
 

@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.DataType.AssocConverters;
 public interface IJsonParser
 {
-    bool TryParseJson(string json, out Association? assoc);
+    bool TryParseJson(string json, out GhAssocBase? assoc);
 }

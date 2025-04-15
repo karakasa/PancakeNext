@@ -9,62 +9,62 @@ namespace PancakeNextCore.DataType;
 public sealed class QuantityArithmetic : ArithmeticRepository
 {
     [Arithmetic.Operator(Arithmetic.Operation.Add)]
-    public static Quantity Add(Quantity a, Quantity b)
+    public static GhQuantity Add(GhQuantity a, GhQuantity b)
     {
         return a + b;
     }
     [Arithmetic.Operator(Arithmetic.Operation.Sub)]
-    public static Quantity Sub(Quantity a, Quantity b)
+    public static GhQuantity Sub(GhQuantity a, GhQuantity b)
     {
         return a - b;
     }
     [Arithmetic.Operator(Arithmetic.Operation.Mul)]
-    public static Quantity Mul(Quantity a, int b)
+    public static GhQuantity Mul(GhQuantity a, int b)
     {
         return a * b;
     }
     [Arithmetic.Operator(Arithmetic.Operation.Mul)]
-    public static Quantity Mul(Quantity a, double b)
+    public static GhQuantity Mul(GhQuantity a, double b)
     {
         return a * b;
     }
     [Arithmetic.Operator(Arithmetic.Operation.Mul)]
-    public static Quantity Mul(int a, Quantity b)
+    public static GhQuantity Mul(int a, GhQuantity b)
     {
         return a * b;
     }
     [Arithmetic.Operator(Arithmetic.Operation.Mul)]
-    public static Quantity Mul(double a, Quantity b)
+    public static GhQuantity Mul(double a, GhQuantity b)
     {
         return a * b;
     }
     [Arithmetic.Operator(Arithmetic.Operation.Div)]
-    public static Quantity Div(Quantity a, int b)
+    public static GhQuantity Div(GhQuantity a, int b)
     {
         return a / b;
     }
     [Arithmetic.Operator(Arithmetic.Operation.Div)]
-    public static Quantity Div(Quantity a, double b)
+    public static GhQuantity Div(GhQuantity a, double b)
     {
         return a / b;
     }
     [Arithmetic.Operator(Arithmetic.Operation.Div)]
-    public static double Div(Quantity a, Quantity b)
+    public static double Div(GhQuantity a, GhQuantity b)
     {
         return a / b;
     }
     [Arithmetic.Function(Arithmetic.Binary.Max)]
-    public static Quantity Max(Quantity a, Quantity b)
+    public static GhQuantity Max(GhQuantity a, GhQuantity b)
     {
         return a > b ? a : b;
     }
     [Arithmetic.Function(Arithmetic.Binary.Min)]
-    public static Quantity Min(Quantity a, Quantity b)
+    public static GhQuantity Min(GhQuantity a, GhQuantity b)
     {
         return a < b ? a : b;
     }
     [Arithmetic.Function(Arithmetic.Ternary.Clip)]
-    public static Quantity Clip(Quantity v, Quantity min, Quantity max)
+    public static GhQuantity Clip(GhQuantity v, GhQuantity min, GhQuantity max)
     {
         v.ThrowWhenIncompatible(min);
         v.ThrowWhenIncompatible(max);
@@ -95,19 +95,19 @@ public sealed class QuantityArithmetic : ArithmeticRepository
     }
 
     [Arithmetic.Function(Arithmetic.Binary.Mod)]
-    public static Quantity Mod(Quantity a, Quantity b)
+    public static GhQuantity Mod(GhQuantity a, GhQuantity b)
     {
         return a % b;
     }
 
     [Arithmetic.Function(Arithmetic.Binary.Multiple)]
-    public static Quantity Multiple(Quantity a, Quantity b)
+    public static GhQuantity Multiple(GhQuantity a, GhQuantity b)
     {
         b = Abs(b);
         var retVal = a.Duplicate();
         retVal.FromNeutralUnit((Math.Truncate(a / b) * b).ToNeutralUnit());
 
-        if (a is FeetInchLength && b is FeetInchLength && retVal is FeetInchLength fi)
+        if (a is GhLengthFeetInch && b is GhLengthFeetInch && retVal is GhLengthFeetInch fi)
         {
             const double FeetInchError = 0.0001;
             fi.SetPreciseWithinError(FeetInchError);
@@ -117,46 +117,46 @@ public sealed class QuantityArithmetic : ArithmeticRepository
     }
 
     [Arithmetic.Function(Arithmetic.Binary.Round)]
-    public static Quantity Round(Quantity a, int b)
+    public static GhQuantity Round(GhQuantity a, int b)
     {
-        if (a is DecimalLength dv)
+        if (a is GhLengthDecimal dv)
         {
-            var q = (DecimalLength)dv.Duplicate();
+            var q = (GhLengthDecimal)dv.Duplicate();
             q.RawValue = Math.Round(q.RawValue, b);
             return q;
         }
-        else if (a is FeetInchLength fi)
+        else if (a is GhLengthFeetInch fi)
         {
             if (b <= 0)
             {
                 throw new ArgumentException("Round value must be larger than 1.");
             }
 
-            return new FeetInchLength(fi.ToNeutralUnit(), b);
+            return new GhLengthFeetInch(fi.ToNeutralUnit(), b);
         }
 
         throw new NotSupportedException();
     }
 
     [Arithmetic.Function(Arithmetic.Unary.Abs)]
-    public static Quantity Abs(Quantity a) => a.IsNegative ? -a : a;
+    public static GhQuantity Abs(GhQuantity a) => a.IsNegative ? -a : a;
 
     [Arithmetic.Function(Arithmetic.Unary.Sign)]
-    public static int Sign(Quantity a)
+    public static int Sign(GhQuantity a)
     {
         return Math.Sign(a.GetRawValue());
     }
 
     [Arithmetic.Function(Arithmetic.Unary.Truncate)]
-    public static Quantity Truncate(Quantity a)
+    public static GhQuantity Truncate(GhQuantity a)
     {
-        if (a is DecimalLength dv)
+        if (a is GhLengthDecimal dv)
         {
-            var q = (DecimalLength)dv.Duplicate();
+            var q = (GhLengthDecimal)dv.Duplicate();
             q.RawValue = Math.Truncate(q.RawValue);
             return q;
         }
-        else if (a is FeetInchLength fi)
+        else if (a is GhLengthFeetInch fi)
         {
             return fi.GetWholeAndRemainderPart().Whole;
         }
@@ -165,15 +165,15 @@ public sealed class QuantityArithmetic : ArithmeticRepository
     }
 
     [Arithmetic.Function(Arithmetic.Unary.Remainder)]
-    public static Quantity Remainder(Quantity a)
+    public static GhQuantity Remainder(GhQuantity a)
     {
-        if (a is DecimalLength dv)
+        if (a is GhLengthDecimal dv)
         {
-            var q = (DecimalLength)dv.Duplicate();
+            var q = (GhLengthDecimal)dv.Duplicate();
             q.RawValue = GetRemainderPart(q.RawValue);
             return q;
         }
-        else if (a is FeetInchLength fi)
+        else if (a is GhLengthFeetInch fi)
         {
             return fi.GetWholeAndRemainderPart().Remainder;
         }
@@ -181,9 +181,9 @@ public sealed class QuantityArithmetic : ArithmeticRepository
         throw new NotSupportedException();
     }
 
-    private static FeetInchLength GetOneTinyInch(FeetInchLength fi)
+    private static GhLengthFeetInch GetOneTinyInch(GhLengthFeetInch fi)
     {
-        var retVal = new FeetInchLength(0, 1, 0, 0, precision: fi.Precision);
+        var retVal = new GhLengthFeetInch(0, 1, 0, 0, precision: fi.Precision);
         return retVal;
     }
 
@@ -198,15 +198,15 @@ public sealed class QuantityArithmetic : ArithmeticRepository
     }
 
     [Arithmetic.Function(Arithmetic.Unary.Floor)]
-    public static Quantity Floor(Quantity a)
+    public static GhQuantity Floor(GhQuantity a)
     {
-        if (a is DecimalLength dv)
+        if (a is GhLengthDecimal dv)
         {
-            var q = (DecimalLength)dv.Duplicate();
+            var q = (GhLengthDecimal)dv.Duplicate();
             q.RawValue = Math.Floor(q.RawValue);
             return q;
         }
-        else if (a is FeetInchLength fi)
+        else if (a is GhLengthFeetInch fi)
         {
             var (whole, remainder) = fi.GetWholeAndRemainderPart();
 
@@ -224,15 +224,15 @@ public sealed class QuantityArithmetic : ArithmeticRepository
     }
 
     [Arithmetic.Function(Arithmetic.Unary.Ceiling)]
-    public static Quantity Ceiling(Quantity a)
+    public static GhQuantity Ceiling(GhQuantity a)
     {
-        if (a is DecimalLength dv)
+        if (a is GhLengthDecimal dv)
         {
-            var q = (DecimalLength)dv.Duplicate();
+            var q = (GhLengthDecimal)dv.Duplicate();
             q.RawValue = Math.Ceiling(q.RawValue);
             return q;
         }
-        else if (a is FeetInchLength fi)
+        else if (a is GhLengthFeetInch fi)
         {
             var (whole, remainder) = fi.GetWholeAndRemainderPart();
 

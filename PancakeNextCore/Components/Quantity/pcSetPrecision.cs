@@ -24,10 +24,10 @@ public class pcSetPrecision : PancakeComponent
 
     protected override void Process(IDataAccess access)
     {
-        access.GetItem(0, out DataType.Quantity obj);
+        access.GetItem(0, out DataType.GhQuantity obj);
         access.GetItem(1, out int precision);
 
-        if (obj is FeetInchLength len)
+        if (obj is GhLengthFeetInch len)
         {
             if (precision <= 0)
             {
@@ -35,7 +35,7 @@ public class pcSetPrecision : PancakeComponent
                 return;
             }
 
-            var len2 = (FeetInchLength)len.Duplicate();
+            var len2 = (GhLengthFeetInch)len.Duplicate();
             var oldPrecise = len.Precise;
 
             len2.UpdatePrecision(precision);
@@ -45,7 +45,7 @@ public class pcSetPrecision : PancakeComponent
             return;
         }
 
-        if (obj is DecimalLength mlen)
+        if (obj is GhLengthDecimal mlen)
         {
             if (precision < 0)
             {
@@ -64,7 +64,7 @@ public class pcSetPrecision : PancakeComponent
                 return;
             }
 
-            var mlen2 = (DecimalLength)mlen.Duplicate();
+            var mlen2 = (GhLengthDecimal)mlen.Duplicate();
 
             if (precision > 0)
                 mlen2.KeepDecimal = true;

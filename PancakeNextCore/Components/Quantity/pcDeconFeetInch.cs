@@ -29,7 +29,7 @@ public class pcDeconFeetInch : PancakeComponent
 
     protected override void Process(IDataAccess access)
     {
-        access.GetItem(0, out FeetInchLength q);
+        access.GetItem(0, out GhLengthFeetInch q);
         if (q == null)
         {
             access.AddError("Wrong type", "The fed data is not a quantity.");

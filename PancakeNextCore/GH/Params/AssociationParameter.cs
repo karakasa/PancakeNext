@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.DataType;
 
 [IoId("5442B78E-DC82-4EE2-9887-0C77FF395F9A")]
-public sealed class AssociationParameter : Parameter<Association>
+public sealed class AssociationParameter : Parameter<GhAssocBase>
 {
     public AssociationParameter(IReader reader) : base(reader)
     {
@@ -21,5 +21,5 @@ public sealed class AssociationParameter : Parameter<Association>
     {
     }
 
-    public override ITypeAssistant<Association> TypeAssistant => AssociationTypeAssistant.Instance;
+    public override ITypeAssistant<GhAssocBase> TypeAssistant => AssociationTypeAssistant.Instance;
 }

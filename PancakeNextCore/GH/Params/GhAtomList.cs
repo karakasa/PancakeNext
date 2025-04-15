@@ -9,24 +9,24 @@ using System.Threading.Tasks;
 
 namespace PancakeNextCore.DataType;
 [IoId("22B79783-C674-4BC4-AFBA-014C94D727BE")]
-public sealed class AtomList : Association
+public sealed class GhAtomList : GhAssocBase
 {
-    public AtomList()
+    public GhAtomList()
     {
     }
-    public AtomList(IReader reader) : base(reader)
+    public GhAtomList(IReader reader) : base(reader)
     {
     }
 
-    public AtomList(params object?[] objects)
+    public GhAtomList(params object?[] objects)
     {
         EnsureData(objects.Length);
         Values.AddRange(objects);
     }
 
-    internal override Association GenericClone()
+    internal override GhAssocBase GenericClone()
     {
-        return new AtomList()
+        return new GhAtomList()
         {
             Values = HasValues ? new(Values) : null
         };
@@ -54,7 +54,7 @@ public sealed class AtomList : Association
 
         foreach (var it in Values)
         {
-            if (it is AtomList list)
+            if (it is GhAtomList list)
             {
                 foreach (var it2 in list.GetFlattenInnerListUnwrapped())
                     yield return it2;
