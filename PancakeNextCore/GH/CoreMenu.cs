@@ -8,6 +8,7 @@ using System.Text;
 using Eto.Forms;
 using PancakeNextCore.Dataset;
 using Grasshopper2.UI;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PancakeNextCore.GH;
 
@@ -56,42 +57,54 @@ internal class MenuConstructor
 
         return item;*/
     }
-    internal MenuItem AddEntry(string name, EventHandler<EventArgs> procedure, bool? check = null, bool disallowShortcut = false, string toolTip = null)
+
+    internal ButtonMenuItem AddEntry(string name, Action procedure, string? toolTip = null)
     {
-        MenuItem item;
+        ButtonMenuItem item;
 
-        if (check is null)
+        item = new ButtonMenuItem
         {
-            item = new ButtonMenuItem
-            {
-                Text = name
-            };
-        }
-        else
+            Text = name
+        };
+
+        item.Click += (_, _) => procedure();
+
+        PolishMenuItem(item, false, toolTip);
+
+        return item;
+    }
+
+    internal CheckMenuItem AddToggleEntry(string name, Func<bool, bool> procedure, bool check, string? toolTip = null)
+    {
+        CheckMenuItem item;
+
+        item = new CheckMenuItem
         {
-            item = new CheckMenuItem
-            {
-                Text = name,
-                Checked = check ?? false
-            };
-        }
+            Text = name,
+            Checked = check
+        };
 
-        /* if (check == null && !Config.IsMac)
-            item.Image = Placeholder; */
+        item.Click += (_, _) =>
+        {
+            item.Checked = procedure(!item.Checked);
+        };
 
+        PolishMenuItem(item, false, toolTip);
+
+        return item;
+    }
+
+    private void PolishMenuItem(MenuItem item, bool disallowShortcut, string? toolTip)
+    {
         if (toolTip != null)
             item.ToolTip = toolTip;
 
-        if (procedure != null)
-            item.Click += procedure;
 
         lastSeparator = false;
         _parent.Add(item);
 
         if (!disallowShortcut)
             CoreMenu.MenuEntryAllowShortcut.Add(item);
-
-        return item;
     }
 
     internal ButtonMenuItem? AddLabel(string name, string sectionName)
@@ -101,7 +114,7 @@ internal class MenuConstructor
 
         var item = new ButtonMenuItem
         {
-            Text = name,
+            Text = $"[ {name} ]",
             Tag = sectionName,
             Enabled = false
         };
@@ -117,9 +130,6 @@ internal class MenuConstructor
         {
             Text = name
         };
-
-        // if (!Config.IsRunningOnMac)
-        // item.Image = Placeholder;
 
         lastSeparator = false;
         outItem = item;
@@ -160,31 +170,11 @@ internal sealed class CoreMenu
     public static readonly CoreMenu Instance = new();
 
     private SubMenuItem _topMenu = new();
-    private MenuItem _mnuEnableVersionWaterstamp;
-    private MenuItem _mnuEnableVersionWaterstampRhino;
-    private MenuItem _mnuHangProtection;
-    private MenuItem _mnuUnblockMonitor;
-    private MenuItem _mnuIncludeComponent;
-    private MenuItem _mnuCheckDownload;
-    private MenuItem _mnuClusterSkipRef;
-    private MenuItem _mnuDevMode;
-    private MenuItem _mnuDisableComponent;
-    private MenuItem _mnuOverlayInfo;
-    private MenuItem _mnuParamContentOverlay;
-    private ButtonMenuItem _mnuTitleExchange;
-    private ButtonMenuItem _mnuTitleVersion;
-    private ButtonMenuItem _mnuTitleTweaks;
-    private ButtonMenuItem _mnuTitleUtilities;
-    private ButtonMenuItem _mnuTitleAbout1;
 
     private const string MenuTitleSafe = "Pancake [Safemode]";
     private const string MenuTitle = "Pancake";
 
     internal static List<MenuItem> MenuEntryAllowShortcut = new List<MenuItem>();
-    private MenuItem _mnuExtendedMenu;
-    private MenuItem _mnuEnableLog;
-    private MenuItem _mnuForceIdlingHang;
-    private MenuItem _mnuEnableBetaFeatures;
 
     internal static void RegisterEntriesForShortcut()
     {
@@ -223,14 +213,14 @@ internal sealed class CoreMenu
     {
         var menu = new MenuConstructor(retMenu);
 
-        _mnuTitleExchange = menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_PrepareForExchange, "exchange");
+        menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_PrepareForExchange, "exchange");
 
         menu.AddEntry(Strings.CoreMenu_AddMenuFeatures_InternalizeReferencedGeometry, mnuInternalize_Click, toolTip: Strings.ThisFeatureWillInternalizeAllReferencedGeometryInYourScriptAsIfYouClickInternalizeInAllOfTheMenus);
-        menu.AddEntry(Strings.CoreMenu_AddMenuFeatures_CheckPortabilityOfThisDocument, mnuShowDependency_Click, disallowShortcut: true, toolTip: Strings.StudysWhatExternalResourcesTheCurrentScriptRequiresAndShowAReport);
+        menu.AddEntry(Strings.CoreMenu_AddMenuFeatures_CheckPortabilityOfThisDocument, mnuShowDependency_Click, toolTip: Strings.StudysWhatExternalResourcesTheCurrentScriptRequiresAndShowAReport);
 
         menu.AddSeparator();
 
-        _mnuTitleTweaks = menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_Tweaks, "tweaks");
+        menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_Tweaks, "tweaks");
         //_mnuHangProtection = menu.AddEntry(Strings.CoreMenu_AddMenuFeatures_EnableHangProtection,
             //mnuHangProtection_Click, HangDetector.Enabled, disallowShortcut: true, toolTip: Strings.PancakeWillDoAnEmergencySaveIf);
         //_mnuExtendedMenu = menu.AddEntry(Strings.EnableExtendedContextMenu,
@@ -238,7 +228,7 @@ internal sealed class CoreMenu
 
         menu.AddSeparator();
 
-        _mnuTitleUtilities = menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_Utilities, "utility");
+        menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_Utilities, "utility");
 
         using (var dropdown = menu.AddDropdownEntry(Strings.CoreMenu_AddMenuFeatures_SelectUpDownStreamOrBoth, out _))
         {
@@ -271,68 +261,68 @@ internal sealed class CoreMenu
 
         menu.AddSeparator();
 
-        _mnuTitleAbout1 = menu.AddLabel(string.Format(Strings.CoreMenu_AddMenuFeatures_Pancake_for_GH__0_, versionString), "");
+        menu.AddLabel(string.Format(Strings.CoreMenu_AddMenuFeatures_Pancake_for_GH__0_, versionString), "");
 
         if (Config.SafeMode || Config.DevMode)
         {
             menu.AddSeparator();
             using var dropdown = menu.AddDropdownEntry(Strings.CoreMenu_AddMenuFeatures_DeveloperTools, out _);
-            _mnuDevMode = dropdown.AddEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, mnuDevMode_Click, Config.DevMode);
+            dropdown.AddToggleEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, mnuDevMode_Click, Config.DevMode);
             dropdown.AddSeparator();
         }
     }
 
-    private void mnuDevMode_Click(object sender, EventArgs e)
+    private bool mnuDevMode_Click(bool expectedState)
+    {
+        return Config.DevMode = expectedState;
+    }
+
+    private void mnuIncludeComponent_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuIncludeComponent_Click(object sender, EventArgs e)
+    private void mnuFarEndDownstream_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuFarEndDownstream_Click(object sender, EventArgs e)
+    private void mnuFarEndUpstream_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuFarEndUpstream_Click(object sender, EventArgs e)
+    private void mnuPickAll_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuPickAll_Click(object sender, EventArgs e)
+    private void mnuPickUpstream_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuPickUpstream_Click(object sender, EventArgs e)
+    private void mnuPickDownstream_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuPickDownstream_Click(object sender, EventArgs e)
+    private void mnuExtendedMenu_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuExtendedMenu_Click(object sender, EventArgs e)
+    private void mnuHangProtection_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuHangProtection_Click(object sender, EventArgs e)
+    private void mnuShowDependency_Click()
     {
         throw new NotImplementedException();
     }
 
-    private void mnuShowDependency_Click(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void mnuInternalize_Click(object sender, EventArgs e)
+    private void mnuInternalize_Click()
     {
         throw new NotImplementedException();
     }
