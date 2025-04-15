@@ -31,6 +31,8 @@ internal static class PluginLifetime
     public static void PreUiLoad()
     {
         PreUiLoaded?.Invoke(null, EventArgs.Empty);
+
+        KnockKnockAreYouAwake.WaitAtDoor();
     }
 
     public static void PostUiLoad()

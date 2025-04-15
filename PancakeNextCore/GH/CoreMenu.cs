@@ -267,7 +267,7 @@ internal sealed class CoreMenu
             dropdown.AddEntry(Strings.BenchmarkSelectedComponents, (sender, e) => Performance.BenchmarkSelected());
         }*/
 
-        var versionString = " !!PreRelease!!"; //Updater.CoreVersion.ToString(4);
+        var versionString = PancakeInfo.CoreVersion.ToString(4);
 
         menu.AddSeparator();
 
