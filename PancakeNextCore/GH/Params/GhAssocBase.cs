@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 public abstract class GhAssocBase : IStorable, ICloneable
 {
     private sealed class TemporaryPear : IPear

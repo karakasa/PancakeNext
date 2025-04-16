@@ -6,7 +6,7 @@ using PancakeNextCore.Polyfill;
 using PancakeNextCore.Utility;
 using Rhino;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 
 public sealed class GhLengthDecimal : GhQuantity
 {

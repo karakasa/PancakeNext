@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace PancakeNextCore.DataType.AssocConverters;
+namespace PancakeNextCore.GH.Params.AssocConverters;
 
 internal static partial class StringUtility
 {

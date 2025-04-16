@@ -1,5 +1,4 @@
-﻿using PancakeNextCore.DataType.AssocConverters;
-using PancakeNextCore.Polyfill;
+﻿using PancakeNextCore.Polyfill;
 using PancakeNextCore.Utility;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace PancakeNextCore.DataType.AssocConverters;
+namespace PancakeNextCore.GH.Params.AssocConverters;
 
 internal sealed class XmlIo
 {
@@ -37,7 +36,7 @@ internal sealed class XmlIo
 
         var index = name.LastIndexOf("@");
 
-        if (index == -1 || !Polyfill.StringUtility.TryParseSubstrAsInt(name, index + 1, out var indice))
+        if (index == -1 || !name.TryParseSubstrAsInt(index + 1, out var indice))
             return 0;
         else
             return indice;
@@ -230,11 +229,11 @@ internal sealed class XmlIo
     }
     private static bool IsDisallowedTagChar(char c)
     {
-        return (c >= ' ' && c <= ',') || c == '/' || (c >= ';' && c <= '@') || (c >= '[' && c <= '^') || c == '`' || (c >= '{' && c <= '~');
+        return c >= ' ' && c <= ',' || c == '/' || c >= ';' && c <= '@' || c >= '[' && c <= '^' || c == '`' || c >= '{' && c <= '~';
     }
     private static bool IsDisallowedFirstChar(char firstChar)
     {
-        return firstChar == '-' || firstChar == '.' || (firstChar >= '0' && firstChar <= '9');
+        return firstChar == '-' || firstChar == '.' || firstChar >= '0' && firstChar <= '9';
     }
 
     public static GhAssocBase ReadXml(string content, out string? root, ICollection<string>? interested = null)
@@ -265,7 +264,7 @@ internal sealed class XmlIo
 
         for (; ; )
         {
-            bool skipRead = false;
+            var skipRead = false;
 
             switch (xml.NodeType)
             {

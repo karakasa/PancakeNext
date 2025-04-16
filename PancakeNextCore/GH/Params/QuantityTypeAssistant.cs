@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 public sealed class QuantityTypeAssistant : TypeAssistant<GhQuantity>
 {
     internal static readonly QuantityTypeAssistant Instance = new();
@@ -28,6 +28,6 @@ public sealed class QuantityTypeAssistant : TypeAssistant<GhQuantity>
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static int SortRareNull(GhQuantity? a, GhQuantity? b) 
+    private static int SortRareNull(GhQuantity? a, GhQuantity? b)
         => a is null ? b is null ? 0 : -1 : 1;
 }

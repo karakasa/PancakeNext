@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
-namespace PancakeNextCore.DataType.AssocConverters;
+namespace PancakeNextCore.GH.Params.AssocConverters;
 
 internal sealed class BuiltinJsonParser : IJsonParser
 {

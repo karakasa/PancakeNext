@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 [IoId("22B79783-C674-4BC4-AFBA-014C94D727BE")]
 public sealed class GhAtomList : GhAssocBase
 {
@@ -42,7 +42,7 @@ public sealed class GhAtomList : GhAssocBase
     {
         if (!HasValues) yield break;
 
-        for(var i = 0; i < Values.Count; i++)
+        for (var i = 0; i < Values.Count; i++)
         {
             yield return i.ToString(CultureInfo.InvariantCulture);
         }

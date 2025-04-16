@@ -1,4 +1,4 @@
-﻿namespace PancakeNextCore.DataType.AssocConverters;
+﻿namespace PancakeNextCore.GH.Params.AssocConverters;
 
 public enum EscapeStyle
 {

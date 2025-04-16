@@ -1,13 +1,15 @@
-﻿using System;
+﻿using PancakeNextCore.DataType.AssocConverters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType.AssocConverters;
+namespace PancakeNextCore.GH.Params.AssocConverters;
 internal static class JsonParserLibrary
 {
-    public static Dictionary<string, IJsonParser> Parsers = new (){
+    public static Dictionary<string, IJsonParser> Parsers = new()
+    {
         ["Pancake"] = BuiltinJsonParser.Instance,
         ["Newtonsoft"] = NSJsonParser.Instance,
 #if NET

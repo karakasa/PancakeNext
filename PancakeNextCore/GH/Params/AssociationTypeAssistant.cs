@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 public sealed class AssociationTypeAssistant : TypeAssistant<GhAssocBase>
 {
     internal static readonly AssociationTypeAssistant Instance = new();

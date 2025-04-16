@@ -94,6 +94,20 @@ internal class MenuConstructor
         return item;
     }
 
+    internal CheckMenuItem AddToggleEntry(string name, Func<bool> getter, Func<bool, bool> setter, string? toolTip = null)
+    {
+        return AddToggleEntry(name, setter, getter(), toolTip);
+    }
+
+    internal CheckMenuItem AddToggleEntry(string name, Func<bool> getter, Action<bool> setter, string? toolTip = null)
+    {
+        return AddToggleEntry(name, x =>
+        {
+            setter(x);
+            return x;
+        }, getter(), toolTip);
+    }
+
     private void PolishMenuItem(MenuItem item, bool disallowShortcut, string? toolTip)
     {
         if (toolTip != null)
@@ -169,7 +183,7 @@ internal sealed class CoreMenu
 {
     public static readonly CoreMenu Instance = new();
 
-    private SubMenuItem _topMenu = new();
+    private readonly SubMenuItem _topMenu = new();
 
     private const string MenuTitleSafe = "Pancake [Safemode]";
     private const string MenuTitle = "Pancake";
@@ -267,19 +281,9 @@ internal sealed class CoreMenu
         {
             menu.AddSeparator();
             using var dropdown = menu.AddDropdownEntry(Strings.CoreMenu_AddMenuFeatures_DeveloperTools, out _);
-            dropdown.AddToggleEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, mnuDevMode_Click, Config.DevMode);
+            dropdown.AddToggleEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, () => Config.DevMode, x => Config.DevMode = x);
             dropdown.AddSeparator();
         }
-    }
-
-    private bool mnuDevMode_Click(bool expectedState)
-    {
-        return Config.DevMode = expectedState;
-    }
-
-    private void mnuIncludeComponent_Click()
-    {
-        throw new NotImplementedException();
     }
 
     private void mnuFarEndDownstream_Click()
@@ -303,16 +307,6 @@ internal sealed class CoreMenu
     }
 
     private void mnuPickDownstream_Click()
-    {
-        throw new NotImplementedException();
-    }
-
-    private void mnuExtendedMenu_Click()
-    {
-        throw new NotImplementedException();
-    }
-
-    private void mnuHangProtection_Click()
     {
         throw new NotImplementedException();
     }

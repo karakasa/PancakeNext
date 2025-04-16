@@ -2,7 +2,7 @@
 
 using Grasshopper2.Components;
 using GrasshopperIO;
-using PancakeNextCore.DataType;
+using PancakeNextCore.GH.Params;
 
 namespace PancakeNextCore.Components.Quantity;
 
@@ -22,7 +22,16 @@ public class pcToFtInLen : PancakeComponent
     }
     protected override void Process(IDataAccess access)
     {
+
+/* Unmerged change from project 'PancakeNextCore (net7.0)'
+Before:
         access.GetItem(0, out DataType.GhQuantity quantity);
+        access.GetItem(1, out int precision);
+After:
+        access.GetItem(0, out GhQuantity quantity);
+        access.GetItem(1, out int precision);
+*/
+        access.GetItem(0, out GH.Params.GhQuantity quantity);
         access.GetItem(1, out int precision);
 
         var len = new GhLengthFeetInch(quantity.ToNeutralUnit(), precision);

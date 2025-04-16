@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 
 [IoId("3423D60E-E961-4727-95B1-A46C549CE0B5")]
 public sealed class BigRedButton : Parameter<bool>, ISolutionPriority

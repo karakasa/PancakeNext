@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 
 public abstract class GhQuantity : IEquatable<GhQuantity>, IComparable<GhQuantity>
 {
@@ -40,7 +40,7 @@ public abstract class GhQuantity : IEquatable<GhQuantity>, IComparable<GhQuantit
     }
 
     public abstract GhQuantity Duplicate();
-    
+
     public GhQuantity ConvertToUnit(string unit)
     {
         if (unit.StartsWith("ftin", StringComparison.OrdinalIgnoreCase))
@@ -221,7 +221,7 @@ public abstract class GhQuantity : IEquatable<GhQuantity>, IComparable<GhQuantit
     public bool Equals(GhQuantity? other)
     {
         if (other is null) return false;
-        return UnitType == other.UnitType && 
+        return UnitType == other.UnitType &&
             UnitName == other.UnitName &&
             ToNeutralUnit() == other.ToNeutralUnit();
     }

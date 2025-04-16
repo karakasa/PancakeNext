@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 
 public sealed class GhLengthFeetInch : GhQuantity
 {

@@ -1,10 +1,12 @@
 ﻿using Grasshopper2;
+using Rhino;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace PancakeNextCore.Dataset;
 
-internal static class Config
+public static class Config
 {
     const string DatabaseName = "PancakeGH";
 
@@ -25,8 +27,17 @@ internal static class Config
 
     internal static bool SafeMode = false;
 
-    private static readonly bool _isRunningOnMac = Environment.OSVersion.Platform != PlatformID.Win32NT;
-    internal static bool IsRunningOnMac => _isRunningOnMac;
+    public static bool IsRunningOnMac { get; } = Environment.OSVersion.Platform != PlatformID.Win32NT;
+    public static bool IsRunningOnModernNET { get; } = Environment.Version.Major >= 5;
+    public const bool IsCompiledForModernNET =
+#if NET
+        true
+#else
+        false
+#endif
+        ;
+
+    public static bool IsModernNETMismatched => IsRunningOnModernNET ^ IsCompiledForModernNET;
 
     internal static string Read(string name, string def = "", string safeDef = "")
     {
@@ -48,7 +59,7 @@ internal static class Config
         }
     }
 
-    internal static void Write(string key, string value)
+    internal static void Write(string key, string? value)
     {
         Database.Set(key, value);
     }
@@ -80,7 +91,7 @@ internal static class Config
         }
     }
 
-    public static bool DevMode
+    internal static bool DevMode
     {
         get
         {
@@ -121,4 +132,48 @@ internal static class Config
         _untrustedFlagScanned = true;
     }
 
+    private static RunningEnvironment? _env;
+    private static RunningEnvironment DetermineRunningEnvironment()
+    {
+        try
+        {
+            if (IsRunningOnMac)
+                return RunningEnvironment.Rhino;
+
+            var prcName = Process.GetCurrentProcess()?.ProcessName?.ToLowerInvariant();
+            switch (prcName)
+            {
+                case "rhino":
+                    return RunningEnvironment.Rhino;
+                case "revit":
+                case "acad":
+                    return RunningEnvironment.RhinoInside;
+                case "rhino.compute":
+                    return RunningEnvironment.RhinoCompute;
+            }
+        }
+        catch
+        {
+        }
+
+        return DetermineRunningEnvironmentFallback();
+    }
+    private static RunningEnvironment DetermineRunningEnvironmentFallback()
+    {
+        if (RhinoApp.IsRunningHeadless)
+            return RunningEnvironment.UnknownHeadless;
+        return RunningEnvironment.Unknown;
+    }
+    public static RunningEnvironment CurrentEnvironment => _env ??= DetermineRunningEnvironment();
+    public static bool IsInRhino => CurrentEnvironment is RunningEnvironment.Rhino;
+    public static bool IsInteractive => CurrentEnvironment is RunningEnvironment.Rhino or RunningEnvironment.RhinoInside;
+}
+
+public enum RunningEnvironment
+{
+    Rhino,
+    RhinoInside,
+    RhinoCompute,
+    UnknownHeadless,
+    Unknown
 }

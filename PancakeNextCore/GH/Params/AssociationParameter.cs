@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 
 [IoId("5442B78E-DC82-4EE2-9887-0C77FF395F9A")]
 public sealed class AssociationParameter : Parameter<GhAssocBase>

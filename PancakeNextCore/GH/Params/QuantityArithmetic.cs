@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 public sealed class QuantityArithmetic : ArithmeticRepository
 {
     [Arithmetic.Operator(Arithmetic.Operation.Add)]

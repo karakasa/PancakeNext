@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 
 [IoId("1E7E4661-E60F-49A4-BEC3-4A128C1BDFB8")]
 public sealed class QuantityParameter : Parameter<GhQuantity>

@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PancakeNextCore.DataType;
 
-namespace PancakeNextCore.DataType.AssocConverters;
+namespace PancakeNextCore.GH.Params.AssocConverters;
 internal sealed class NSJsonParser : IJsonParser
 {
     public static readonly NSJsonParser Instance = new();

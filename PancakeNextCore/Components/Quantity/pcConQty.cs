@@ -3,7 +3,7 @@ using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
 using PancakeNextCore.Dataset;
-using PancakeNextCore.DataType;
+using PancakeNextCore.GH.Params;
 using PancakeNextCore.Utility;
 using System;
 

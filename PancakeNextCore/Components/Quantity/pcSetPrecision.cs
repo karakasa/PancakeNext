@@ -2,7 +2,7 @@
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
-using PancakeNextCore.DataType;
+using PancakeNextCore.GH.Params;
 
 namespace PancakeNextCore.Components.Quantity;
 
@@ -24,7 +24,16 @@ public class pcSetPrecision : PancakeComponent
 
     protected override void Process(IDataAccess access)
     {
+
+/* Unmerged change from project 'PancakeNextCore (net7.0)'
+Before:
         access.GetItem(0, out DataType.GhQuantity obj);
+        access.GetItem(1, out int precision);
+After:
+        access.GetItem(0, out GhQuantity obj);
+        access.GetItem(1, out int precision);
+*/
+        access.GetItem(0, out GH.Params.GhQuantity obj);
         access.GetItem(1, out int precision);
 
         if (obj is GhLengthFeetInch len)

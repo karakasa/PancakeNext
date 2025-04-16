@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 public sealed class AssociationConversions : ConversionRepository
 {
     public static Merit AssocToNTuple(GhAssocBase assoc, out NTuple? tuple, out string message)

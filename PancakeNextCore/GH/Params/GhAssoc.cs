@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Xml.Linq;
 
-namespace PancakeNextCore.DataType;
+namespace PancakeNextCore.GH.Params;
 
 [IoId("22B79783-C674-4BC4-AFBA-014C94D727BD")]
 public sealed class GhAssoc : GhAssocBase
@@ -264,7 +264,7 @@ public sealed class GhAssoc : GhAssocBase
     }
     private IEnumerable<string> GetItemNames()
     {
-        if (!HasValues) 
+        if (!HasValues)
             yield break;
 
         for (var i = 0; i < Length; i++)
@@ -325,7 +325,7 @@ public sealed class GhAssoc : GhAssocBase
 
     public bool Equals(GhAssoc another)
     {
-        if (another is null) 
+        if (another is null)
             return false;
 
         var thisLength = Length;

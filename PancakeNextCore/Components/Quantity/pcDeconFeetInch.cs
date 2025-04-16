@@ -2,7 +2,7 @@
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
-using PancakeNextCore.DataType;
+using PancakeNextCore.GH.Params;
 
 namespace PancakeNextCore.Components.Quantity;
 

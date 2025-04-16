@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PancakeNextCore.DataType.AssocConverters;
-using PancakeNextCore.DataType;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.GH.Params.AssocConverters;
+
+
 
 #if NET
 using System.Text.Json;
