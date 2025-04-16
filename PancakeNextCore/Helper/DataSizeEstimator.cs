@@ -1,5 +1,6 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters;
+using Grasshopper2.Types.Colour;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PancakeNextCore.Helper;
-internal static class ParameterSizeEstimator
+internal static class DataSizeEstimator
 {
     public static ulong Estimate(IParameter p)
     {
@@ -43,6 +44,8 @@ internal static class ParameterSizeEstimator
         public const ulong Circle = Plane + Double;
         public const ulong Sphere = Plane + Double;
         public const ulong Rectangle3d = Plane + Interval * 2;
+        public const ulong Cone = Plane + 2 * Double;
+        public const ulong Cylinder = Circle + Double * 2;
     }
 
     private static ulong EstimateType(object? obj)
@@ -67,7 +70,12 @@ internal static class ParameterSizeEstimator
             Circle => BuiltinSizes.Circle,
             Sphere => BuiltinSizes.Sphere,
             Rectangle3d => BuiltinSizes.Rectangle3d,
+            Quaternion => sizeof(double) * 4,
+            Transform => sizeof(double) * 16,
             System.Numerics.Complex => 2 * sizeof(double),
+            Ellipse or Cone => BuiltinSizes.Cone,
+            Cylinder => BuiltinSizes.Cylinder,
+            Colour => 4 * sizeof(double) + sizeof(int),
             GeometryBase geo => geo.MemoryEstimate(),
             Array array => EstimateArray(array),
             ValueType => EstimateValueType(obj.GetType()),
