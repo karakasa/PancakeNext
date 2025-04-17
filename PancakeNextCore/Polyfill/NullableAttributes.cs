@@ -28,4 +28,10 @@ public sealed class NotNullWhenAttribute : Attribute
     public NotNullWhenAttribute(bool result) { }
 }
 
+[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
+public sealed class DisallowNullAttribute : Attribute
+{
+    public DisallowNullAttribute() { }
+}
+
 #endif

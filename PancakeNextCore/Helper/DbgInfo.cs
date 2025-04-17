@@ -8,58 +8,38 @@ using Grasshopper2.Parameters;
 using GrasshopperIO;
 using PancakeNextCore.UI;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.Framework;
+using Path = System.IO.Path;
+using PancakeNextCore.Utility;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PancakeNextCore.Helper;
 
-/// <summary>
-/// Debug info class. These features will soon be moved to another plugin.
-/// Do not translate this module.
-/// </summary>
-internal class DbgInfo
+internal static class DbgInfo
 {
-    /*public static string[] GetCoreComponents()
+    private sealed class PluginEqualityComparer : IEqualityComparer<Plugin>
     {
-        var list = new List<string>();
-        var coreAssembly = new HashSet<Guid>();
-        var noncoreAssembly = new HashSet<Guid>();
-
-        var objs = Instances.ComponentServer.ObjectProxies;
-
-        foreach (var obj in objs)
+        public bool Equals(Plugin? x, Plugin? y) => x?.Id == y?.Id;
+        public int GetHashCode([DisallowNull] Plugin obj) => obj.Id.GetHashCode();
+    }
+    public static IEnumerable<ObjectProxy> GetCoreComponents()
+    {
+        var corePlugins = PluginServer.CorePlugins.Select(FileIo.GetInvariantName).ExcludeNulls().ToHashSet();
+        var cache = new ParameterizedCache<HashSet<string>, Plugin, bool>(corePlugins, IsCorePlugin, new PluginEqualityComparer());
+        foreach (var proxy in ObjectProxies.Proxies)
         {
-            if (obj.Kind != GH_ObjectType.CompiledObject)
-            {
-                continue;
-            }
-
-            var assemblyGuid = obj.LibraryGuid;
-            if (coreAssembly.Contains(assemblyGuid))
-            {
-                list.Add($"{obj.Guid},{obj.Desc.Name},{obj.Type.FullName}");
-                continue;
-            }
-            if (noncoreAssembly.Contains(assemblyGuid))
-            {
-                continue;
-            }
-
-            var assembly = Instances.ComponentServer.FindAssembly(assemblyGuid);
-            if (assembly == null)
-            {
-                noncoreAssembly.Add(assemblyGuid);
-                continue;
-            }
-
-            var isCore = assembly.IsCoreLibrary;
-            (isCore ? coreAssembly : noncoreAssembly).Add(assemblyGuid);
-            if (isCore)
-            {
-                list.Add($"{obj.Guid},{obj.Desc.Name},{obj.Type.FullName}");
-            }
+            if (cache[proxy.Plugin])
+                yield return proxy;
         }
+    }
 
-        return list.ToArray();
-    }*/
+    private static bool IsCorePlugin(HashSet<string> set, Plugin plugin)
+    {
+        var name = plugin.Location.GetInvariantName();
+        if (name is "grasshopper2") return true;
+        if (name is null) return false;
+        return set.Contains(name);
+    }
 
     internal static void ShowDocObjInfo(IDocumentObject? obj)
     {
@@ -71,7 +51,7 @@ internal class DbgInfo
 
             var type = obj.GetType();
 
-            report += DescribeNomen(obj) + "\r\n";
+            report += DescribeNomen(obj) + "\r\n\r\n";
             report += GetTypeDescription(type);
             report += string.Format(Strings.DbgInfo_ShowDocObjInfo_CompId, obj.GetType().GetCustomAttribute<IoIdAttribute>()?.Id ?? Guid.Empty);
             report += string.Format(Strings.DbgInfo_ShowDocObjInfo_InstId, obj.InstanceId);
@@ -125,16 +105,16 @@ internal class DbgInfo
         }
 
     }
-    private static Type? TryDetermineInnerType(IParameter param)
+    private static Type? InferInnerType(IParameter param)
     {
         if (param is GenericParameter)
         {
             return typeof(object);
         }
 
-        return param.TypeAssistantWeak?.Type ?? GetGenericInterfaceImplementation(param);
+        return param.TypeAssistantWeak?.Type ?? GetGenericParameter(param);
     }
-    private static Type? GetGenericInterfaceImplementation(IParameter param)
+    private static Type? GetGenericParameter(IParameter param)
     {
         return param.GetType().GetInterfaces()
             .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IParameter<>))
@@ -145,7 +125,14 @@ internal class DbgInfo
     private static string DescribeNomen(IDocumentObject obj)
     {
         var nomen = obj.Nomen;
-        return $"{nomen.Name} ({obj.UserName ?? "/"}) from {nomen.Chapter}-{nomen.Section}";
+        var str = nomen.Name;
+        if (!string.IsNullOrEmpty(obj.UserName))
+            str += $" ({obj.UserName})";
+
+        if (!string.IsNullOrEmpty(nomen.Chapter) || !string.IsNullOrEmpty(nomen.Section))
+            str += $" [{nomen.Chapter}: {nomen.Section}]";
+
+        return str;
     }
 
     private static string GetParamDescription(IParameter param)
@@ -155,7 +142,9 @@ internal class DbgInfo
 
         var report =
             $"    {DescribeNomen(param)}\r\n" +
-            string.Format(Strings.DbgInfo_GetParamDescription_ExpectedType, TryDetermineInnerType(param)?.Name ?? "<unknown>");
+            string.Format(Strings.DbgInfo_GetParamDescription_ExpectedType, InferInnerType(param)?.Name ?? "<unknown>");
+
+        var doc = param.Document;
 
         try
         {

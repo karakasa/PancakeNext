@@ -446,6 +446,6 @@ public class ExtendedContextMenu : Feature
 
     public override bool IsDefaultEnabled()
     {
-        return true;
+        return false;
     }
 }

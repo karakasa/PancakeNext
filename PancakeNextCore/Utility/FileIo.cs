@@ -38,4 +38,10 @@ internal static class FileIo
 
         return File.ReadAllText(path, encoding);
     }
+
+    public static string? GetInvariantName(this string path)
+    {
+        if (path is null) return null;
+        return Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+    }
 }

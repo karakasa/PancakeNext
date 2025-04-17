@@ -10,6 +10,7 @@ using PancakeNextCore.Dataset;
 using Grasshopper2.UI;
 using System.Diagnostics.CodeAnalysis;
 using PancakeNextCore.Helper;
+using PancakeNextCore.UI;
 
 namespace PancakeNextCore.GH;
 
@@ -253,13 +254,25 @@ internal sealed class CoreMenu
 
         menu.AddLabel(string.Format(Strings.CoreMenu_AddMenuFeatures_Pancake_for_GH__0_, versionString), "");
 
-        if (Config.SafeMode || Config.DevMode)
+        if (Config.SafeMode || Config.DevMode || Config.PreRelease)
         {
             menu.AddSeparator();
             using var dropdown = menu.AddDropdownEntry(Strings.CoreMenu_AddMenuFeatures_DeveloperTools, out _);
             dropdown.AddToggleEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, () => Config.DevMode, x => Config.DevMode = x);
             dropdown.AddSeparator();
+            dropdown.AddEntry("List core components...", mnuListCoreComponents_Click);
         }
+    }
+
+    private static void mnuListCoreComponents_Click()
+    {
+        var sb = new StringBuilder();
+        foreach (var proxy in DbgInfo.GetCoreComponents())
+        {
+            sb.AppendLine($"{proxy.Id},{proxy.Nomen.Name},{proxy.Nomen.Chapter},{proxy.Nomen.Section}");
+        }
+
+        Presenter.ShowReportWindow(sb.ToString());
     }
 
     private void mnuFarEndDownstream_Click()

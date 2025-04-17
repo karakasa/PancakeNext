@@ -91,6 +91,7 @@ public static class Config
         }
     }
 
+    internal const bool PreRelease = true;
     internal static bool DevMode
     {
         get

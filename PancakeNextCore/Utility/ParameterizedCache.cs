@@ -6,9 +6,26 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PancakeNextCore.Utility;
-internal sealed class ParameterizedCache<TParam, TKey, TValue>(TParam param, Func<TParam, TKey, TValue> retriever) where TKey : notnull
+internal sealed class ParameterizedCache<TParam, TKey, TValue> where TKey : notnull
 {
-    private readonly Dictionary<TKey, TValue> _cache = [];
+    private readonly Dictionary<TKey, TValue> _cache;
+    private readonly TParam param;
+    private readonly Func<TParam, TKey, TValue> retriever;
+
+    public ParameterizedCache(TParam param, Func<TParam, TKey, TValue> retriever)
+    {
+        this.param = param;
+        this.retriever = retriever;
+        _cache = [];
+    }
+
+    public ParameterizedCache(TParam param, Func<TParam, TKey, TValue> retriever, IEqualityComparer<TKey> comparer)
+    {
+        this.param = param;
+        this.retriever = retriever;
+        _cache = new(comparer);
+    }
+
     public TValue this[TKey key]
     {
         get
