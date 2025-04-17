@@ -9,6 +9,7 @@ using Eto.Forms;
 using PancakeNextCore.Dataset;
 using Grasshopper2.UI;
 using System.Diagnostics.CodeAnalysis;
+using PancakeNextCore.Helper;
 
 namespace PancakeNextCore.GH;
 
@@ -26,36 +27,14 @@ internal class MenuConstructor
         _parent = parent;
     }
 
-    internal MenuItem AddFeatureEntry(string displayName, string featureName, bool disallowShortcut = false, string toolTip = null)
+    internal CheckMenuItem AddFeatureEntry(string displayName, string featureName, bool disallowShortcut = false, string? toolTip = null)
     {
-        throw new NotImplementedException();
-        return null!;
+        var name = featureName;
+        var check = PluginLifetime.Features.IsEffective(featureName);
 
-        /*var name = featureName;
-        var check = Config.Features.IsEffective(featureName);
-
-        var item = new MenuItem
-        {
-            Text = displayName,
-            Checked = check
-        };
-
-        if (toolTip != null)
-            item.ToolTipText = toolTip;
-
-        item.Click += (sender, e) =>
-        {
-            item.Checked = !item.Checked;
-            Config.Features.SetStatus(name, item.Checked);
-        };
-        
-        lastSeparator = false;
-        _parent.Add(item);
-
-        if (!disallowShortcut)
-            CoreMenu.MenuEntryAllowShortcut.Add(item);
-
-        return item;*/
+        return AddToggleEntry(displayName, check,
+            expectedState => PluginLifetime.Features.SetStatus(name, expectedState) ? expectedState : !expectedState, 
+            toolTip);
     }
 
     internal ButtonMenuItem AddEntry(string name, Action procedure, string? toolTip = null)
@@ -74,7 +53,7 @@ internal class MenuConstructor
         return item;
     }
 
-    internal CheckMenuItem AddToggleEntry(string name, Func<bool, bool> procedure, bool check, string? toolTip = null)
+    internal CheckMenuItem AddToggleEntry(string name, bool check, Func<bool, bool> procedure, string? toolTip = null)
     {
         CheckMenuItem item;
 
@@ -96,16 +75,16 @@ internal class MenuConstructor
 
     internal CheckMenuItem AddToggleEntry(string name, Func<bool> getter, Func<bool, bool> setter, string? toolTip = null)
     {
-        return AddToggleEntry(name, setter, getter(), toolTip);
+        return AddToggleEntry(name, getter(), setter, toolTip);
     }
 
     internal CheckMenuItem AddToggleEntry(string name, Func<bool> getter, Action<bool> setter, string? toolTip = null)
     {
-        return AddToggleEntry(name, x =>
+        return AddToggleEntry(name, getter(), x =>
         {
             setter(x);
             return x;
-        }, getter(), toolTip);
+        }, toolTip);
     }
 
     private void PolishMenuItem(MenuItem item, bool disallowShortcut, string? toolTip)
@@ -235,10 +214,7 @@ internal sealed class CoreMenu
         menu.AddSeparator();
 
         menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_Tweaks, "tweaks");
-        //_mnuHangProtection = menu.AddEntry(Strings.CoreMenu_AddMenuFeatures_EnableHangProtection,
-            //mnuHangProtection_Click, HangDetector.Enabled, disallowShortcut: true, toolTip: Strings.PancakeWillDoAnEmergencySaveIf);
-        //_mnuExtendedMenu = menu.AddEntry(Strings.EnableExtendedContextMenu,
-                //mnuExtendedMenu_Click, Config.Features.IsEffective(ExtendedContextMenu.Name), disallowShortcut: true, toolTip: Strings.AddsAContextMenuWhenYouRightClickCertain);
+        menu.AddFeatureEntry(Strings.EnableExtendedContextMenu, ExtendedContextMenu.Name, toolTip: Strings.AddsAContextMenuWhenYouRightClickCertain);
 
         menu.AddSeparator();
 

@@ -1,5 +1,6 @@
 ﻿using Grasshopper2.UI;
 using PancakeNextCore.Dataset;
+using PancakeNextCore.PancakeMgr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,7 @@ internal static class PluginLifetime
     public static event EventHandler? PostUiLoaded;
     public static event EventHandler? UiClosing;
 
-    static bool _iconLoaded = false;
-    public static void HandleIconEvent()
-    {
-        if (_iconLoaded) return;
-
-        PostUiLoad();
-
-        _iconLoaded = true;
-    }
-
+    public static readonly FeatureManager Features = new();
     static void RegisterCloseEvent()
     {
         Editor.Instance.Closing += static (o, e) => BeforeUiClose();
@@ -30,7 +22,11 @@ internal static class PluginLifetime
 
     public static void PreUiLoad()
     {
+        Features.LoadFeatures();
+
         PreUiLoaded?.Invoke(null, EventArgs.Empty);
+
+        Features.ProcessStartupHook(FeatureManager.LoadStage.PreUI);
 
         KnockKnockAreYouAwake.WaitAtDoor();
     }
@@ -38,8 +34,11 @@ internal static class PluginLifetime
     public static void PostUiLoad()
     {
         RegisterCloseEvent();
-        CoreMenu.Instance.RegisterMenu();
+        
+        Features.ProcessStartupHook(FeatureManager.LoadStage.UI);
         PostUiLoaded?.Invoke(null, EventArgs.Empty);
+
+        CoreMenu.Instance.RegisterMenu();
     }
     public static void BeforeUiClose()
     {

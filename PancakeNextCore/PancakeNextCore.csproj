@@ -16,9 +16,7 @@
   <ItemGroup>
     <Compile Remove="Components\SleepComponent.cs" />
     <Compile Remove="GH\AssociationStringifier.cs" />
-    <Compile Remove="Helper\DbgInfo.cs" />
     <Compile Remove="Helper\DependencyWalker.cs" />
-    <Compile Remove="Helper\ExtendedContextMenu.cs" />
     <Compile Remove="Helper\HighlightManager.cs" />
     <Compile Remove="Helper\OverlayInfo.cs" />
     <Compile Remove="Helper\ParamContentHint.cs" />
@@ -45,6 +43,20 @@
     <Compile Remove="Modules\TransferSetting\GrasshopperLibProvider.cs" />
     <Compile Remove="Modules\TransferSetting\GrasshopperProvider.cs" />
     <Compile Remove="Modules\TransferSetting\PancakeProvider.cs" />
+    <Compile Remove="UI\ColorScheme.cs" />
+    <Compile Remove="UI\DarkModeIconUtility.cs" />
+    <Compile Remove="UI\EtoForms\AddonManagerLogic.cs" />
+    <Compile Remove="UI\EtoForms\AddonManagerUi.cs" />
+    <Compile Remove="UI\EtoForms\PancakeSettingUi.cs" />
+    <Compile Remove="UI\EtoForms\PerformanceAnalyzerLogic.cs" />
+    <Compile Remove="UI\EtoForms\PerformanceAnalyzerUi.cs" />
+    <Compile Remove="UI\EtoForms\PortabilityReportLogic.cs" />
+    <Compile Remove="UI\EtoForms\PortabilityReportUi.cs" />
+    <Compile Remove="UI\EtoForms\TransferSettingUi.cs" />
+    <Compile Remove="UI\IFormPerformanceAnalyzer.cs" />
+    <Compile Remove="UI\IFormPortabilityReport.cs" />
+    <Compile Remove="UI\PerformanceAnalyzerPresenter.cs" />
+    <Compile Remove="UI\UIHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,9 +103,7 @@
 
   <ItemGroup>
     <None Include="Components\SleepComponent.cs" />
-    <None Include="Helper\DbgInfo.cs" />
     <None Include="Helper\DependencyWalker.cs" />
-    <None Include="Helper\ExtendedContextMenu.cs" />
     <None Include="Helper\HighlightManager.cs" />
     <None Include="Helper\OverlayInfo.cs" />
     <None Include="Helper\ParamContentHint.cs" />
@@ -120,6 +130,20 @@
     <None Include="Modules\TransferSetting\GrasshopperLibProvider.cs" />
     <None Include="Modules\TransferSetting\GrasshopperProvider.cs" />
     <None Include="Modules\TransferSetting\PancakeProvider.cs" />
+    <None Include="UI\ColorScheme.cs" />
+    <None Include="UI\DarkModeIconUtility.cs" />
+    <None Include="UI\EtoForms\AddonManagerLogic.cs" />
+    <None Include="UI\EtoForms\AddonManagerUi.cs" />
+    <None Include="UI\EtoForms\PancakeSettingUi.cs" />
+    <None Include="UI\EtoForms\PerformanceAnalyzerLogic.cs" />
+    <None Include="UI\EtoForms\PerformanceAnalyzerUi.cs" />
+    <None Include="UI\EtoForms\PortabilityReportLogic.cs" />
+    <None Include="UI\EtoForms\PortabilityReportUi.cs" />
+    <None Include="UI\EtoForms\TransferSettingUi.cs" />
+    <None Include="UI\IFormPerformanceAnalyzer.cs" />
+    <None Include="UI\IFormPortabilityReport.cs" />
+    <None Include="UI\PerformanceAnalyzerPresenter.cs" />
+    <None Include="UI\UIHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>

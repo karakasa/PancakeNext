@@ -52,6 +52,14 @@ public sealed class FeatureManager
         return _features.Where(f => f.GetName() == featureName).OfType<T>().FirstOrDefault();
     }
 
+    public bool IsEffective<T>() where T : Feature
+    {
+        var feature = GetFeature<T>();
+        if (feature == null) return false;
+
+        return feature.IsEffective();
+    }
+
     public bool IsEffective(string featureName)
     {
         var feature = GetFeatureByName(featureName);

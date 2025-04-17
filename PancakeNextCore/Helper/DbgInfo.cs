@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pancake.UI;
-using Grasshopper;
-using Grasshopper.Kernel;
-using Pancake.Interfaces;
-using Grasshopper.Kernel.Special;
 using System.Reflection;
+using Grasshopper2.Doc;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters;
+using GrasshopperIO;
+using PancakeNextCore.UI;
+using Grasshopper2.Parameters.Standard;
 
 namespace PancakeNextCore.Helper;
 
@@ -16,7 +17,7 @@ namespace PancakeNextCore.Helper;
 /// </summary>
 internal class DbgInfo
 {
-    public static string[] GetCoreComponents()
+    /*public static string[] GetCoreComponents()
     {
         var list = new List<string>();
         var coreAssembly = new HashSet<Guid>();
@@ -58,20 +59,11 @@ internal class DbgInfo
         }
 
         return list.ToArray();
-    }
+    }*/
 
-    internal static void ShowDocObjInfo(IGH_DocumentObject obj = null)
+    internal static void ShowDocObjInfo(IDocumentObject? obj)
     {
-        if (obj == null)
-        {
-            var objs = Instances.ActiveCanvas?.Document?.SelectedObjects();
-            if (objs == null || objs.Count != 1)
-            {
-                UiHelper.Information(Strings.DbgInfo_ShowDocObjInfo_You_can_only_check_properties_of_one_DocObject_);
-                return;
-            }
-            obj = objs[0];
-        }
+        if (obj is null) return;
 
         try
         {
@@ -79,18 +71,19 @@ internal class DbgInfo
 
             var type = obj.GetType();
 
+            report += DescribeNomen(obj) + "\r\n";
             report += GetTypeDescription(type);
-            report += string.Format(Strings.DbgInfo_ShowDocObjInfo_CompId, obj.ComponentGuid);
-            report += string.Format(Strings.DbgInfo_ShowDocObjInfo_InstId, obj.InstanceGuid);
+            report += string.Format(Strings.DbgInfo_ShowDocObjInfo_CompId, obj.GetType().GetCustomAttribute<IoIdAttribute>()?.Id ?? Guid.Empty);
+            report += string.Format(Strings.DbgInfo_ShowDocObjInfo_InstId, obj.InstanceId);
             report += "\r\n";
 
             var interfaceList = string.Join("\r\n    ",
-                type.GetInterfaces().Except(typeof(GH_DocumentObject).GetInterfaces()));
+                type.GetInterfaces().Except(typeof(DocumentObject).GetInterfaces()));
 
             report += string.Format(Strings.DbgInfo_ShowDocObjInfo_Implement, interfaceList);
             report += Strings.DbgInfo_ShowDocObjInfo_Inherited_from__;
             var baseType = type.BaseType;
-            while (baseType != null && baseType != typeof(GH_DocumentObject))
+            while (baseType != null && baseType != typeof(DocumentObject))
             {
                 report += "\r\n";
                 report += GetTypeDescription(baseType, 1);
@@ -101,30 +94,22 @@ internal class DbgInfo
 
             switch (obj)
             {
-                case IGH_Component component:
+                case Component component:
                     report += Strings.DbgInfo_ShowDocObjInfo_InpParam;
-                    foreach (var input in component.Params.Input)
+                    foreach (var input in component.Parameters.Inputs)
                     {
                         report += GetParamDescription(input);
                     }
 
                     report += Strings.DbgInfo_ShowDocObjInfo_OutParam;
-                    foreach (var input in component.Params.Output)
+                    foreach (var input in component.Parameters.Outputs)
                     {
                         report += GetParamDescription(input);
                     }
 
-                    if (component is IPerformanceProfiler profiled)
-                    {
-                        report += "\r\n";
-                        report += $"    Input processing time:  {profiled.GetInputProcessingTime()} ms\r\n";
-                        report += $"    Output processing time: {profiled.GetOutputProcessingTime()} ms\r\n";
-                        report += $"    Calculation time:       {profiled.GetCalculationTime()} ms\r\n";
-                    }
-
                     break;
 
-                case IGH_Param param:
+                case IParameter param:
                     report += Strings.DbgInfo_ShowDocObjInfo_ParamInfo;
                     report += GetParamDescription(param);
                     break;
@@ -140,23 +125,45 @@ internal class DbgInfo
         }
 
     }
+    private static Type? TryDetermineInnerType(IParameter param)
+    {
+        if (param is GenericParameter)
+        {
+            return typeof(object);
+        }
 
-    private static string GetParamDescription(IGH_Param param)
+        return param.TypeAssistantWeak?.Type ?? GetGenericInterfaceImplementation(param);
+    }
+    private static Type? GetGenericInterfaceImplementation(IParameter param)
+    {
+        return param.GetType().GetInterfaces()
+            .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IParameter<>))
+            .Select(t => t.GetGenericArguments()[0])
+            .FirstOrDefault();
+    }
+
+    private static string DescribeNomen(IDocumentObject obj)
+    {
+        var nomen = obj.Nomen;
+        return $"{nomen.Name} ({obj.UserName ?? "/"}) from {nomen.Chapter}-{nomen.Section}";
+    }
+
+    private static string GetParamDescription(IParameter param)
     {
         if (param == null)
             return "";
 
         var report =
-            $"    {param.NickName}: {param.Name}\r\n" +
-            $"    {param.Description}\r\n" +
-            string.Format(Strings.DbgInfo_GetParamDescription_ExpectedType, param.Type.Name);
+            $"    {DescribeNomen(param)}\r\n" +
+            string.Format(Strings.DbgInfo_GetParamDescription_ExpectedType, TryDetermineInnerType(param)?.Name ?? "<unknown>");
 
         try
         {
-            if (param.Kind == GH_ParamKind.input || param.Kind == GH_ParamKind.floating)
+            /*
+            if (param.Kind is Kind.Input or Kind.Floating)
             {
                 var typeTable = new HashSet<Type>();
-                foreach (var single in param.Sources)
+                foreach (var single in param.Inputs)
                 {
                     var atom = single.VolatileData;
                     if (atom?.PathCount != 0)
@@ -186,7 +193,7 @@ internal class DbgInfo
                             $"        {single.Attributes.GetTopLevel.DocObject.Name}, {single.NickName}: {single.Name}\r\n");
                 }
             }
-            if (param.Kind == GH_ParamKind.output || param.Kind == GH_ParamKind.floating)
+            if (param.Kind is Kind.Output or Kind.Floating)
             {
 
                 var typeTable = new HashSet<Type>();
@@ -218,6 +225,7 @@ internal class DbgInfo
                             $"        {single.Attributes.GetTopLevel.DocObject.Name}, {single.NickName}: {single.Name}\r\n");
                 }
             }
+            */
         }
         catch (Exception)
         {
@@ -255,11 +263,4 @@ internal class DbgInfo
 
         return report;
     }
-
-#if DEBUG
-    internal static void RemoveClusterPassword(IGH_DocumentObject docObj)
-    {
-        typeof(GH_Cluster).GetField("m_password", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(docObj, null);
-    }
-#endif
 }

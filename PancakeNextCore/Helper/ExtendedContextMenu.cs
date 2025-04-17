@@ -2,99 +2,95 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
-using GH_Util;
-using Grasshopper;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Undo;
-using Grasshopper.Kernel.Undo.Actions;
-using Pancake.GH;
-using Pancake.GH.Tweaks;
-using Pancake.Utility;
+using Eto.Forms;
+using Grasshopper2.Components;
+using Grasshopper2.Doc;
+using Grasshopper2.Extensions;
+using Grasshopper2.Parameters;
+using Grasshopper2.UI;
+using PancakeNextCore.GH;
 using PancakeNextCore.PancakeMgr;
 
 namespace PancakeNextCore.Helper;
 
 public class ExtendedContextMenu : Feature
 {
-    private readonly ContextMenuStrip _wireMenu = new ContextMenuStrip();
-    private readonly ContextMenuStrip _componentMenu = new ContextMenuStrip();
-    private readonly ContextMenuStrip _paramMenu = new ContextMenuStrip();
-    private readonly ContextMenuStrip _groupMenu = new ContextMenuStrip();
-    private readonly ContextMenuStrip _undefinedMenu = new ContextMenuStrip();
+    private readonly ContextMenu _wireMenu = new();
+    private readonly ContextMenu _componentMenu = new();
+    private readonly ContextMenu _paramMenu = new();
+    private readonly ContextMenu _groupMenu = new();
 
     private bool _enabled;
-    private IGH_Param activeSource;
-    private IGH_Param activeTarget;
-    private IGH_Component activeComponent;
+    private IParameter? activeParameter;
+    private IDocumentObject? activeObject;
+    private WireEnds? activeWire;
 
-    private void MouseClickEventHandler(object sender, MouseEventArgs e)
+    const Keys ExpectedModifier = Keys.Control | Keys.Shift;
+    const MouseButtons ExpectedButton = MouseButtons.Primary;
+
+    private void MouseClickEventHandler(object? sender, MouseEventArgs e)
     {
-        if ((Control.ModifierKeys & Keys.Shift) != Keys.Shift) return;
-        if ((Control.ModifierKeys & Keys.Control) != Keys.Control) return;
-
-        if (e.Button != MouseButtons.Right) return;
-
-        var doc = Instances.ActiveCanvas?.Document;
-        if (doc == null)
-            return;
-
         try
         {
-            var pointf = Instances.ActiveCanvas.Viewport.UnprojectPoint(e.Location);
+            if (Editor.Instance?.Canvas is not { } canvas) return;
+            if (canvas.Document is not { } doc) return;
 
-            var searchRadius = 14 / Instances.ActiveCanvas.Viewport.Zoom;
+            if ((Keyboard.Modifiers & ExpectedModifier) != ExpectedModifier) return;
+            if ((e.Buttons & ExpectedButton) != ExpectedButton) return;
 
-            if (doc.FindWireAt(pointf, searchRadius, ref activeSource, ref activeTarget))
+            var mappedEvent = e.MapToContent(canvas);
+            var pick = canvas.ResolvePick(mappedEvent.Location, false, true, true, true, false);
+
+            switch (pick.Kind)
             {
-                _wireMenu.Show((Control)sender, e.Location);
-                return;
+                case Pick.Wire:
+                    e.Handled = true;
+                    HandleWire(doc, pick.WireUnderPick);
+                    break;
+                case Pick.Inlet:
+                    e.Handled = true;
+                    HandleParameterInComponent(doc.Objects.FindParameter(pick.InletUnderPick));
+                    break;
+                case Pick.Outlet:
+                    e.Handled = true;
+                    HandleParameterInComponent(doc.Objects.FindParameter(pick.OutletUnderPick));
+                    break;
+                case Pick.BackgroundObject:
+                case Pick.ForegroundObject:
+                    e.Handled = true;
+                    HandleStandaloneObject(doc.Objects.Find(pick.ObjectUnderPick));
+                    break;
+                default:
+                    return;
             }
-
-            foreach (var obj in doc.Objects)
-            {
-                switch (obj)
-                {
-                    case IGH_Param param
-                        when param.Kind == GH_ParamKind.floating && param.Attributes.Bounds.Contains(pointf):
-
-                        activeSource = param;
-                        activeComponent = null;
-                        _componentMenu.Show((Control)sender, e.Location);
-                        return;
-
-                    case IGH_Component component
-                        when component.Attributes.Bounds.Contains(pointf):
-
-                        foreach (var param in component.Params.Input.Concat(component.Params.Output))
-                        {
-                            if (!param.Attributes.Bounds.Contains(pointf)) continue;
-
-                            activeComponent = component;
-                            activeSource = param;
-                            _paramMenu.Show((Control)sender, e.Location);
-                            return;
-                        }
-
-                        activeComponent = component;
-                        _componentMenu.Show((Control)sender, e.Location);
-                        return;
-                }
-            }
-
-            if (doc.SelectedCount != 0)
-            {
-                _groupMenu.Show((Control)sender, e.Location);
-                return;
-            }
-
-            _undefinedMenu.Show((Control)sender, e.Location);
         }
         catch
         {
             // Something bad happened.
         }
 
+    }
+
+    private void HandleParameterInComponent(IParameter? param)
+    {
+        if (param is null) return;
+        activeParameter = param;
+
+        _paramMenu.Show();
+    }
+
+    private void HandleStandaloneObject(IDocumentObject? obj)
+    {
+        if (obj is null) return;
+        activeObject = obj;
+
+        _componentMenu.Show();
+    }
+
+    private void HandleWire(Document doc, WireEnds obj)
+    {
+        activeWire = obj;
+        _wireMenu.Show();
     }
 
     public override void OnLoad()
@@ -106,7 +102,7 @@ public class ExtendedContextMenu : Feature
             if (_wireMenu == null || _wireMenu.Items.Count == 0)
                 InitMenu();
 
-            Instances.ActiveCanvas.MouseUp += MouseClickEventHandler;
+            Editor.Instance.Canvas.MouseUp += MouseClickEventHandler;
         }
         catch
         {
@@ -121,16 +117,16 @@ public class ExtendedContextMenu : Feature
         menu.AddLabel("Pancake", "contextMain");
         menu.AddSeparator();
 
-        menu.AddEntry(Strings.Delete, HandlerDelete);
+        // menu.AddEntry(Strings.Delete, HandlerDelete);
         menu.AddSeparator();
 
-        menu.AddEntry(Strings.Source, HandlerToSrc);
-        menu.AddEntry(Strings.Target, HandlerToDest);
+        //menu.AddEntry(Strings.Source, HandlerToSrc);
+        //menu.AddEntry(Strings.Target, HandlerToDest);
 
-        menu.AddSeparator();
-        menu.AddEntry(Strings.Normal, HandleSetNormal);
-        menu.AddEntry(Strings.Faint, HandleSetFaint);
-        menu.AddEntry(Strings.SetAsHidden, HandleSetHidden);
+        //menu.AddSeparator();
+        //menu.AddEntry(Strings.Normal, HandleSetNormal);
+        //menu.AddEntry(Strings.Faint, HandleSetFaint);
+        //menu.AddEntry(Strings.SetAsHidden, HandleSetHidden);
 
         menu = new MenuConstructor(_componentMenu.Items);
 
@@ -138,19 +134,19 @@ public class ExtendedContextMenu : Feature
         menu.AddSeparator();
 
         menu.AddSeparator();
-        menu.AddEntry(Strings.InputWiresNormal, HandleSetNormalAll);
-        menu.AddEntry(Strings.InputWiresFaint, HandleSetFaintAll);
-        menu.AddEntry(Strings.InputWiresHidden, HandleSetHiddenAll);
+        //menu.AddEntry(Strings.InputWiresNormal, HandleSetNormalAll);
+        //menu.AddEntry(Strings.InputWiresFaint, HandleSetFaintAll);
+        //menu.AddEntry(Strings.InputWiresHidden, HandleSetHiddenAll);
 
-        menu.AddSeparator();
-        menu.AddEntry("Set all output wires as normal", HandleSetOutputNormalAll);
-        menu.AddEntry("Set all output wires as faint", HandleSetOutputFaintAll);
-        menu.AddEntry("Set all output wires as hidden", HandleSetOutputHiddenAll);
+        //menu.AddSeparator();
+        //menu.AddEntry("Set all output wires as normal", HandleSetOutputNormalAll);
+        //menu.AddEntry("Set all output wires as faint", HandleSetOutputFaintAll);
+        //menu.AddEntry("Set all output wires as hidden", HandleSetOutputHiddenAll);
 
-        menu.AddSeparator();
+        //menu.AddSeparator();
 
-        menu.AddEntry(Strings.DisconnectAllInputs, HandleDisconnectAllInputs);
-        menu.AddEntry(Strings.DisconnectAllOutputs, HandleDisconnectAllOutputs);
+        //menu.AddEntry(Strings.DisconnectAllInputs, HandleDisconnectAllInputs);
+        //menu.AddEntry(Strings.DisconnectAllOutputs, HandleDisconnectAllOutputs);
 
         menu.AddSeparator();
         menu.AddEntry(Strings.Inspect, HandleInspectDocObject);
@@ -160,14 +156,14 @@ public class ExtendedContextMenu : Feature
         menu.AddLabel("Pancake", "contextMain");
         menu.AddSeparator();
 
-        menu.AddEntry(Strings.InputWiresNormal, HandleSetNormalAll);
-        menu.AddEntry(Strings.InputWiresFaint, HandleSetFaintAll);
-        menu.AddEntry(Strings.InputWiresHidden, HandleSetHiddenAll);
+        //menu.AddEntry(Strings.InputWiresNormal, HandleSetNormalAll);
+        //menu.AddEntry(Strings.InputWiresFaint, HandleSetFaintAll);
+        //menu.AddEntry(Strings.InputWiresHidden, HandleSetHiddenAll);
 
-        menu.AddSeparator();
-        menu.AddEntry("Set all output wires as normal", HandleSetOutputNormalAll);
-        menu.AddEntry("Set all output wires as faint", HandleSetOutputFaintAll);
-        menu.AddEntry("Set all output wires as hidden", HandleSetOutputHiddenAll);
+        //menu.AddSeparator();
+        //menu.AddEntry("Set all output wires as normal", HandleSetOutputNormalAll);
+        //menu.AddEntry("Set all output wires as faint", HandleSetOutputFaintAll);
+        //menu.AddEntry("Set all output wires as hidden", HandleSetOutputHiddenAll);
 
         menu.AddSeparator();
         menu.AddEntry(Strings.InspectComponent, HandleInspectDocObject);
@@ -178,23 +174,17 @@ public class ExtendedContextMenu : Feature
         menu.AddLabel("Pancake", "contextMain");
         menu.AddSeparator();
 
-        menu.AddEntry(Strings.ProfileSelectedComponents, HandleCountTime);
-        menu.AddEntry(Strings.ProfileSelectedComponentsRepeated, HandleCountTimeRepeated);
+        //menu.AddEntry(Strings.ProfileSelectedComponents, HandleCountTime);
+        //menu.AddEntry(Strings.ProfileSelectedComponentsRepeated, HandleCountTimeRepeated);
 
-        menu.AddSeparator();
+        //menu.AddSeparator();
 
-        menu.AddEntry(Strings.InputWiresNormal, HandleSetNormalSelected);
-        menu.AddEntry(Strings.InputWiresFaint, HandleSetFaintSelected);
-        menu.AddEntry(Strings.InputWiresHidden, HandleSetHiddenSelected);
-
-        menu = new MenuConstructor(_undefinedMenu.Items);
-
-        menu.AddLabel("Pancake", "contextMain");
-        menu.AddSeparator();
-        menu.AddEntry(Strings.ActionsDefinedThisKindObjectS, (x, y) => { });
+        //menu.AddEntry(Strings.InputWiresNormal, HandleSetNormalSelected);
+        //menu.AddEntry(Strings.InputWiresFaint, HandleSetFaintSelected);
+        //menu.AddEntry(Strings.InputWiresHidden, HandleSetHiddenSelected);
     }
 
-    private void HandleSetOutputHiddenAll(object sender, EventArgs e)
+    /*private void HandleSetOutputHiddenAll(object sender, EventArgs e)
     {
         SetWireStyle(GH_ParamWireDisplay.hidden, false);
     }
@@ -259,19 +249,19 @@ public class ExtendedContextMenu : Feature
     private void HandleCountTime(object sender, EventArgs e)
     {
         ShowTimeCountReport(false);
-    }
+    }*/
 
-    private void HandleInspectParameter(object sender, EventArgs e)
+    private void HandleInspectParameter()
     {
-        DbgInfo.ShowDocObjInfo(activeSource);
+        DbgInfo.ShowDocObjInfo(activeParameter);
     }
 
-    private void HandleInspectDocObject(object sender, EventArgs e)
+    private void HandleInspectDocObject()
     {
-        DbgInfo.ShowDocObjInfo(activeComponent ?? activeSource as IGH_DocumentObject);
+        DbgInfo.ShowDocObjInfo(activeObject ?? activeParameter as IDocumentObject);
     }
 
-    private void HandleSetHiddenSelected(object sender, EventArgs e)
+    /*private void HandleSetHiddenSelected(object sender, EventArgs e)
     {
         SetWireStyleSelected(GH_ParamWireDisplay.hidden);
     }
@@ -420,13 +410,15 @@ public class ExtendedContextMenu : Feature
         doc.UndoUtil.RecordWireEvent("Pancake.Core.DeleteWire", activeTarget);
         activeTarget.RemoveSource(activeSource);
         activeTarget.ExpireSolution(true);
-    }
+    }*/
 
     public override void OnUnload()
     {
         try
         {
-            Instances.ActiveCanvas.MouseUp -= MouseClickEventHandler;
+            if (Editor.Instance?.Canvas is { } canvas)
+                canvas.MouseUp -= MouseClickEventHandler;
+
             _enabled = false;
         }
         catch
@@ -440,7 +432,7 @@ public class ExtendedContextMenu : Feature
         return _enabled;
     }
 
-    public static string Name = "Advanced wire";
+    public const string Name = "Advanced wire";
 
     public override string GetName()
     {
@@ -454,6 +446,6 @@ public class ExtendedContextMenu : Feature
 
     public override bool IsDefaultEnabled()
     {
-        return false;
+        return true;
     }
 }
