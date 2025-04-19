@@ -1,5 +1,6 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
 using Grasshopper2.UI;
 using Grasshopper2.UI.Icon;
 using GrasshopperIO;
@@ -39,24 +40,16 @@ public sealed class pcExportSTL : PancakeComponent
 
     protected override void RegisterInputs()
     {
+        AddParam<MeshParameter>("mesh");
+        AddParam("relocate", true);
+        AddParam<TextParameter>("savepath");
+        AddParam("saveasbinaryfile", true);
+        AddParam("savenow", false);
     }
 
     protected override void RegisterOutputs()
     {
-    }
-
-    protected override void AddInputs(InputAdder inputs)
-    {
-        inputs.AddMesh("Mesh", "Ms", "Mesh to export");
-        inputs.AddBoolean("Relocate", "Rl", "Relocate the mesh to the origin").Set(true);
-        inputs.AddText("Destination", "Dst", "Path to save the file");
-        inputs.AddBoolean("Save Format", "Fmt", "Save format of the file", ("Binary", "Save file as binary"), ("ASCII", "Save file as ASCII")).Set(true);
-        inputs.AddBoolean("Save", "OK", "Save the file").Set(false);
-    }
-
-    protected override void AddOutputs(OutputAdder outputs)
-    {
-        outputs.AddBoolean("Saved", "OK", "Whether the file is saved.");
+        AddParam<BooleanParameter>("ok");
     }
 
     protected override void Process(IDataAccess access)

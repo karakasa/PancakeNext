@@ -13,7 +13,7 @@ namespace PancakeNextCore.GH.Tweaks;
 public sealed class GhParamAccessArtist : ICanvasArtist
 {
     private const string ConfigHintOptional = "HintOptionalParameter";
-    private static bool _hintOptional = Config.Read(ConfigHintOptional, false, false);
+    private static bool _hintOptional = Config.Read(ConfigHintOptional, false, true);
     public static bool HintOptional
     {
         get => _hintOptional;
