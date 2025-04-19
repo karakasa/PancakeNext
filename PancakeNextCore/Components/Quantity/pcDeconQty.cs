@@ -25,13 +25,6 @@ public class pcDeconQty : PancakeComponent
 
     protected override void Process(IDataAccess access)
     {
-
-/* Unmerged change from project 'PancakeNextCore (net7.0)'
-Before:
-        access.GetItem(0, out DataType.GhQuantity quantity);
-After:
-        access.GetItem(0, out GhQuantity quantity);
-*/
         access.GetItem(0, out GH.Params.GhQuantity quantity);
 
         access.SetItem(0, quantity.GetRawValue());

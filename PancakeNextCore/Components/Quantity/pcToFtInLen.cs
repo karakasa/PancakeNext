@@ -23,14 +23,6 @@ public class pcToFtInLen : PancakeComponent
     protected override void Process(IDataAccess access)
     {
 
-/* Unmerged change from project 'PancakeNextCore (net7.0)'
-Before:
-        access.GetItem(0, out DataType.GhQuantity quantity);
-        access.GetItem(1, out int precision);
-After:
-        access.GetItem(0, out GhQuantity quantity);
-        access.GetItem(1, out int precision);
-*/
         access.GetItem(0, out GH.Params.GhQuantity quantity);
         access.GetItem(1, out int precision);
 

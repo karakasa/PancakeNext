@@ -17,9 +17,6 @@
     <Compile Remove="Components\SleepComponent.cs" />
     <Compile Remove="GH\AssociationStringifier.cs" />
     <Compile Remove="Helper\DependencyWalker.cs" />
-    <Compile Remove="Helper\HighlightManager.cs" />
-    <Compile Remove="Helper\OverlayInfo.cs" />
-    <Compile Remove="Helper\ParamContentHint.cs" />
     <Compile Remove="Helper\Performance.cs" />
     <Compile Remove="Helper\PerformanceSnapshot.cs" />
     <Compile Remove="Helper\PickStream.cs" />
@@ -104,9 +101,6 @@
   <ItemGroup>
     <None Include="Components\SleepComponent.cs" />
     <None Include="Helper\DependencyWalker.cs" />
-    <None Include="Helper\HighlightManager.cs" />
-    <None Include="Helper\OverlayInfo.cs" />
-    <None Include="Helper\ParamContentHint.cs" />
     <None Include="Helper\Performance.cs" />
     <None Include="Helper\PerformanceSnapshot.cs" />
     <None Include="Helper\PickStream.cs" />

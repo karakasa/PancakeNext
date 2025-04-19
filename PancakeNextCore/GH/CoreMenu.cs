@@ -11,6 +11,7 @@ using Grasshopper2.UI;
 using System.Diagnostics.CodeAnalysis;
 using PancakeNextCore.Helper;
 using PancakeNextCore.UI;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.GH;
 
@@ -34,7 +35,11 @@ internal class MenuConstructor
         var check = PluginLifetime.Features.IsEffective(featureName);
 
         return AddToggleEntry(displayName, check,
-            expectedState => PluginLifetime.Features.SetStatus(name, expectedState) ? expectedState : !expectedState, 
+            expectedState =>
+            {
+                PluginLifetime.Features.SetStatus(name, expectedState);
+                return PluginLifetime.Features.IsEffective(name);
+            }, 
             toolTip);
     }
 
@@ -66,7 +71,7 @@ internal class MenuConstructor
 
         item.Click += (_, _) =>
         {
-            item.Checked = procedure(!item.Checked);
+            item.Checked = procedure(item.Checked);
         };
 
         PolishMenuItem(item, false, toolTip);
@@ -216,6 +221,8 @@ internal sealed class CoreMenu
 
         menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_Tweaks, "tweaks");
         menu.AddFeatureEntry(Strings.EnableExtendedContextMenu, ExtendedContextMenu.Name, toolTip: Strings.AddsAContextMenuWhenYouRightClickCertain);
+        menu.AddFeatureEntry("Param access overlay", OverlayInfo.Name);
+        menu.AddFeatureEntry("Param content hint", ParamContentHint.Name);
 
         menu.AddSeparator();
 
@@ -260,11 +267,18 @@ internal sealed class CoreMenu
             using var dropdown = menu.AddDropdownEntry(Strings.CoreMenu_AddMenuFeatures_DeveloperTools, out _);
             dropdown.AddToggleEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, () => Config.DevMode, x => Config.DevMode = x);
             dropdown.AddSeparator();
-            dropdown.AddEntry("List core components...", mnuListCoreComponents_Click);
+            dropdown.AddEntry("List core components...", mnuListCoreComponents);
+            dropdown.AddEntry("Enable debug overlay", mnuEnableDebugOverlay);
         }
     }
 
-    private static void mnuListCoreComponents_Click()
+    private void mnuEnableDebugOverlay()
+    {
+        var canvas = Editor.Instance.Canvas;
+        ReflectionHelper.SetProperty(canvas, "ShowDebugOverlay", true, false);
+    }
+
+    private static void mnuListCoreComponents()
     {
         var sb = new StringBuilder();
         foreach (var proxy in DbgInfo.GetCoreComponents())

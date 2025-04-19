@@ -1,44 +1,19 @@
-﻿using Grasshopper;
-using Pancake.GH.Tweaks;
+﻿using PancakeNextCore.GH.Tweaks;
 using PancakeNextCore.PancakeMgr;
 
 namespace PancakeNextCore.Helper;
 
-public class OverlayInfo : Feature
+public sealed class OverlayInfo : CanvasArtistFeature<GhParamAccessArtist>
 {
     public const string Name = "Overlay Info";
-    private static void RedrawCanvas()
-    {
-        Instances.RedrawCanvas();
-    }
-
-    public override FeatureManager.LoadStage GetExpectedLoadStage() => FeatureManager.LoadStage.UI;
-
     public override string GetName() => Name;
-
-    public override bool IsEffective() => GhParamAccessArtist.Instance.Enabled;
-
-    public override void OnLoad()
+    public static bool HintOptional
     {
-        GhParamAccessArtist.Instance.Enabled = true;
-        RedrawCanvas();
-    }
-
-    public override void OnUnload()
-    {
-        GhParamAccessArtist.Instance.Enabled = false;
-        RedrawCanvas();
-    }
-
-    public bool HintOptional
-    {
-        get => GhParamAccessArtist.Instance.HintOptional;
+        get => GhParamAccessArtist.HintOptional;
         set
         {
-            GhParamAccessArtist.Instance.HintOptional = value;
+            GhParamAccessArtist.HintOptional = value;
             RedrawCanvas();
         }
     }
-
-    public override bool IsDefaultEnabled() => false;
 }

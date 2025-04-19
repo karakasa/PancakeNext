@@ -170,7 +170,7 @@ internal static class ReflectionHelper
 
         return [.. assembly
             .GetTypes()
-            .Where(myType => myType.IsClass && !myType.IsAbstract && type.IsAssignableFrom(myType) && myType.IsPublic)];
+            .Where(myType => myType.IsClass && !myType.IsAbstract && type.IsAssignableFrom(myType) && (assembly is null || myType.IsPublic))];
     }
     public static List<Type> GetTypeChain(Type srcType)
     {

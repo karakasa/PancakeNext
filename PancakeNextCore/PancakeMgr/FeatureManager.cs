@@ -39,15 +39,15 @@ public sealed class FeatureManager
         }
     }
 
-    public T GetFeature<T>() where T : Feature
+    public T? GetFeature<T>() where T : Feature
     {
         return _features.OfType<T>().FirstOrDefault();
     }
-    public Feature GetFeatureByName(string featureName)
+    public Feature? GetFeatureByName(string featureName)
     {
         return _features.Where(f => f.GetName() == featureName).FirstOrDefault();
     }
-    public T GetFeatureByName<T>(string featureName)
+    public T? GetFeatureByName<T>(string featureName)
     {
         return _features.Where(f => f.GetName() == featureName).OfType<T>().FirstOrDefault();
     }
