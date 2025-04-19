@@ -1,12 +1,13 @@
 ﻿using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PancakeNextCore.Polyfill;
-internal static class StringUtility
+namespace PancakeNextCore.Utility.Polyfill;
+internal static class StringSpanOperations
 {
     public static bool Equals(string? a, string? b) => a == b;
 #if NET
@@ -24,6 +25,15 @@ internal static class StringUtility
 #endif
     }
 
+    public static bool TryParseSubstrAsInt(this string val, int startIndex, int length, out int result, NumberStyles styles)
+    {
+#if NET
+        return int.TryParse(val.AsSpan(startIndex, length), styles, CultureInfo.InvariantCulture, out result);
+#else
+        return int.TryParse(val.Substring(startIndex, length), styles, CultureInfo.InvariantCulture, out result);
+#endif
+    }
+
     public static bool TryParseSubstrAsDouble(this string val, int startIndex, int length, out double result)
     {
 #if NET
@@ -32,6 +42,7 @@ internal static class StringUtility
         return double.TryParse(val.Substring(startIndex, length), out result);
 #endif
     }
+
 #if !NET
     public static string Substr(this string val, int startIndex, int length)
     {
@@ -53,54 +64,15 @@ internal static class StringUtility
 #endif
     }
 
-    public static IEnumerable<string> SplitWhile(this string str, Func<char, bool> predicate)
+    public static bool TryParseTrimmedAsDouble(this string a, int startIndex, int length, out double v)
     {
-        int lastResult = -1;
-        var currentStr = string.Empty;
-
-        foreach (var it in str)
-        {
-            var currentPredicate = predicate(it) ? 1 : 0;
-            if (lastResult == -1) lastResult = currentPredicate;
-            if (currentPredicate != lastResult)
-            {
-                yield return currentStr;
-                lastResult = currentPredicate;
-                currentStr = "" + it;
-            }
-            else
-            {
-                currentStr += it;
-            }
-        }
-
-        if (currentStr != string.Empty)
-        {
-            yield return currentStr;
-        }
+        return double.TryParse(a.Substr(startIndex, length).Trim(), out v);
     }
 
-    public static bool IsNumeric(char c) => (c >= '0' && c <= '9') || c == '.';
-
-    public static bool IsNumericAndNegative(char c) => (c >= '0' && c <= '9') || c == '.' || c == '-';
-
-    public static bool IsNumeric(string s) => s.All(IsNumeric);
-    public static void SplitLikelyOne(this string str, string[] separators, ref OptimizedConditionTester<string> result)
+#if !NET
+    public static bool Contains(this string a, string b, StringComparison cond)
     {
-        foreach (var it in separators)
-        {
-            if (
-#if NET
-                str.Contains(it, StringComparison.Ordinal)
-#else
-                str.IndexOf(it, StringComparison.Ordinal) < 0
+        return a.IndexOf(b, cond) >= 0;
+    }
 #endif
-                ) continue;
-
-            result = new(str.Split(separators, StringSplitOptions.RemoveEmptyEntries));
-            return;
-        }
-
-        result = string.IsNullOrEmpty(str) ? default : new(str);
-    }
 }

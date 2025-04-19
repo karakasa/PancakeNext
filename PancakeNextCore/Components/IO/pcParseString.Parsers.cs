@@ -2,10 +2,15 @@
 using Grasshopper2.Types.Colour;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
+using PancakeNextCore.Utility;
+using PancakeNextCore.Utility.Polyfill;
 using Rhino.Geometry;
 using Rhino.Input.Custom;
+using Rhino.Render;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +18,7 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.Components.IO;
 public sealed partial class pcParseString
 {
-    private bool TryParseXml(string strData, out GhAssocBase? result)
+    private bool TryParseXml(string strData, [NotNullWhen(true)] out GhAssocBase? result)
     {
         try
         {
@@ -32,13 +37,13 @@ public sealed partial class pcParseString
         }
     }
 
-    private bool TryParseNull(string strData, out object result)
+    private bool TryParseNull(string strData, out object? result)
     {
         result = null;
         return strData == "null";
     }
 
-    private bool TryParseCommaString(string strData, out string str)
+    private bool TryParseCommaString(string strData, [NotNullWhen(true)] out string? str)
     {
         if (strData.StartsWith("\"") && strData.EndsWith("\""))
         {
@@ -48,33 +53,62 @@ public sealed partial class pcParseString
         str = default;
         return false;
     }
+
+    private struct ParsePointExecutor : IStringPartExecutor
+    {
+        private double x;
+        private double y;
+        private double z;
+        private bool threeDimensional;
+        public readonly Point3d CollectResult() => new(x, y, z);
+        public bool HandlePart(string str, int partId, int startIndex, int length)
+        {
+            switch (partId)
+            {
+                case 0 when length == 1:
+                    return str[startIndex] == '{';
+                case 1:
+                    return str.TryParseTrimmedAsDouble(startIndex, length, out x);
+                case 2 when length == 1:
+                    return str[startIndex] == ',';
+                case 3:
+                    return str.TryParseTrimmedAsDouble(startIndex, length, out y);
+                case 4 when length == 1:
+                    switch (str[startIndex])
+                    {
+                        case '}':
+                            threeDimensional = false;
+                            return true;
+                        case ',':
+                            threeDimensional = true;
+                            return true;
+                        default:
+                            return false;
+                    }
+                case 5 when threeDimensional:
+                    return str.TryParseTrimmedAsDouble(startIndex, length, out z);
+                case 6 when length == 1 && threeDimensional:
+                    return str[startIndex] == '}';
+                default:
+                    return false;
+            }
+        }
+    }
+
     internal static bool TryParsePoint(string strData, out Point3d point)
     {
         try
         {
-            var blocks = strData.SplitWhile(StringUtility.IsNumericAndNegative).Select(s => s.Trim()).ToArray();
-            if (blocks.Length == 5)
+            var executor = new ParsePointExecutor();
+
+            if (!strData.TrySplitWhile(default(StringUtility.IsNumericAndNegativePredicate), ref executor))
             {
-                if (blocks[0] == "{" && blocks[4] == "}" && blocks[2] == ",")
-                {
-                    point = new Point3d(
-                        Convert.ToDouble(blocks[1]),
-                        Convert.ToDouble(blocks[3]),
-                        0.0);
-                    return true;
-                }
+                point = default;
+                return false;
             }
-            else if (blocks.Length == 7)
-            {
-                if (blocks[0] == "{" && blocks[6] == "}" && blocks[2] == "," && blocks[4] == ",")
-                {
-                    point = new Point3d(
-                        Convert.ToDouble(blocks[1]),
-                        Convert.ToDouble(blocks[3]),
-                        Convert.ToDouble(blocks[5]));
-                    return true;
-                }
-            }
+
+            point = executor.CollectResult();
+            return true;
         }
         catch
         {
@@ -106,21 +140,30 @@ public sealed partial class pcParseString
         return false;
     }
 
-    internal static bool TryParseColor(string strData, out Colour color)
+    internal static bool TryParseColor(string strData, [NotNullWhen(true)] out Colour? color)
     {
         try
         {
             if ((strData.Length == 7 || strData.Length == 9) &&
                 strData.StartsWith("#", StringComparison.Ordinal))
             {
-                var part1 = int.Parse(strData.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-                var part2 = int.Parse(strData.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-                var part3 = int.Parse(strData.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                if (!strData.TryParseSubstrAsInt(1, 2, out var part1, NumberStyles.HexNumber) ||
+                    !strData.TryParseSubstrAsInt(2, 2, out var part2, NumberStyles.HexNumber) ||
+                    !strData.TryParseSubstrAsInt(3, 2, out var part3, NumberStyles.HexNumber))
+                {
+                    color = null;
+                    return false;
+                }
+
                 int part4;
 
                 if (strData.Length == 9)
                 {
-                    part4 = int.Parse(strData.Substring(7, 2), System.Globalization.NumberStyles.HexNumber);
+                    if (!strData.TryParseSubstrAsInt(7, 2, out part4, NumberStyles.HexNumber))
+                    {
+                        color = null;
+                        return false;
+                    }
                 }
                 else
                 {

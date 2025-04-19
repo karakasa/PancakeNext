@@ -1,8 +1,8 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Data.Meta;
 using GrasshopperIO;
-using PancakeNextCore.Polyfill;
 using PancakeNextCore.Utility;
+using PancakeNextCore.Utility.Polyfill;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -179,7 +179,7 @@ public sealed class GhAssoc : GhAssocBase
 
         for (var i = 0; i < Length; i++)
         {
-            if (StringUtility.Equals(realName, Names[i]))
+            if (StringSpanOperations.Equals(realName, Names[i]))
             {
                 if (index == indice)
                 {

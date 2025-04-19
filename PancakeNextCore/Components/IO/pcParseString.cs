@@ -8,7 +8,6 @@ using Grasshopper2.Types.Colour;
 using GrasshopperIO;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
-using PancakeNextCore.Polyfill;
 using PancakeNextCore.Utility;
 using Rhino.Geometry;
 using Path = System.IO.Path;

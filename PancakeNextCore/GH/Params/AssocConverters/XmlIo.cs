@@ -1,5 +1,5 @@
-﻿using PancakeNextCore.Polyfill;
-using PancakeNextCore.Utility;
+﻿using PancakeNextCore.Utility;
+using PancakeNextCore.Utility.Polyfill;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

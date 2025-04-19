@@ -2,8 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using PancakeNextCore.Dataset;
-using PancakeNextCore.Polyfill;
 using PancakeNextCore.Utility;
+using PancakeNextCore.Utility.Polyfill;
 using Rhino;
 
 namespace PancakeNextCore.GH.Params;

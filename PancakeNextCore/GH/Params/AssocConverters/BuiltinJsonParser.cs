@@ -315,7 +315,7 @@ internal sealed class BuiltinJsonParser : IJsonParser
                 }
                 else
                 {
-                    var unescaped = StringUtility.UnescapeJsonSpecialChar(ch);
+                    var unescaped = AssocStringUtility.UnescapeJsonSpecialChar(ch);
                     if (unescaped == char.MinValue)
                     {
                         StopHere();

@@ -2,7 +2,7 @@
 using Grasshopper2.Doc;
 using Grasshopper2.Interop;
 using GrasshopperIO;
-using PancakeNextCore.Components.Io;
+using PancakeNextCore.Components.IO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

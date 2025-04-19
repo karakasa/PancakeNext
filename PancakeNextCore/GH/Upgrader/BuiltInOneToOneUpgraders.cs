@@ -1,4 +1,4 @@
-﻿using PancakeNextCore.Components.Io;
+﻿using PancakeNextCore.Components.IO;
 using PancakeNextCore.Components.Quantity;
 
 namespace PancakeNextCore.GH.Upgrader;

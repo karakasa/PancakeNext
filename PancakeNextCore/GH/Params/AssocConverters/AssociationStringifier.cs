@@ -122,7 +122,7 @@ internal static class AssociationStringifier
         }
 
         return StyleKeywords[style][Keyword.StrValL]
-            + StringUtility.EscapeForJson(obj?.ToString() ?? "null", MapEscapeStyle(style))
+            + AssocStringUtility.EscapeForJson(obj?.ToString() ?? "null", MapEscapeStyle(style))
             + StyleKeywords[style][Keyword.StrValR];
     }
     private static string ToStringJsonLike(GhAssocBase assoc, StringConversionType style)
@@ -134,7 +134,7 @@ internal static class AssociationStringifier
 
         var innerStr = string.Join(StyleKeywords[style][Keyword.KVPairComma],
             assoc.GetNamesForExport().Zip(assoc.Values, (name, value) =>
-            string.Format(StyleKeywords[style][Keyword.KVPair], StringUtility.EscapeForJson(name), ToJsonLike(value, style))
+            string.Format(StyleKeywords[style][Keyword.KVPair], AssocStringUtility.EscapeForJson(name), ToJsonLike(value, style))
             ));
 
         return StyleKeywords[style][Keyword.ObjValL]
@@ -148,7 +148,7 @@ internal static class AssociationStringifier
 
         var innerStr = string.Join(", ",
             assoc.GetNamesForExport().Zip(assoc.Values, (name, value) =>
-            $"\"{name}\": \"{StringUtility.EscapeForJson(value?.ToString() ?? "null")}\""));
+            $"\"{name}\": \"{AssocStringUtility.EscapeForJson(value?.ToString() ?? "null")}\""));
 
         return "{" + innerStr + "}";
     }
@@ -159,7 +159,7 @@ internal static class AssociationStringifier
 
         var innerStr = string.Join("&",
             assoc.GetNamesForExport().Zip(assoc.Values, (name, value) =>
-            $"{name}={StringUtility.EscapeForUrl(value?.ToString() ?? "null")}"));
+            $"{name}={AssocStringUtility.EscapeForUrl(value?.ToString() ?? "null")}"));
 
         return innerStr;
     }

@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace PancakeNextCore.GH.Params.AssocConverters;
 
-internal static partial class StringUtility
+internal static partial class AssocStringUtility
 {
     public static string EscapeForXml(this string str)
     {
@@ -184,39 +184,6 @@ internal static partial class StringUtility
 
         return str;
     }
-
-    public static IEnumerable<string> SplitWhile(this string str, Func<char, bool> predicate)
-    {
-        var lastResult = -1;
-        var currentStr = string.Empty;
-
-        foreach (var it in str)
-        {
-            var currentPredicate = predicate(it) ? 1 : 0;
-            if (lastResult == -1) lastResult = currentPredicate;
-            if (currentPredicate != lastResult)
-            {
-                yield return currentStr;
-                lastResult = currentPredicate;
-                currentStr = "" + it;
-            }
-            else
-            {
-                currentStr += it;
-            }
-        }
-
-        if (currentStr != string.Empty)
-        {
-            yield return currentStr;
-        }
-    }
-
-    public static bool IsNumeric(char c) => c >= '0' && c <= '9' || c == '.';
-
-    public static bool IsNumericAndNegative(char c) => c >= '0' && c <= '9' || c == '.' || c == '-';
-
-    public static bool IsNumeric(string s) => s.All(IsNumeric);
 
     public static IEnumerable<Guid> ToGuids(this IEnumerable<string> strs) => strs.Select(str => new Guid(str));
 }
