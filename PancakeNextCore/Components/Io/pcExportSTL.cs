@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Path = System.IO.Path;
 
-namespace PancakeNextCore.Components.Io;
+namespace PancakeNextCore.Components.IO;
 
 [IoId("5d6c7460-aedd-4ede-bd29-7730b0228c1f")]
 public sealed class pcExportSTL : PancakeComponent

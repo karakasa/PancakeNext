@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PancakeNextCore.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -84,4 +85,22 @@ internal static class StringUtility
     public static bool IsNumericAndNegative(char c) => (c >= '0' && c <= '9') || c == '.' || c == '-';
 
     public static bool IsNumeric(string s) => s.All(IsNumeric);
+    public static void SplitLikelyOne(this string str, string[] separators, ref OptimizedConditionTester<string> result)
+    {
+        foreach (var it in separators)
+        {
+            if (
+#if NET
+                str.Contains(it, StringComparison.Ordinal)
+#else
+                str.IndexOf(it, StringComparison.Ordinal) < 0
+#endif
+                ) continue;
+
+            result = new(str.Split(separators, StringSplitOptions.RemoveEmptyEntries));
+            return;
+        }
+
+        result = string.IsNullOrEmpty(str) ? default : new(str);
+    }
 }

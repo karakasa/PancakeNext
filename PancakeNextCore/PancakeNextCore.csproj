@@ -95,10 +95,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Association\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Components\SleepComponent.cs" />
     <None Include="Helper\DependencyWalker.cs" />
     <None Include="Helper\Performance.cs" />

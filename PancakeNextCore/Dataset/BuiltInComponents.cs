@@ -1,5 +1,5 @@
 ﻿using Grasshopper2.UI;
-using PancakeNextCore.Components.Io;
+using PancakeNextCore.Components.IO;
 using PancakeNextCore.Components.Quantity;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,12 @@ internal static partial class ComponentLibrary
 {
     private static void AddBuiltinComponentList()
     {
-        AddCategory("Export", 
+        AddCategory("IO",
             [
-            (typeof(pcExportSTL), Strings.ExportSTL, Strings.ExportSTLDesc, 0),
+            (typeof(pcParseString), Strings.ParseString, Strings.ParseFormattedStringToItsCorrectTypeCurrentlyThisComponentSupportsIntegerNumberBooleanGuidLengthQuantityDatetimePointDomain12DColourAndJsonSeeExamplesOrManualForMoreInformation, 0),
+            (typeof(pcImportTXT), Strings.ImportTXT, Strings.ReadTextFileWithASpecificEncoding, 0),
+            (typeof(pcExportSTL), Strings.ExportSTL, Strings.ExportSTLDesc, 1),
+            (typeof(pcExportTXT), Strings.ExportTXT,  Strings.ThisComponentExportsTextToAFile, 1),
             ]);
 
         AddCategory("Quantity",
