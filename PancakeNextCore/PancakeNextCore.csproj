@@ -14,11 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Components\Algorithm\pcCategorize.cs" />
-    <Compile Remove="Components\Algorithm\pcCategorizeByInd.cs" />
     <Compile Remove="Components\Algorithm\pcCountUnique.cs" />
     <Compile Remove="Components\Algorithm\pcMultiSort.cs" />
-    <Compile Remove="Components\Algorithm\pcShuffle.cs" />
     <Compile Remove="Components\Association\pcAssocToCSV.cs" />
     <Compile Remove="Components\Association\pcAssocToDatatable.cs" />
     <Compile Remove="Components\Association\pcAssocToKv.cs" />
@@ -28,7 +25,6 @@
     <Compile Remove="Components\Association\pcCSVToAssoc.cs" />
     <Compile Remove="Components\Association\pcDeconAssoc.cs" />
     <Compile Remove="Components\Association\pcExtractFromAssoc.cs" />
-    <Compile Remove="Components\Association\pcJsonToAssoc.cs" />
     <Compile Remove="Components\Association\pcKVtoAssoc.cs" />
     <Compile Remove="Components\Association\pcMergeAssoc.cs" />
     <Compile Remove="Components\Association\pcSetAssocPVal.cs" />
@@ -116,11 +112,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Components\Algorithm\pcCategorize.cs" />
-    <None Include="Components\Algorithm\pcCategorizeByInd.cs" />
     <None Include="Components\Algorithm\pcCountUnique.cs" />
     <None Include="Components\Algorithm\pcMultiSort.cs" />
-    <None Include="Components\Algorithm\pcShuffle.cs" />
     <None Include="Components\Association\pcAssocToCSV.cs" />
     <None Include="Components\Association\pcAssocToDatatable.cs" />
     <None Include="Components\Association\pcAssocToKv.cs" />
@@ -130,7 +123,6 @@
     <None Include="Components\Association\pcCSVToAssoc.cs" />
     <None Include="Components\Association\pcDeconAssoc.cs" />
     <None Include="Components\Association\pcExtractFromAssoc.cs" />
-    <None Include="Components\Association\pcJsonToAssoc.cs" />
     <None Include="Components\Association\pcKVtoAssoc.cs" />
     <None Include="Components\Association\pcMergeAssoc.cs" />
     <None Include="Components\Association\pcSetAssocPVal.cs" />

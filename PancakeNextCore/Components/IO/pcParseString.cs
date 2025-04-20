@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Grasshopper2.Components;
+using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
 using Grasshopper2.Types.Colour;
 using GrasshopperIO;
@@ -21,12 +22,12 @@ public sealed partial class pcParseString : PancakeComponent
     public pcParseString(IReader reader) : base(reader) { }
     protected override void RegisterInputs()
     {
-        AddParam<TextParameter>("string2");
-        AddParam<TextParameter>("desiredtype", requirement: Grasshopper2.Parameters.Requirement.MayBeMissing);
+        AddParam<TextParameter>("string2", access: Access.Tree);
+        AddParam<TextParameter>("desiredtype", requirement: Requirement.MayBeMissing);
     }
     protected override void RegisterOutputs()
     {
-        AddParam("parsed");
+        AddParam("parsed", access: Access.Tree);
         AddParam<TextParameter>("type");
     }
 

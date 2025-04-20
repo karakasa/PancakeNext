@@ -1,4 +1,6 @@
 ﻿using Grasshopper2.UI;
+using PancakeNextCore.Components.Algorithm;
+using PancakeNextCore.Components.Association;
 using PancakeNextCore.Components.IO;
 using PancakeNextCore.Components.Quantity;
 using System;
@@ -20,6 +22,11 @@ internal static partial class ComponentLibrary
             (typeof(pcExportTXT), Strings.ExportTXT,  Strings.ThisComponentExportsTextToAFile, 1),
             ]);
 
+        AddCategory("Association", 
+            [
+            (typeof(pcJsonToAssoc), "Json to Assoc", "Converts a json string to Assoc object.\r\nUse 'Assoc to String' to convert assoc to json.", 0),
+            ]);
+
         AddCategory("Quantity",
             [
             (typeof(pcConQty), Strings.ConstructQuantity, Strings.AddUnitToANumberToConvertItIntoAQuantityWhenTheUnitIsNotSuppliedDocumentUnitIsUsedRNUseParseStringComponentToCreateAFeetInchLengthQuantity, 0),
@@ -28,6 +35,10 @@ internal static partial class ComponentLibrary
             (typeof(pcSetPrecision), Strings.SetPrecision, Strings.SetThePrecisionOfAQuantityPrecisionMayHaveDifferentMeaningsOnDifferentQuantitiesSeeManualOrExampleForMoreInformation, 0),
             (typeof(pcToDecimalLen), Strings.ToDecimalLength, Strings.ConvertAQuantityToADecimalLengthWithDesignatedUnit, 0),
             (typeof(pcToFtInLen), Strings.ToFeetInchLength, Strings.ConvertAQuantityToAFeetInchLengthWithDesignatedUnit, 0),
+            ]);
+
+        AddCategory("Misc", [
+            (typeof(pcCategorize),     Strings.Categorize,Strings.CategorizeValuesByKeys,0),
             ]);
     }
 }

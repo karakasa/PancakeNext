@@ -1,198 +1,162 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using GH_IO.Serialization;
-using Grasshopper;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Data;
-using Pancake.Attributes;
-using Pancake.Utility;
+using Eto.Forms;
+using Grasshopper2.Components;
+using Grasshopper2.Data;
+using Grasshopper2.Doc;
+using Grasshopper2.Extensions;
+using Grasshopper2.Parameters;
+using Grasshopper2.UI.Icon;
+using Grasshopper2.UI;
+using Grasshopper2.UI.InputPanel;
+using Grasshopper2.UI.Toolbar;
+using GrasshopperIO;
+using PancakeNextCore.GH;
+using Eto.Drawing;
 
 namespace PancakeNextCore.Components.Algorithm;
 
-[ComponentCategory("data", 0)]
+[IoId("b521157b-0ed0-4229-940a-7c9c2d9357ee")]
 public class pcCategorize : PancakeComponent
 {
+    public pcCategorize() : base(typeof(pcCategorize)) {}
+    public pcCategorize(IReader reader) : base(reader) {}
+
+    protected override void ReadConfig()
+    {
+        _sortIfPossible = CustomValues.Get(SortIfPossibleConfigName, false);
+    }
     protected override void RegisterInputs()
     {
-        AddParam("key", GH_ParamAccess.list);
-        AddParam("value", GH_ParamAccess.list);
+        AddParam("key", access: Access.Twig);
+        AddParam("value", access: Access.Twig);
     }
 
     protected override void RegisterOutputs()
     {
-        AddParam("keylist", GH_ParamAccess.list);
-        AddParam("valuetree", GH_ParamAccess.tree);
+        AddParam("keylist", access: Access.Twig);
+        AddParam("valuetree", access: Access.Tree);
     }
 
-    private List<object> _keyList = new List<object>();
-    private List<object> _valList = new List<object>();
-
-    private void ClearList()
+    protected override void Process(IDataAccess access)
     {
-        _keyList.Clear();
-        _valList.Clear();
-    }
+        access.GetITwig(0, out var keyList);
+        access.GetITwig(1, out var valList);
 
-    private bool HasReferenceType()
-    {
-        return _keyList.Any(e => !(e is ValueType) && !(e is string));
-    }
-
-    private bool HasNull()
-    {
-        return _keyList.Any(e => e == null);
-    }
-
-    private bool IsAllIComparable()
-    {
-        if (_keyList.Count == 0)
-            return false;
-
-        if (!(_keyList[0] is IComparable))
-            return false;
-
-        var type = _keyList[0].GetType();
-        for (var i = 1; i < _keyList.Count; i++)
+        if (keyList.ItemCount != valList.ItemCount)
         {
-            if (!_keyList[i].GetType().Equals(type) || !(_keyList[i] is IComparable))
-                return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
-    {
-        ClearList();
-
-        var _tempKeyList = new List<object>();
-        DA.GetDataList(0, _tempKeyList);
-        DA.GetDataList(1, _valList);
-
-        if (_tempKeyList.Count != _valList.Count)
-        {
-            ClearList();
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.KeyAndValueListMustHaveTheSameLength);
+            access.AddError("Mismatched lists", Strings.KeyAndValueListMustHaveTheSameLength);
             return;
         }
 
-        if (_tempKeyList.Count == 0)
+        if (keyList.ItemCount == 0)
         {
-            ClearList();
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.TheListCannotBeEmpty);
+            access.AddWarning("Empty input", Strings.TheListCannotBeEmpty);
             return;
         }
 
-        _keyList.AddRange(_tempKeyList.Select(GooHelper.UnwrapIfPossible));
-        _tempKeyList.Clear();
-
-        if (HasNull())
+        if(keyList.NullCount > 0)
         {
-            ClearList();
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.KeyCannotBeNull);
+            access.AddError("Wrong keys", Strings.KeyCannotBeNull);
             return;
         }
 
-        if (HasReferenceType())
+        ITwig keysOut;
+        ITree valsOut;
+
+        switch (keyList)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark,
-                Strings.SomeOfTheKeysAreNotValueTypeTheResultMayBeWrongCheckCarefully);
+            case Twig<int> listOfInts:
+                FastSortKeyValues(listOfInts, valList, out var kInt, out valsOut, _sortIfPossible);
+                keysOut = kInt;
+                break;
+            case Twig<double> listOfDoubles:
+                FastSortKeyValues(listOfDoubles, valList, out var kDouble, out valsOut, _sortIfPossible);
+                keysOut = kDouble;
+                break;
+            case Twig<string> listOfStrings:
+                FastSortKeyValues(listOfStrings, valList, out var kString, out valsOut, _sortIfPossible);
+                keysOut = kString;
+                break;
+            case Twig<bool> listOfBooleans:
+                FastSortKeyValues(listOfBooleans, valList, out var kBoolean, out valsOut, _sortIfPossible);
+                keysOut = kBoolean;
+                break;
+            default:
+                SortKeyValuesFallback(keyList, valList, out keysOut, out valsOut, _sortIfPossible);
+                break;
         }
 
-        SortKeyValues(out var keysOut, out var valsOut, _sortIfPossible);
-
-        DA.SetDataList(0, keysOut);
-        DA.SetDataTree(1, valsOut);
+        access.SetTwig(0, keysOut);
+        access.SetTree(1, valsOut);
     }
 
-    internal class ComparerOfIComparable : IComparer<object>
+    private sealed class PearEqualityComparer<T> : IEqualityComparer<Pear<T>>
+        where T : IEquatable<T>
     {
-        public int Compare(object x, object y)
-        {
-            return ((IComparable)x).CompareTo(y);
-        }
+        public static readonly PearEqualityComparer<T> Instance = new();
+        public bool Equals(Pear<T>? x, Pear<T>? y) => x.Item.Equals(y.Item);
+
+        public int GetHashCode(Pear<T> obj) => obj.Item.GetHashCode();
     }
 
-    private void SortKeyValues(out List<object> keysOut, out IGH_DataTree valsOut, bool sortIfPossible = true)
+    private sealed class PearEqualityComparerGeneric : IEqualityComparer<IPear>
     {
-        IDictionary<object, List<object>> currentDict = null;
+        public static readonly PearEqualityComparerGeneric Instance = new();
+        public bool Equals(IPear? x, IPear? y) => OptimizedOperators.SameContentQ(x, y);
 
-        if (sortIfPossible && IsAllIComparable())
-        {
-            currentDict = new SortedDictionary<object, List<object>>(new ComparerOfIComparable());
-        }
-        else
-        {
-            currentDict = new Dictionary<object, List<object>>();
-        }
-
-        for (var i = 0; i < _keyList.Count; i++)
-        {
-            List<object> list;
-
-            if (!currentDict.TryGetValue(_keyList[i], out list))
-                currentDict[_keyList[i]] = list = new List<object>();
-
-            list.Add(_valList[i]);
-        }
-
-        keysOut = currentDict.Keys.ToList();
-
-        var tree = new DataTree<object>();
-        var branchIndex = 0;
-
-        foreach (var it in currentDict.Values)
-        {
-            tree.AddRange(it, new GH_Path(branchIndex));
-            branchIndex++;
-        }
-
-        valsOut = tree;
-
-        currentDict.Clear();
-        currentDict = null;
+        public int GetHashCode(IPear obj) => OptimizedOperators.Hashcode(obj);
+    }
+    private sealed class PearComparerGeneric : IComparer<IPear>
+    {
+        public static readonly PearComparerGeneric Instance = new();
+        public int Compare(IPear? x, IPear? y) => OptimizedOperators.Compare(x, y);
     }
 
-    protected override System.Drawing.Bitmap LightModeIcon => ComponentIcon.Categorize;
+    private static void FastSortKeyValues<T>(Twig<T> keyList, ITwig valList, out Twig<T> keysOut, out ITree valsOut, bool sortIfPossible = true)
+        where T : IComparable<T>, IEquatable<T>
+    {
+        var grps = keyList.Pears.Zip(valList.Pears, (k, v) => (k, v)).GroupBy(kv => kv.k, PearEqualityComparer<T>.Instance);
+        if (sortIfPossible)
+            grps = grps.OrderBy(kv => kv.Key.Item);
 
-    public override Guid ComponentGuid => new Guid("b521157b-0ed0-4229-940a-7c9c2d9357ee");
+        var realizedGroups = grps.ToArray();
+        var keys = realizedGroups.Select(kv => kv.Key).ToArray();
 
-    public override string LocalizedName => Strings.Categorize;
+        keysOut = Garden.TwigFromPears(keys);
+        valsOut = Garden.ITreeFromITwigs(realizedGroups.Select(x => Garden.ITwigFromPears(x.Select(y => y.v))));
+    }
 
-    public override string LocalizedDescription => Strings.CategorizeValuesByKeys;
+    private static void SortKeyValuesFallback(ITwig keyList, ITwig valList, out ITwig keysOut, out ITree valsOut, bool sortIfPossible = true)
+    {
+        var grps = keyList.Pears.Zip(valList.Pears, (k, v) => (k, v)).GroupBy(kv => kv.k, PearEqualityComparerGeneric.Instance);
+        if (sortIfPossible)
+            grps = grps.OrderBy(kv => kv.Key, PearComparerGeneric.Instance);
+
+        var realizedGroups = grps.ToArray();
+        var keys = realizedGroups.Select(kv => kv.Key).ToArray();
+
+        keysOut = Garden.ITwigFromPears(keys);
+        valsOut = Garden.ITreeFromITwigs(realizedGroups.Select(x => Garden.ITwigFromPears(x.Select(y => y.v))));
+    }
 
     private const string SortIfPossibleConfigName = "SortIfPossible";
-    private bool _sortIfPossible = false;
+    private bool _sortIfPossible;
 
-    public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+    private void MnuSortIfPossible(bool newValue)
     {
-        Menu_AppendSeparator(menu);
-        var mnu = Menu_AppendItem(menu, Strings.SortKeysIfPossible, MnuSortIfPossible, true, _sortIfPossible);
-        mnu.ToolTipText = Strings.KeysWillBeSortedIfAllAreComparableAndBelongToASameTypeWhichWillSlowTheComputation;
-        base.AppendAdditionalMenuItems(menu);
+        _sortIfPossible = newValue;
+        CustomValues.Set(SortIfPossibleConfigName, _sortIfPossible);
+        Expire();
+        Document?.Solution?.DelayedExpire(this);
     }
 
-    private void MnuSortIfPossible(object sender, EventArgs e)
-    {
-        _sortIfPossible = !_sortIfPossible;
-        ExpireSolution(true);
-    }
-
-    public override bool Read(GH_IReader reader)
-    {
-        reader.TryGetBoolean(SortIfPossibleConfigName, ref _sortIfPossible);
-        return base.Read(reader);
-    }
-
-    public override bool Write(GH_IWriter writer)
-    {
-        writer.SetBoolean(SortIfPossibleConfigName, _sortIfPossible);
-        return base.Write(writer);
-    }
+    protected override InputOption[][] SimpleOptions => [[
+            new ToggleOption("Sort if possible", "Controls if keys should be sorted", _sortIfPossible, MnuSortIfPossible, "Sort keys", "Keep order of keys")
+            {
+                OnColor = OpenColor.Blue5,
+                OffColor = OpenColor.Gray0
+            }
+        ]];
 }

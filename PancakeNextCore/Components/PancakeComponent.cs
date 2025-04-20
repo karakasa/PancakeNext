@@ -20,12 +20,14 @@ using PancakeNextCore.GH;
 
 namespace PancakeNextCore.Components;
 
-public abstract class PancakeComponent : Component, IPancakeLocalizable
+public abstract partial class PancakeComponent : Component, IPancakeLocalizable
 {
     protected PancakeComponent(Type componentName) : base(ComponentLibrary.LookUpComponent(componentName))
     {
         ProcessRuntimeModifier();
         HandleLocalizationForNewlyCreated();
+
+        ReadConfig();
     }
 
     protected PancakeComponent(IReader reader) : base(reader)
@@ -34,6 +36,8 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
 
         ProcessRuntimeModifier();
         HandleLocalizationForRestored();
+
+        ReadConfig();
     }
 
 
@@ -222,7 +226,7 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
 
     protected string? GetValue(string settingName, string? defaultValue)
         => CustomValues.Get(settingName, defaultValue);
-    protected void SetValue(string settingName, string strValue)
+    protected void SetValue(string settingName, string? strValue)
         => CustomValues.Set(settingName, strValue);
 
     public Version? LastSaveVersion { get; private set; }
@@ -259,5 +263,16 @@ public abstract class PancakeComponent : Component, IPancakeLocalizable
         Document?.Solution?.Stop();
         access?.AddError("Access violation", "This feature is disabled in the untrusted mode.");
         throw new InvalidOperationException();
+    }
+
+    protected void ExpireSolution()
+    {
+        Expire();
+        base.Document?.Solution.Start();
+    }
+
+    protected virtual void ReadConfig()
+    {
+
     }
 }

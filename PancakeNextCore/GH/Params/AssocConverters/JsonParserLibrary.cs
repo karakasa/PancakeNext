@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.GH.Params.AssocConverters;
 internal static class JsonParserLibrary
 {
-    public static Dictionary<string, IJsonParser> Parsers = new()
+    public static List<(string Name, IJsonParser Instance)> Parsers = new()
     {
-        ["Pancake"] = BuiltinJsonParser.Instance,
-        ["Newtonsoft"] = NSJsonParser.Instance,
+        ("Pancake", BuiltinJsonParser.Instance),
+        ("Newtonsoft", NSJsonParser.Instance),
 #if NET
-        [".NET"] = STJsonParser.Instance
+        (".NET", STJsonParser.Instance)
 #endif
     };
 
@@ -21,7 +21,10 @@ internal static class JsonParserLibrary
 
     public static IJsonParser GetParser(string? name)
     {
-        if (name is null) return DefaultParser;
-        return Parsers.TryGetValue(name, out var parser) ? parser : DefaultParser;
+        if (string.IsNullOrEmpty(name)) return DefaultParser;
+        foreach (var it in Parsers)
+            if (it.Item1 == name)
+                return it.Item2;
+        return DefaultParser;
     }
 }

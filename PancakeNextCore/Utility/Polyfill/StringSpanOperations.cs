@@ -1,8 +1,8 @@
-﻿using PancakeNextCore.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,31 +18,30 @@ internal static class StringSpanOperations
 
     public static bool TryParseSubstrAsInt(this string val, int startIndex, out int result)
     {
-#if NET
-        return int.TryParse(val.AsSpan(startIndex), out result);
-#else
-        return int.TryParse(val.Substring(startIndex), out result);
-#endif
+        return TryParseSubstrAsInt(val, startIndex, out result, NumberStyles.Integer);
+    }
+
+    public static bool TryParseSubstrAsInt(this string val, int startIndex, out int result, NumberStyles styles)
+    {
+        return int.TryParse(val.Substr(startIndex), styles, CultureInfo.InvariantCulture, out result);
     }
 
     public static bool TryParseSubstrAsInt(this string val, int startIndex, int length, out int result, NumberStyles styles)
     {
-#if NET
-        return int.TryParse(val.AsSpan(startIndex, length), styles, CultureInfo.InvariantCulture, out result);
-#else
-        return int.TryParse(val.Substring(startIndex, length), styles, CultureInfo.InvariantCulture, out result);
-#endif
+        return int.TryParse(val.Substr(startIndex, length), styles, CultureInfo.InvariantCulture, out result);
     }
 
     public static bool TryParseSubstrAsDouble(this string val, int startIndex, int length, out double result)
     {
-#if NET
-        return double.TryParse(val.AsSpan(startIndex, length), out result);
-#else
-        return double.TryParse(val.Substring(startIndex, length), out result);
-#endif
+        return TryParseSubstrAsDouble(val, startIndex, length, out result, NumberStyles.Float);
     }
 
+    public static bool TryParseSubstrAsDouble(this string val, int startIndex, int length, out double result, NumberStyles styles)
+    {
+        return double.TryParse(val.Substr(startIndex, length), styles, CultureInfo.InvariantCulture, out result);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if !NET
     public static string Substr(this string val, int startIndex, int length)
     {
@@ -55,18 +54,28 @@ internal static class StringSpanOperations
     }
 #endif
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if !NET
+    public static string Substr(this string val, int startIndex)
+    {
+        return val.Substring(startIndex);
+    }
+#else
+    public static ReadOnlySpan<char> Substr(this string val, int startIndex)
+    {
+        return val.AsSpan(startIndex);
+    }
+#endif
+
     public static bool EqualsSubstring(string a, int startIndexInA, int lengthInA, string b)
     {
-#if NET
-        return Equals(a.AsSpan(startIndexInA, lengthInA), b);
-#else
-        return Equals(a.Substring(startIndexInA, lengthInA), b);
-#endif
+        return Equals(a.Substr(startIndexInA, lengthInA), b);
     }
 
     public static bool TryParseTrimmedAsDouble(this string a, int startIndex, int length, out double v)
     {
-        return double.TryParse(a.Substr(startIndex, length).Trim(), out v);
+        const NumberStyles style = NumberStyles.Integer | NumberStyles.AllowDecimalPoint;
+        return double.TryParse(a.Substr(startIndex, length), style, CultureInfo.InvariantCulture, out v);
     }
 
 #if !NET
