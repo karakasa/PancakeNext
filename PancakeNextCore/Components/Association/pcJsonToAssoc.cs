@@ -1,4 +1,5 @@
 ﻿using Grasshopper2.Components;
+using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
@@ -19,7 +20,7 @@ public sealed class pcJsonToAssoc : PancakeComponent
 
     protected override void RegisterInputs()
     {
-        AddParam("json");
+        AddParam<TextParameter>("json");
     }
 
     protected override void RegisterOutputs()
@@ -66,7 +67,6 @@ public sealed class pcJsonToAssoc : PancakeComponent
     {
         _parser = GetValue(ConfigParserName, null);
     }
-    protected override string InputPanelCategoryName => "Parser";
     static readonly string[] ValidParsers = JsonParserLibrary.Parsers.Select(p => p.Name).ToArray();
     protected override InputOption[][] SimpleOptions => [[
             new PickOneOption<string>("Parser", "Pick a parser for parsing JSON. They vary in requirements and performances.", "parser", 

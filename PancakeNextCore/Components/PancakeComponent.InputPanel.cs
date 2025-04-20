@@ -58,9 +58,10 @@ public abstract partial class PancakeComponent
         public string Placeholder { get; set; } = placeholder;
         public Action<string>? Setter { get; set; } = setter;
         public Action<string>? TextChanged { get; set; }
+        public string? ChapterName { get; set; }
         public override BarItem Create(PancakeComponent comp)
         {
-            var text = new TextField(Icon, new Grasshopper2.UI.Nomen(Name, Description), InitialContent)
+            var text = new TextField(Icon, new Grasshopper2.UI.Nomen(Name, Description, ChapterName), InitialContent)
             {
                 Placeholder = Placeholder
             };
@@ -88,9 +89,10 @@ public abstract partial class PancakeComponent
         public Color? OffColor { get; set; }
         public string OnText { get; set; } = onText;
         public string OffText { get; set; } = offText;
+        public string? ChapterName { get; set; }
         public override BarItem Create(PancakeComponent comp)
         {
-            var toggle = new RadioToggle(Icon, new Grasshopper2.UI.Nomen(Name, Description), InitialValue, v =>
+            var toggle = new RadioToggle(Icon, new Grasshopper2.UI.Nomen(Name, Description, ChapterName), InitialValue, v =>
             {
                 Setter(v);
                 comp.ExpireSolution();
@@ -129,7 +131,7 @@ public abstract partial class PancakeComponent
                 var val = ValidValues[i];
                 var valName = ValueNames[i];
 
-                var toggle = new RadioToggle(Icons?[i], new(Name, Description, "Pancake", SectionName), val.Equals(InitialValue), v =>
+                var toggle = new RadioToggle(Icons?[i], new(Name, Description, SectionName, SectionName), val.Equals(InitialValue), v =>
                 {
                     if (v)
                     {
@@ -154,9 +156,10 @@ public abstract partial class PancakeComponent
         public Action Action { get; set; } = action;
         public Color? OnColor { get; set; }
         public string Text { get; set; } = text;
+        public string? ChapterName { get; set; }
         public override BarItem Create(PancakeComponent comp)
         {
-            var toggle = new PushButton(Icon, new Grasshopper2.UI.Nomen(Name, Description), Action);
+            var toggle = new PushButton(Icon, new Grasshopper2.UI.Nomen(Name, Description, ChapterName), Action);
             return toggle;
         }
     }
