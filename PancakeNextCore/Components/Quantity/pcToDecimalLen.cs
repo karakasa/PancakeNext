@@ -2,16 +2,23 @@
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
 using PancakeNextCore.Dataset;
 using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Quantity;
 
 [IoId("1332c8a7-f118-4319-b63d-374c5ac589a6")]
-public class pcToDecimalLen : PancakeComponent
+[ComponentCategory("qty", 0)]
+public sealed class pcToDecimalLen : PancakeComponent<pcToDecimalLen>, IPancakeLocalizable<pcToDecimalLen>
 {
+    public static string StaticLocalizedName => Strings.ToDecimalLength;
+
+    public static string StaticLocalizedDescription => Strings.ConvertAQuantityToADecimalLengthWithDesignatedUnit;
+
     public pcToDecimalLen(IReader reader) : base(reader) { }
-    public pcToDecimalLen() : base(typeof(pcToDecimalLen)) { }
+    public pcToDecimalLen() { }
     protected override void RegisterInputs()
     {
         AddParam<QuantityParameter>("quantity5");

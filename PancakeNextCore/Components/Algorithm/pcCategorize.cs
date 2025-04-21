@@ -14,13 +14,16 @@ using Grasshopper2.UI.Toolbar;
 using GrasshopperIO;
 using PancakeNextCore.GH;
 using Eto.Drawing;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Algorithm;
 
 [IoId("b521157b-0ed0-4229-940a-7c9c2d9357ee")]
-public class pcCategorize : PancakeComponent
+[ComponentCategory("misc")]
+public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocalizable<pcCategorize>
 {
-    public pcCategorize() : base(typeof(pcCategorize)) {}
+    public pcCategorize() {}
     public pcCategorize(IReader reader) : base(reader) {}
 
     protected override void ReadConfig()
@@ -163,4 +166,8 @@ public class pcCategorize : PancakeComponent
                 OffColor = OpenColor.Gray0
             }
         ]];
+
+    public static string StaticLocalizedName => Strings.Categorize;
+
+    public static string StaticLocalizedDescription => Strings.CategorizeValuesByKeys;
 }

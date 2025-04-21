@@ -8,3 +8,12 @@ public interface IPancakeLocalizable
     string? LastSaveLocalization { get; }
     void RefreshLocalizationAppearance();
 }
+
+public interface IPancakeLocalizable<T> : IPancakeLocalizable
+    where T : IPancakeLocalizable<T>
+{
+#if NET
+    public static abstract string StaticLocalizedName { get; }
+    public static abstract string StaticLocalizedDescription { get; }
+#endif
+}

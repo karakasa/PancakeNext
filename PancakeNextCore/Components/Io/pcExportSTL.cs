@@ -4,6 +4,8 @@ using Grasshopper2.Parameters.Standard;
 using Grasshopper2.UI;
 using Grasshopper2.UI.Icon;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.Interfaces;
 using PancakeNextCore.Utility;
 using Rhino.Geometry;
 using System;
@@ -16,7 +18,8 @@ using Path = System.IO.Path;
 namespace PancakeNextCore.Components.IO;
 
 [IoId("5d6c7460-aedd-4ede-bd29-7730b0228c1f")]
-public sealed class pcExportSTL : PancakeComponent
+[ComponentCategory("io", 1)]
+public sealed class pcExportSTL : PancakeComponent<pcExportSTL>, IPancakeLocalizable<pcExportSTL>
 {
     static pcExportSTL()
     {
@@ -34,7 +37,7 @@ public sealed class pcExportSTL : PancakeComponent
     {
     }
 
-    public pcExportSTL() : base(typeof(pcExportSTL))
+    public pcExportSTL()
     {
     }
 
@@ -186,4 +189,8 @@ public sealed class pcExportSTL : PancakeComponent
     }
 
     protected override IIcon IconInternal => SvgGhIcon.CreateFromSvgResource("ExportSTL", 32, 32);
+
+    public static string StaticLocalizedName => Strings.ExportSTL;
+
+    public static string StaticLocalizedDescription => Strings.ExportSTLDesc;
 }

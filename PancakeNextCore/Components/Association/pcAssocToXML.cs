@@ -13,9 +13,9 @@ namespace PancakeNextCore.Components.Association;
 
 [ComponentCategory("io", 0)]
 [IoId("{83649765-DCCB-4B68-9DF9-B05EEC44FDA2}")]
-public class pcAssocToXml : PancakeComponent, IPancakeLocalizableStatic<pcAssocToXml>
+public class pcAssocToXml : PancakeComponent<pcAssocToXml>, IPancakeLocalizable<pcAssocToXml>
 {
-    public pcAssocToXml() : base(typeof(pcAssocToXml)) { }
+    public pcAssocToXml() { }
     public pcAssocToXml(IReader reader) : base(reader) { }
     public static string StaticLocalizedName => Strings.AssocToXML;
     public static string StaticLocalizedDescription => Strings.ExportAnAssocToXMLSeeExampleForMoreInformation;

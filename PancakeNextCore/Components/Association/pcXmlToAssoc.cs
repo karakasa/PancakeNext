@@ -2,18 +2,20 @@
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
+using PancakeNextCore.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace PancakeNextCore.Components.Association;
 
 [IoId("{FE555B52-23B3-4589-8276-26CF7F9AED57}")]
-public class pcXmlToAssoc : PancakeComponent
+[ComponentCategory("assoc")]
+public sealed class pcXmlToAssoc : PancakeComponent<pcXmlToAssoc>, IPancakeLocalizable<pcXmlToAssoc>
 {
-    public pcXmlToAssoc() : base(typeof(pcXmlToAssoc)) { }
+    public pcXmlToAssoc() { }
     public pcXmlToAssoc(IReader reader) : base(reader) { }
 
     protected override void ReadConfig()
@@ -68,4 +70,8 @@ public class pcXmlToAssoc : PancakeComponent
                 ChapterName = "Simplify input"
             }
             ]];
+
+    public static string StaticLocalizedName => Strings.XMLToAssoc;
+
+    public static string StaticLocalizedDescription => Strings.ReadXMLFileIntoAssocYouMayNeedAssocToKeyValuesToConvert;
 }

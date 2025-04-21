@@ -1,6 +1,7 @@
 ﻿using PancakeNextCore.Dataset;
 using PancakeNextCore.Utility;
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -215,7 +216,7 @@ public abstract class GhQuantity : IEquatable<GhQuantity>, IComparable<GhQuantit
 
     public override int GetHashCode()
     {
-        throw new NotImplementedException();
+        throw new UnreachableException();
     }
 
     public bool Equals(GhQuantity? other)

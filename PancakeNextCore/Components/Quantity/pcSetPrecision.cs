@@ -2,15 +2,20 @@
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Quantity;
 
 [IoId("dc2e77c7-9bbb-4fe3-b046-088ed67d1f16")]
-public class pcSetPrecision : PancakeComponent
+[ComponentCategory("qty", 0)]
+public sealed class pcSetPrecision : PancakeComponent<pcSetPrecision>, IPancakeLocalizable<pcSetPrecision>
 {
+    public static string StaticLocalizedName => Strings.SetPrecision;
+    public static string StaticLocalizedDescription => Strings.SetThePrecisionOfAQuantityPrecisionMayHaveDifferentMeaningsOnDifferentQuantitiesSeeManualOrExampleForMoreInformation;
     public pcSetPrecision(IReader reader) : base(reader) { }
-    public pcSetPrecision() : base(typeof(pcSetPrecision)) { }
+    public pcSetPrecision() { }
     protected override void RegisterInputs()
     {
         AddParam<QuantityParameter>("quantity4");

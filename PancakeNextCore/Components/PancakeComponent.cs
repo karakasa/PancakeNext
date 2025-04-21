@@ -17,19 +17,19 @@ using Grasshopper2.UI.Icon;
 using Grasshopper2.UI.Canvas;
 using System.Diagnostics.CodeAnalysis;
 using PancakeNextCore.GH;
+using System.Reflection;
 
 namespace PancakeNextCore.Components;
 
 public abstract partial class PancakeComponent : Component, IPancakeLocalizable
 {
-    protected PancakeComponent(Type componentName) : base(ComponentLibrary.LookUpComponent(componentName))
+    protected PancakeComponent(Nomen nomen) : base(nomen)
     {
         ProcessRuntimeModifier();
         HandleLocalizationForNewlyCreated();
 
         ReadConfig();
     }
-
     protected PancakeComponent(IReader reader) : base(reader)
     {
         ReadVersion(reader);
@@ -54,14 +54,14 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
         RegisterOutputs();
         _currentOutputManager = null;
     }
-    private void RefreshLocalizationAppearance(Nomen expected)
+    protected void RefreshLocalizationAppearance(Nomen expected)
     {
-        // ModifyNameAndInfo(LocalizedName, LocalizedDescription);
+        ModifyNameAndInfo(expected.Name, expected.Info);
     }
 
     public void RefreshLocalizationAppearance()
     {
-        // ModifyNameAndInfo(LocalizedName, LocalizedDescription);
+        ModifyNameAndInfo(LocalizedName, LocalizedDescription);
     }
 
     private bool _isSupported = true;
@@ -90,15 +90,7 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
     }
 
     [MemberNotNull(nameof(LocalizedDescription), nameof(LocalizedName))]
-    private void HandleLocalizationForRestored()
-    {
-        var expectedNomen = ComponentLibrary.LookUpComponent(GetType(), Obsolete);
-        RefreshLocalizationAppearance(expectedNomen);
-        SaveCurrentLangIfNot();
-
-        LocalizedName = Nomen.Name;
-        LocalizedDescription = Nomen.Info;
-    }
+    protected abstract void HandleLocalizationForRestored();
 
     private void ReadAttributes(Type type)
     {
@@ -117,8 +109,8 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
         }
     }
 
-    public string LocalizedName { get; private set; }
-    public string LocalizedDescription { get; private set; }
+    public string LocalizedName { get; protected set; }
+    public string LocalizedDescription { get; protected set; }
     protected override void PreProcess(Solution solution)
     {
         if (!_isSupported)
@@ -216,7 +208,7 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
 
     public string? LastSaveLocalization => GetValue(SettingLastSaveLocal, default(string));
 
-    private void SaveCurrentLangIfNot()
+    protected void SaveCurrentLangIfNot()
     {
         if (string.IsNullOrEmpty(LastSaveLocalization))
         {
@@ -277,5 +269,55 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
     protected virtual void ReadConfig()
     {
 
+    }
+}
+
+public abstract class PancakeComponent<T> : PancakeComponent
+    where T : IPancakeLocalizable<T>
+{
+    protected PancakeComponent() : base(CreateNomen())
+    {
+    }
+    protected PancakeComponent(IReader reader) : base(reader)
+    {
+    }
+    private static Nomen CreateNomen()
+    {
+        string name, desc;
+
+#if NET
+        name = T.StaticLocalizedName;
+        desc = T.StaticLocalizedDescription;
+#else
+        name = (CachedLocalizedName ??= (string)ReflectionHelper.GetStaticProperty<T>("StaticLocalizedName")!);
+        desc = (CachedLocalizedDescription ??= (string)ReflectionHelper.GetStaticProperty<T>("StaticLocalizedDescription")!);
+#endif
+
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(desc))
+        {
+            throw new InvalidOperationException($"Fail to retrieve name or description for {typeof(T).Name}");
+        }
+
+        var category = typeof(T).GetCustomAttribute<ComponentCategoryAttribute>() ??
+            throw new InvalidOperationException($"Fail to retrieve category for {typeof(T).Name}");
+
+        var categoryName = ComponentLibrary.GetCategoryFriendlyName(category.SectionName);
+        return new Nomen(name, desc, ComponentLibrary.PanelName, categoryName, category.SubPanelIndex, category.Rank);
+    }
+
+#if !NET
+    private static string? CachedLocalizedName;
+    private static string? CachedLocalizedDescription;
+#endif
+
+    protected override void HandleLocalizationForRestored()
+    {
+        var expectedNomen = CreateNomen();
+
+        LocalizedName = expectedNomen.Name;
+        LocalizedDescription = expectedNomen.Info;
+
+        RefreshLocalizationAppearance(expectedNomen);
+        SaveCurrentLangIfNot();
     }
 }

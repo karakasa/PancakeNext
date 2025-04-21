@@ -1,8 +1,10 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
+using PancakeNextCore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,9 +15,10 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.Components.Association;
 
 [IoId("{C92DF7F3-F383-483B-BFE7-3342788DF589}")]
-public sealed class pcJsonToAssoc : PancakeComponent
+[ComponentCategory("assoc")]
+public sealed class pcJsonToAssoc : PancakeComponent<pcJsonToAssoc>, IPancakeLocalizable<pcJsonToAssoc>
 {
-    public pcJsonToAssoc() : base(typeof(pcJsonToAssoc)) { }
+    public pcJsonToAssoc() { }
     public pcJsonToAssoc(IReader reader) : base(reader) { }
 
     protected override void RegisterInputs()
@@ -72,4 +75,8 @@ public sealed class pcJsonToAssoc : PancakeComponent
                 setter: v => Parser = v
                 )
             ]];
+
+    public static string StaticLocalizedName => "Json to Assoc";
+
+    public static string StaticLocalizedDescription => "Converts a json string to Assoc object.\r\nUse 'Assoc to String' to convert assoc to json.";
 }

@@ -2,15 +2,20 @@
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Quantity;
 
 [IoId("c8e25bce-58d5-4feb-9cd1-9f77ee40c065")]
-public class pcDeconFeetInch : PancakeComponent
+[ComponentCategory("qty", 0)]
+public class pcDeconFeetInch : PancakeComponent<pcDeconFeetInch>, IPancakeLocalizable<pcDeconFeetInch>
 {
+    public static string StaticLocalizedName => Strings.DeconstructFeetInchLength;
+    public static string StaticLocalizedDescription => Strings.DeconstructAFeetInchLengthQuantityToItsComponents;
     public pcDeconFeetInch(IReader reader) : base(reader) { }
-    public pcDeconFeetInch() : base(typeof(pcDeconFeetInch)) { }
+    public pcDeconFeetInch() { }
     protected override void RegisterInputs()
     {
         AddParam<QuantityParameter>("quantity2");

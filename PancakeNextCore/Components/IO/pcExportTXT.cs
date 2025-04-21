@@ -1,17 +1,23 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.Interfaces;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Text;
 
 namespace PancakeNextCore.Components.IO;
 
 [IoId("04042ba4-ffff-42d6-a264-2eb6e701c116")]
-public sealed class pcExportTXT : PancakeComponent
+[ComponentCategory("io", 1)]
+public sealed class pcExportTXT : PancakeComponent<pcExportTXT>, IPancakeLocalizable<pcExportTXT>
 {
-    public pcExportTXT() : base(typeof(pcExportTXT)) { }
+    public static string StaticLocalizedName => Strings.ExportTXT;
+
+    public static string StaticLocalizedDescription => Strings.ThisComponentExportsTextToAFile;
+
+    public pcExportTXT() { }
     public pcExportTXT(IReader reader) : base(reader) { }
     protected override void RegisterInputs()
     {

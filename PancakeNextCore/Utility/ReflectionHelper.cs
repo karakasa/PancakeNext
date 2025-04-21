@@ -215,4 +215,8 @@ internal static class ReflectionHelper
 
         return compliedFunction;
     }
+    public static object? GetStaticProperty<T>(string name)
+    {
+        return typeof(T).GetProperty(name, BindingFlags.Public | BindingFlags.Static)?.GetValue(null);
+    }
 }

@@ -2,15 +2,20 @@
 
 using Grasshopper2.Components;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Quantity;
 
 [IoId("56e39add-a7bd-4eec-bed8-8dc6e528720f")]
-public class pcToFtInLen : PancakeComponent
+[ComponentCategory("qty", 0)]
+public sealed class pcToFtInLen : PancakeComponent<pcToFtInLen>, IPancakeLocalizable<pcToFtInLen>
 {
+    public static string StaticLocalizedName => Strings.ToFeetInchLength;
+    public static string StaticLocalizedDescription => Strings.ConvertAQuantityToAFeetInchLengthWithDesignatedUnit;
     public pcToFtInLen(IReader reader) : base(reader) { }
-    public pcToFtInLen() : base(typeof(pcToFtInLen)) { }
+    public pcToFtInLen() { }
     protected override void RegisterInputs()
     {
         AddParam<QuantityParameter>("quantity7");
@@ -23,7 +28,7 @@ public class pcToFtInLen : PancakeComponent
     protected override void Process(IDataAccess access)
     {
 
-        access.GetItem(0, out GH.Params.GhQuantity quantity);
+        access.GetItem(0, out GhQuantity quantity);
         access.GetItem(1, out int precision);
 
         var len = new GhLengthFeetInch(quantity.ToNeutralUnit(), precision);

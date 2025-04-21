@@ -63,57 +63,7 @@ internal static partial class ComponentLibrary
         public override string ToString() => Description;
     }
 
-    private sealed class ComponentInfo
-    {
-        public Type Identifier { get; set; } = typeof(void);
-        public CategoryInfo? Section { get; set; }
-        public string Name { get; set; } = "";
-        public string Description { get; set; } = "";
-        public int SubSection { get; set; }
-        public Rank Rank { get; set; }
-        public Nomen ToNomen(bool obsolete = false)
-        {
-            if (Identifier.Name.IndexOf(DeprecatedSuffix, StringComparison.Ordinal) > 0 || Identifier.GetCustomAttribute<ObsoleteAttribute>() is not null)
-                obsolete = true;
-
-            return new Nomen(Name, Description, CategoryName, Section?.ToString() ?? "", SubSection, obsolete ? Rank.Hidden : Rank);
-        }
-
-        public static implicit operator ComponentInfo((Type Identifier, string Name, string Desc, int SubSection) tuple)
-        {
-            return (tuple.Identifier, tuple.Name, tuple.Desc, tuple.SubSection, Rank.Normal);
-        }
-
-        public static implicit operator ComponentInfo((Type Identifier, string Name, string Desc, int SubSection, Rank Rank) tuple)
-        {
-            return new()
-            {
-                Identifier = tuple.Identifier,
-                Name = tuple.Name,
-                Description = tuple.Desc,
-                SubSection = tuple.SubSection,
-                Rank = tuple.Rank
-            };
-        }
-    }
-
     private static readonly Dictionary<string, ParamInfo> _paramInfos = [];
-    private static readonly Dictionary<Type, ComponentInfo> _componentInfos = [];
-
-    static int LastCategoryIndex = -1;
-
-    private static void AddCategory(string categoryName, IEnumerable<ComponentInfo> infos)
-    {
-        ++LastCategoryIndex;
-        var c = new CategoryInfo(categoryName, LastCategoryIndex);
-
-        foreach (var info in infos)
-        {
-            info.Section = c;
-            _componentInfos[info.Identifier] = info;
-        }
-    }
-
     public static void Param(string identifier, string name, string nickname, string desc)
     {
         _paramInfos[identifier] = new()
@@ -126,24 +76,21 @@ internal static partial class ComponentLibrary
 
     static ComponentLibrary()
     {
-        AddBuiltinComponentList();
         AddBuiltinParamList();
     }
 
-    public const string CategoryName = "Pancake";
+    public const string PanelName = "Pancake";
     public const string DeprecatedSuffix = "_old";
-    public static Nomen LookUpComponent(Type name, bool obsolete = false)
+
+    public static string GetCategoryFriendlyName(string categoryShortName)
     {
-        if (!_componentInfos.TryGetValue(name, out var info))
+        return categoryShortName switch
         {
-            _componentInfos[name] = info = CreateInfoByReflection(name);
-        }
-
-        return info.ToNomen(obsolete);
-    }
-
-    private static ComponentInfo CreateInfoByReflection(Type type)
-    {
-
+            "io" => "00 | IO",
+            "assoc" => "01 | Association",
+            "qty" => "02 | Quantity",
+            "misc" => "03 | Misc",
+            _ => throw new ArgumentOutOfRangeException(nameof(categoryShortName), $"{categoryShortName} is not a valid category shortname."),
+        };
     }
 }

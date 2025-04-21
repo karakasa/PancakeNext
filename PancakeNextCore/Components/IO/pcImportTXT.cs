@@ -1,6 +1,8 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.Interfaces;
 using System;
 using System.Drawing;
 using System.IO;
@@ -9,9 +11,14 @@ using System.Text;
 namespace PancakeNextCore.Components.IO;
 
 [IoId("{49602452-908A-4FDA-992E-CB8C4E2D62C3}")]
-public sealed class pcImportTXT : PancakeComponent
+[ComponentCategory("io", 0)]
+public sealed class pcImportTXT : PancakeComponent<pcImportTXT>, IPancakeLocalizable<pcImportTXT>
 {
-    public pcImportTXT() : base(typeof(pcImportTXT)) { }
+    public static string StaticLocalizedName => Strings.ImportTXT;
+
+    public static string StaticLocalizedDescription => Strings.ReadTextFileWithASpecificEncoding;
+
+    public pcImportTXT() { }
     public pcImportTXT(IReader reader) : base(reader) { }
     protected override void RegisterInputs()
     {

@@ -7,8 +7,10 @@ using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
 using Grasshopper2.Types.Colour;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
+using PancakeNextCore.Interfaces;
 using PancakeNextCore.Utility;
 using Rhino.Geometry;
 using Path = System.IO.Path;
@@ -16,9 +18,10 @@ using Path = System.IO.Path;
 namespace PancakeNextCore.Components.IO;
 
 [IoId("6507d247-997f-454f-b8b1-33bf59967424")]
-public sealed partial class pcParseString : PancakeComponent
+[ComponentCategory("io", 0)]
+public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPancakeLocalizable<pcParseString>
 {
-    public pcParseString() : base(typeof(pcParseString)) { }
+    public pcParseString() { }
     public pcParseString(IReader reader) : base(reader) { }
     protected override void RegisterInputs()
     {
@@ -56,6 +59,10 @@ public sealed partial class pcParseString : PancakeComponent
     private IDataAccess? _access = null;
 
     static readonly string[] DesiredTypeSeparators = [",", " "];
+
+    public static string StaticLocalizedName => Strings.ParseString;
+
+    public static string StaticLocalizedDescription => Strings.ParseFormattedStringToItsCorrectTypeCurrentlyThisComponentSupportsIntegerNumberBooleanGuidLengthQuantityDatetimePointDomain12DColourAndJsonSeeExamplesOrManualForMoreInformation;
 
     private bool TryHandleFile(string path)
     {

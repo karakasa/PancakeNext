@@ -1,17 +1,12 @@
-﻿using System;
+﻿using Grasshopper2.UI;
+using System;
 
 namespace PancakeNextCore.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class ComponentCategoryAttribute : Attribute
+public sealed class ComponentCategoryAttribute(string section, int subPanelIndex = 0, Rank rank = Rank.Normal) : Attribute
 {
-    public string SectionName { get; private set; } = "";
-    public int SubPanelIndex { get; private set; } = -1;
-
-    public ComponentCategoryAttribute(
-        string section, int subPanelIndex)
-    {
-        SectionName = section;
-        SubPanelIndex = subPanelIndex;
-    }
+    public string SectionName { get; private set; } = section;
+    public int SubPanelIndex { get; private set; } = subPanelIndex;
+    public Rank Rank { get; private set; } = rank;
 }
