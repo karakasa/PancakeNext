@@ -25,6 +25,7 @@ internal static partial class ComponentLibrary
         AddCategory("Association", 
             [
             (typeof(pcJsonToAssoc), "Json to Assoc", "Converts a json string to Assoc object.\r\nUse 'Assoc to String' to convert assoc to json.", 0),
+            (typeof(pcXmlToAssoc), Strings.XMLToAssoc, Strings.ReadXMLFileIntoAssocYouMayNeedAssocToKeyValuesToConvert, 0),
             ]);
 
         AddCategory("Quantity",

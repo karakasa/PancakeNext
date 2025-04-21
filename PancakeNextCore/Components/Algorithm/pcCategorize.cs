@@ -68,23 +68,23 @@ public class pcCategorize : PancakeComponent
         switch (keyList)
         {
             case Twig<int> listOfInts:
-                FastSortKeyValues(listOfInts, valList, out var kInt, out valsOut, _sortIfPossible);
+                FastSortKeyValues(listOfInts, valList, out var kInt, out valsOut, SortIfPossible);
                 keysOut = kInt;
                 break;
             case Twig<double> listOfDoubles:
-                FastSortKeyValues(listOfDoubles, valList, out var kDouble, out valsOut, _sortIfPossible);
+                FastSortKeyValues(listOfDoubles, valList, out var kDouble, out valsOut, SortIfPossible);
                 keysOut = kDouble;
                 break;
             case Twig<string> listOfStrings:
-                FastSortKeyValues(listOfStrings, valList, out var kString, out valsOut, _sortIfPossible);
+                FastSortKeyValues(listOfStrings, valList, out var kString, out valsOut, SortIfPossible);
                 keysOut = kString;
                 break;
             case Twig<bool> listOfBooleans:
-                FastSortKeyValues(listOfBooleans, valList, out var kBoolean, out valsOut, _sortIfPossible);
+                FastSortKeyValues(listOfBooleans, valList, out var kBoolean, out valsOut, SortIfPossible);
                 keysOut = kBoolean;
                 break;
             default:
-                SortKeyValuesFallback(keyList, valList, out keysOut, out valsOut, _sortIfPossible);
+                SortKeyValuesFallback(keyList, valList, out keysOut, out valsOut, SortIfPossible);
                 break;
         }
 
@@ -144,16 +144,20 @@ public class pcCategorize : PancakeComponent
     private const string SortIfPossibleConfigName = "SortIfPossible";
     private bool _sortIfPossible;
 
+    public bool SortIfPossible
+    {
+        get => _sortIfPossible;
+        set => SetValue(SortIfPossibleConfigName, _sortIfPossible = value);
+    }
     private void MnuSortIfPossible(bool newValue)
     {
-        _sortIfPossible = newValue;
-        CustomValues.Set(SortIfPossibleConfigName, _sortIfPossible);
+        SortIfPossible = newValue;
         Expire();
         Document?.Solution?.DelayedExpire(this);
     }
 
     protected override InputOption[][] SimpleOptions => [[
-            new ToggleOption("Sort if possible", "Controls if keys should be sorted", _sortIfPossible, MnuSortIfPossible, "Sort keys", "Keep order of keys")
+            new ToggleOption("Sort if possible", "Controls if keys should be sorted", SortIfPossible, MnuSortIfPossible, "Sort keys", "Keep order of keys")
             {
                 OnColor = OpenColor.Blue5,
                 OffColor = OpenColor.Gray0

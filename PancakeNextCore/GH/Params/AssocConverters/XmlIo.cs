@@ -236,7 +236,7 @@ internal sealed class XmlIo
         return firstChar == '-' || firstChar == '.' || firstChar >= '0' && firstChar <= '9';
     }
 
-    public static GhAssocBase ReadXml(string content, out string? root, ICollection<string>? interested = null)
+    public static GhAssocBase ReadXml(string content, out string? root, IEnumerable<string>? interested = null)
     {
         var file = FileIo.IsValidPath(content);
 
@@ -384,9 +384,9 @@ internal sealed class XmlIo
     {
         public bool AllowEverything = false;
         private readonly Dictionary<string, ProcessTree> _tree = [];
-        public static ProcessTree CreateFrom(ICollection<string>? interested)
+        public static ProcessTree CreateFrom(IEnumerable<string>? interested)
         {
-            if (interested == null || interested.Count == 0)
+            if (interested == null)
                 return new ProcessTree() { AllowEverything = true };
 
             var tree = new ProcessTree();

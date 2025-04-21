@@ -42,6 +42,6 @@ internal class ReportUi : Form
     {
         _textAreaReport.Wrap = wrap;
         _textAreaReport.Text = content;
-        _textAreaReport.Selection = new Range<int>(0);
+        _textAreaReport.CaretIndex = 0;
     }
 }

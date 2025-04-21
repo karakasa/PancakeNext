@@ -56,11 +56,7 @@ public sealed class pcJsonToAssoc : PancakeComponent
     public string? Parser
     {
         get => _parser;
-        set
-        {
-            _parser = value;
-            SetValue(ConfigParserName, _parser ?? "");
-        }
+        set => SetValue(ConfigParserName, _parser ??= value ?? "");
     }
 
     protected override void ReadConfig()

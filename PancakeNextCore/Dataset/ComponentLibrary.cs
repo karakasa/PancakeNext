@@ -134,6 +134,16 @@ internal static partial class ComponentLibrary
     public const string DeprecatedSuffix = "_old";
     public static Nomen LookUpComponent(Type name, bool obsolete = false)
     {
-        return _componentInfos[name].ToNomen(obsolete);
+        if (!_componentInfos.TryGetValue(name, out var info))
+        {
+            _componentInfos[name] = info = CreateInfoByReflection(name);
+        }
+
+        return info.ToNomen(obsolete);
+    }
+
+    private static ComponentInfo CreateInfoByReflection(Type type)
+    {
+
     }
 }

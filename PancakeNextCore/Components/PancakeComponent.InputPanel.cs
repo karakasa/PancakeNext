@@ -49,7 +49,7 @@ public abstract partial class PancakeComponent
         }
     }
 
-    protected sealed class TextOption(string name, string desc, string intialContent, Action<string>? setter, string placeholder = "") : InputOption
+    protected sealed class TextOption(string name, string desc, string intialContent, Action<string>? setter, string placeholder = "", string? chapterName = "") : InputOption
     {
         public IIcon? Icon { get; set; }
         public string Name { get; set; } = name;
@@ -58,7 +58,7 @@ public abstract partial class PancakeComponent
         public string Placeholder { get; set; } = placeholder;
         public Action<string>? Setter { get; set; } = setter;
         public Action<string>? TextChanged { get; set; }
-        public string? ChapterName { get; set; }
+        public string? ChapterName { get; set; } = chapterName;
         public override BarItem Create(PancakeComponent comp)
         {
             var text = new TextField(Icon, new Grasshopper2.UI.Nomen(Name, Description, ChapterName), InitialContent)
@@ -78,7 +78,7 @@ public abstract partial class PancakeComponent
         }
     }
 
-    protected sealed class ToggleOption(string name, string desc, bool initialValue, Action<bool> setter, string onText, string offText) : InputOption
+    protected sealed class ToggleOption(string name, string desc, bool initialValue, Action<bool> setter, string onText, string offText, string? chapterName = null) : InputOption
     {
         public IIcon? Icon { get; set; }
         public string Name { get; set; } = name;
@@ -89,7 +89,7 @@ public abstract partial class PancakeComponent
         public Color? OffColor { get; set; }
         public string OnText { get; set; } = onText;
         public string OffText { get; set; } = offText;
-        public string? ChapterName { get; set; }
+        public string? ChapterName { get; set; } = chapterName;
         public override BarItem Create(PancakeComponent comp)
         {
             var toggle = new RadioToggle(Icon, new Grasshopper2.UI.Nomen(Name, Description, ChapterName), InitialValue, v =>

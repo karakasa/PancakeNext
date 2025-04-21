@@ -214,7 +214,7 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
 
     private const string SettingLastSaveLocal = "LastSaveLocalization";
 
-    public string? LastSaveLocalization => GetValue(SettingLastSaveLocal, default);
+    public string? LastSaveLocalization => GetValue(SettingLastSaveLocal, default(string));
 
     private void SaveCurrentLangIfNot()
     {
@@ -228,7 +228,10 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
         => CustomValues.Get(settingName, defaultValue);
     protected void SetValue(string settingName, string? strValue)
         => CustomValues.Set(settingName, strValue);
-
+    protected bool GetValue(string settingName, bool defaultValue)
+        => CustomValues.Get(settingName, defaultValue);
+    protected void SetValue(string settingName, bool boolValue)
+        => CustomValues.Set(settingName, boolValue);
     public Version? LastSaveVersion { get; private set; }
     private const string CfgSaveVersion = "LastSaveVersion";
     protected bool IsNewlyCreated { get; private set; } = true;

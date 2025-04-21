@@ -11,9 +11,9 @@ internal static class JsonParserLibrary
     public static List<(string Name, IJsonParser Instance)> Parsers = new()
     {
         ("Pancake", BuiltinJsonParser.Instance),
-        ("Newtonsoft", NSJsonParser.Instance),
+        ("NSJ", NSJsonParser.Instance),
 #if NET
-        (".NET", STJsonParser.Instance)
+        ("STJ", STJsonParser.Instance)
 #endif
     };
 

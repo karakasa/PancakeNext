@@ -1,107 +1,71 @@
-﻿using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.Interfaces;
-using Pancake.Utility;
+﻿using Grasshopper2.Components;
+using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.GH.Params.AssocConverters;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("data", 1)]
-public class pcXmlToAssoc : PancakeComponent, IPerformanceProfiler
+[IoId("{FE555B52-23B3-4589-8276-26CF7F9AED57}")]
+public class pcXmlToAssoc : PancakeComponent
 {
-    public override string LocalizedName => Strings.XMLToAssoc;
+    public pcXmlToAssoc() : base(typeof(pcXmlToAssoc)) { }
+    public pcXmlToAssoc(IReader reader) : base(reader) { }
 
-    public override string LocalizedDescription => Strings.ReadXMLFileIntoAssocYouMayNeedAssocToKeyValuesToConvert;
+    protected override void ReadConfig()
+    {
+        _collapseAttributes = CustomValues.Get(CfgCollapseAttributes, false);
+    }
 
-    public override Guid ComponentGuid => new Guid("{FE555B52-23B3-4589-8276-26CF7F9AED57}");
+    private bool _collapseAttributes;
 
     private const string CfgCollapseAttributes = "CollapseAttributes";
-
     public bool CollapseAttributes
     {
-        get => GetValue(CfgCollapseAttributes, false);
-        set => SetValue(CfgCollapseAttributes, value);
+        get => _collapseAttributes;
+        set => CustomValues.Set(CfgCollapseAttributes, _collapseAttributes = value);
     }
     protected override void RegisterInputs()
     {
-        AddParam<Param_String>("string");
-        AddParam<Param_String>("key2", GH_ParamAccess.list);
-        LastAddedParameter.Optional = true;
+        AddParam<TextParameter>("string");
+        AddParam<TextParameter>("key2", access: Access.Twig, requirement: Requirement.MayBeMissing);
     }
 
     protected override void RegisterOutputs()
     {
-        AddParam("assoc");
-        AddParam<Param_String>("roottag");
+        AddParam<QuantityParameter>("assoc");
+        AddParam<TextParameter>("roottag");
     }
 
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        string content = null;
-        var keys = new List<string>();
-        DA.GetData(0, ref content);
-        DA.GetDataList(1, keys);
+        access.GetItem(0, out string content);
+        access.GetTwig<string>(1, out var keys);
 
         try
         {
-            _profiler.Clear();
-            _profiler.BeginStage("parse");
-            var assoc = XmlIo.ReadXml(content, out var root, keys);
+            var assoc = XmlIo.ReadXml(content, out var root, keys?.Items);
 
             if (CollapseAttributes)
                 XmlIo.CollapseXmlAssoc(assoc);
 
-            _profiler.EndStage("parse");
-
-            DA.SetData(0, assoc);
-            DA.SetData(1, root);
-
+            access.SetItem(0, assoc);
+            access.SetItem(1, root);
         }
         catch (Exception e)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.FailToParseXML + "\r\n" + e.ToString());
-        }
-        finally
-        {
-            _profiler.EndStage("parse");
+            access.AddError("Parse failure", Strings.FailToParseXML + "\r\n" + e.ToString());
         }
     }
 
-    protected override Bitmap LightModeIcon => ComponentIcon.XML2Assoc;
-
-    private static readonly List<string> InternalKeywords = new List<string>() { "xml" };
-    public override IEnumerable<string> LocalizedKeywords => InternalKeywords;
-
-    public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
-    {
-        Menu_AppendSeparator(menu);
-        Menu_AppendItem(menu, Strings.CompactAttributes, (sender, e) =>
-        {
-            CollapseAttributes = !CollapseAttributes;
-            UpdateMessage();
-            ExpireSolution(true);
-        }, true, CollapseAttributes).ToolTipText = Strings.FormattingMayBeLostRNIfEnabledXMLNodesWithTextContent;
-        base.AppendAdditionalMenuItems(menu);
-    }
-
-    private void UpdateMessage()
-    {
-        Message = CollapseAttributes ? Strings.Compact : null;
-    }
-
-    public override void AddedToDocument(GH_Document document)
-    {
-        UpdateMessage();
-        base.AddedToDocument(document);
-    }
-
-    private readonly StageProfiler _profiler = new StageProfiler();
-    public long GetInputProcessingTime() => 0;
-    public long GetOutputProcessingTime() => 0;
-
-    public long GetCalculationTime() => _profiler.GetElapsedMillisecondsOrInvalid("parse");
+    protected override InputOption[][] SimpleOptions => [[
+            new ToggleOption("Collapse inner content", "Simplify XML by collapsing single inner content of a tag into the tag itself.\r\nDo not use the option if you want to re-export the association to XML.",
+                CollapseAttributes, x => CollapseAttributes = x, "Collapse attributes", "Keep fidelity"){
+                ChapterName = "Simplify input"
+            }
+            ]];
 }

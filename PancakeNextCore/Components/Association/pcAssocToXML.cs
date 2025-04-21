@@ -1,126 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Xml;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.GH.Params;
-using Pancake.Interfaces;
-using Pancake.Utility;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.GH.Params.AssocConverters;
+using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("data", 1)]
-public class pcAssocToXml : PancakeComponent, IPerformanceProfiler
+[ComponentCategory("io", 0)]
+[IoId("{83649765-DCCB-4B68-9DF9-B05EEC44FDA2}")]
+public class pcAssocToXml : PancakeComponent, IPancakeLocalizableStatic<pcAssocToXml>
 {
-    public override string LocalizedName => Strings.AssocToXML;
-    public override string LocalizedDescription => Strings.ExportAnAssocToXMLSeeExampleForMoreInformation;
+    public pcAssocToXml() : base(typeof(pcAssocToXml)) { }
+    public pcAssocToXml(IReader reader) : base(reader) { }
+    public static string StaticLocalizedName => Strings.AssocToXML;
+    public static string StaticLocalizedDescription => Strings.ExportAnAssocToXMLSeeExampleForMoreInformation;
     protected override void RegisterInputs()
     {
-        AddParam("assoc");
-        AddParam<Param_String>("roottag");
+        AddParam<QuantityParameter>("assoc");
+        AddParam<TextParameter>("roottag");
     }
     protected override void RegisterOutputs()
     {
-        AddParam<Param_String>("string");
+        AddParam<TextParameter>("string");
     }
 
-    private XmlIo _xmlIo = new XmlIo();
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        object obj = null;
-        DA.GetData(0, ref obj);
+        access.GetItem(0, out GhAssocBase obj);
 
-        if (!(obj is GhAssoc assoc))
+        if (obj is not GhAssoc assoc)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.InputMustBeAnAssociativeArray);
+            access.AddError("Format failure", Strings.InputMustBeAnAssociativeArray);
             return;
         }
 
-        string root = null;
-
-        DA.GetData(1, ref root);
+        access.GetItem(1, out string root);
 
         try
         {
-            _profiler.Clear();
+            var io = new XmlIo
+            {
+                Headless = Headless,
+                Expand = Expand
+            };
 
-            _xmlIo.Headless = Headless;
-            _xmlIo.Expand = Expand;
-
-            _profiler.BeginStage("parse");
-            var str = _xmlIo.CreateXml(root, assoc);
-            _profiler.EndStage("parse");
-            DA.SetData(0, str);
+            var str = io.CreateXml(root, assoc);
+            access.SetItem(0, str);
         }
         catch (XmlException format)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, format.Message);
-        }
-        finally
-        {
-            _profiler.EndStage("parse");
+            access.AddError("Format failure", format.Message);
         }
     }
-
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon => ComponentIcon.Assoc2XML;
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("{83649765-DCCB-4B68-9DF9-B05EEC44FDA2}"); }
-    }
-
-    private static readonly string[] InternalKeywords = new string[] { "xml" };
-    public override IEnumerable<string> LocalizedKeywords => InternalKeywords;
 
     private const string ConfigHeadless = "Headless";
     private const string ConfigExpand = "Expand";
+
+    private bool _headless;
+    private bool _expand;
+
+    protected override void ReadConfig()
+    {
+        _headless = GetValue(ConfigHeadless, false);
+        _expand = GetValue(ConfigExpand, false);
+    }
     public bool Headless
     {
-        get => GetValue(ConfigHeadless, false);
-        set => SetValue(ConfigHeadless, value);
+        get => _headless;
+        set => SetValue(ConfigHeadless, _headless = value);
     }
 
     public bool Expand
     {
-        get => GetValue(ConfigExpand, false);
-        set => SetValue(ConfigExpand, value);
-    }
-    public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
-    {
-        Menu_AppendSeparator(menu);
-        Menu_AppendItem(menu, Strings.Headless, (sender, e) => { Headless = !Headless; ExpireSolution(true); }, true, Headless)
-            .ToolTipText = Strings.ControlIfTheXMLHeaderIsOmitted;
-        Menu_AppendItem(menu, Strings.ExpandAttributes, (sender, e) => { Expand = !Expand; UpdateMessage(); ExpireSolution(true); }, true, Expand)
-            .ToolTipText = Strings.ExpandAttributesToSubNodesSeeExampleForMoreInformation;
-
-        base.AppendAdditionalMenuItems(menu);
+        get => _expand;
+        set => SetValue(ConfigExpand, _expand = value);
     }
 
-    private readonly StageProfiler _profiler = new StageProfiler();
-    public long GetInputProcessingTime() => 0;
-    public long GetOutputProcessingTime() => 0;
+    const string ChapterName = "Format output";
 
-    public long GetCalculationTime() => _profiler.GetElapsedMillisecondsOrInvalid("parse");
-
-    public override void AddedToDocument(GH_Document document)
-    {
-        UpdateMessage();
-        base.AddedToDocument(document);
-    }
-    private void UpdateMessage()
-    {
-        Message = Expand ? "Expand" : "";
-    }
+    protected override InputOption[][] SimpleOptions => [
+        [
+            new ToggleOption("Omit header", Strings.ControlIfTheXMLHeaderIsOmitted, Headless, x => Headless = x, "Omit", "Emit", ChapterName),
+            new ToggleOption("Expand attributes", Strings.ExpandAttributesToSubNodesSeeExampleForMoreInformation, Expand, x => Expand = x, "Expand", "Keep", ChapterName),
+            ]];
 }
