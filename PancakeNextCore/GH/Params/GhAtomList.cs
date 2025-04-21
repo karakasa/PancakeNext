@@ -1,4 +1,5 @@
-﻿using GrasshopperIO;
+﻿using Grasshopper2.Data;
+using GrasshopperIO;
 using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,22 @@ public sealed class GhAtomList : GhAssocBase
     {
     }
 
-    public GhAtomList(params object?[] objects)
+    public GhAtomList(object?[] objects)
     {
         EnsureData(objects.Length);
-        Values.AddRange(objects);
+        Values.AddRange(objects.AsPears());
+    }
+
+    public GhAtomList(ITwig twig)
+    {
+        EnsureData(twig.ItemCount);
+        Values.AddRange(twig.Pears);
+    }
+
+    public GhAtomList(IPear?[] pears)
+    {
+        EnsureData(pears.Length);
+        Values.AddRange(pears);
     }
 
     internal override GhAssocBase GenericClone()
@@ -33,6 +46,11 @@ public sealed class GhAtomList : GhAssocBase
     }
 
     public void Add(object? obj)
+    {
+        Add(obj.AsPear());
+    }
+
+    public void Add(IPear? obj)
     {
         EnsureData(0);
         Values.Add(obj);
@@ -52,8 +70,10 @@ public sealed class GhAtomList : GhAssocBase
     {
         if (!HasValues) yield break;
 
-        foreach (var it in Values)
+        foreach (var pear in Values)
         {
+            var it = pear?.Item;
+
             if (it is GhAtomList list)
             {
                 foreach (var it2 in list.GetFlattenInnerListUnwrapped())

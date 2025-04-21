@@ -219,4 +219,17 @@ internal static class ReflectionHelper
     {
         return typeof(T).GetProperty(name, BindingFlags.Public | BindingFlags.Static)?.GetValue(null);
     }
+    public static EventHandler<TArgs>? GetStaticEventHandler<TArgs>(this Type clsType, string eventName)
+    {
+        return clsType.GetField(eventName, BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null) as EventHandler<TArgs>;
+    }
+    public static EventHandler<TArgs>? GetEventHandler<TArgs>(this object @class, string eventName)
+    {
+        return @class.GetType().GetField(eventName, BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(@class) as EventHandler<TArgs>;
+    }
+
+    public static string Describe(this Delegate del)
+    {
+        return $"{del.Method?.ToString() ?? "<>"} on {del.Target?.GetType()?.FullName ?? "<>"}";
+    }
 }

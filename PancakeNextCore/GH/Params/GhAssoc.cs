@@ -115,13 +115,18 @@ public sealed class GhAssoc : GhAssocBase
 
     public void Add(string? name, object? item)
     {
+        Add(name, item.AsPear());
+    }
+
+    public void Add(string? name, IPear? item)
+    {
         EnsureData();
 
         Names.Add(name);
-        Values.Add(item);
+        Values.Add(item.AsPear());
     }
 
-    public bool TryGet(string name, out object? output)
+    public bool TryGet(string? name, out IPear? output)
     {
         if (!HasValues)
         {
@@ -131,7 +136,7 @@ public sealed class GhAssoc : GhAssocBase
 
         for (var i = 0; i < Length; i++)
         {
-            if (name.Equals(Names[i]))
+            if (string.Equals(name, Names?[i]))
             {
                 output = Values[i];
                 return true;
@@ -142,7 +147,7 @@ public sealed class GhAssoc : GhAssocBase
         return false;
     }
 
-    internal bool TryGetContent(string name, out object? output)
+    internal bool TryGetContent(string name, out IPear? output)
     {
         if (!HasValues)
         {
@@ -169,12 +174,7 @@ public sealed class GhAssoc : GhAssocBase
             return false;
         }
 
-#if NET
-        var realName = name.AsSpan(0, lastIndex);
-#else
-        var realName = name.Substring(0, lastIndex);
-#endif
-
+        var realName = name.Substr(0, lastIndex);
         var index = 0;
 
         for (var i = 0; i < Length; i++)
@@ -229,7 +229,7 @@ public sealed class GhAssoc : GhAssocBase
 
     public GhAssoc(IEnumerable<string?>? names, IEnumerable<object?> list)
     {
-        Values = [.. list];
+        Values = [.. list.AsPears()];
 
         if (names is null)
         {
@@ -255,13 +255,6 @@ public sealed class GhAssoc : GhAssocBase
 
     internal override GhAssocBase GenericClone() => Clone();
 
-    public override string ToString()
-    {
-        if (_principleIndex == 0 && HasValues && Values[0] is string str)
-            return str;
-
-        return GetDescriptiveString();
-    }
     private IEnumerable<string> GetItemNames()
     {
         if (!HasValues)
@@ -273,7 +266,7 @@ public sealed class GhAssoc : GhAssocBase
         }
     }
 
-    public string GetDescriptiveString()
+    public override string ToString()
     {
         if (!HasValues)
             return "<>";
@@ -291,16 +284,6 @@ public sealed class GhAssoc : GhAssocBase
                 return i;
 
         return -1;
-    }
-
-    public bool SetPrincipleValue(string name)
-    {
-        var index = FindIndexByName(name);
-
-        if (index < 0)
-            return false;
-
-        return SetPrincipleValue(index);
     }
 
     public override bool Equals(object? obj)
@@ -336,7 +319,7 @@ public sealed class GhAssoc : GhAssocBase
         for (var i = 0; i < thisLength; i++)
         {
             if (!string.Equals(Names![i], another.Names![i])) return false;
-            if (!Equals(Values![i], another.Values![i])) return false;
+            if (!OptimizedOperators.SameContentQ(Values![i], another.Values![i])) return false;
         }
 
         return true;
@@ -348,7 +331,7 @@ public sealed class GhAssoc : GhAssocBase
 
         return unchecked(-940306134
             + EqualityComparer<List<string?>>.Default.GetHashCode(Names) * 7
-            + EqualityComparer<List<object?>>.Default.GetHashCode(Values) * 13);
+            + EqualityComparer<List<IPear?>>.Default.GetHashCode(Values) * 13);
     }
 
     public static bool operator ==(GhAssoc assoc1, GhAssoc assoc2)
@@ -478,7 +461,7 @@ public sealed class GhAssoc : GhAssocBase
 
     internal override List<string?>? GetRawNames() => Names;
 
-    public IEnumerable<KeyValuePair<string?, object?>> GetPairs()
+    public IEnumerable<KeyValuePair<string?, IPear?>> GetPairs()
     {
         if (!HasValues) yield break;
 
@@ -495,7 +478,7 @@ public sealed class GhAssoc : GhAssocBase
         for (var i = 0; i < Names.Count; i++)
         {
             var name = Names[i];
-            if (Values[i] is GhAssocBase inode && name is not null)
+            if (Values[i]?.Item is GhAssocBase inode && name is not null)
                 yield return new KeyValuePair<string, GhAssocBase>(name, inode);
         }
     }
@@ -507,8 +490,8 @@ public sealed class GhAssoc : GhAssocBase
         for (var i = 0; i < Names.Count; i++)
         {
             var name = Names[i];
-            if (Values[i] is not GhAssocBase && name != null)
-                yield return new KeyValuePair<string, object?>(name, Values[i]);
+            if (Values[i]?.Item is not GhAssocBase && name != null)
+                yield return new KeyValuePair<string, object?>(name, Values[i]?.Item);
         }
     }
 
@@ -520,7 +503,7 @@ public sealed class GhAssoc : GhAssocBase
         {
             var name = Names[i];
             if (name is not null)
-                yield return new KeyValuePair<string, object?>(name, Values[i]);
+                yield return new KeyValuePair<string, object?>(name, Values[i]?.Item);
         }
     }
 
@@ -531,7 +514,7 @@ public sealed class GhAssoc : GhAssocBase
         for (var i = 0; i < Length; i++)
         {
             var name = Names[i];
-            if (name is not null && Values[i] is GhAssocBase)
+            if (name is not null && Values[i]?.Item is GhAssocBase)
                 yield return name;
         }
     }
@@ -543,7 +526,7 @@ public sealed class GhAssoc : GhAssocBase
         for (var i = 0; i < Length; i++)
         {
             var name = Names[i];
-            if (name is not null && Values[i] is not GhAssocBase)
+            if (name is not null && Values[i]?.Item is not GhAssocBase)
                 yield return name;
         }
     }

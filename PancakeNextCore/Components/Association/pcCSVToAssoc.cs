@@ -1,51 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using GH_IO.Serialization;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.GH.Params;
-using Pancake.Utility;
+using Grasshopper2.Components;
+using Grasshopper2.Data;
+using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.GH.Params.AssocConverters;
+using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Association;
 
 [ComponentCategory("data", 1)]
-public class pcCsvToAssoc : PancakeComponent
+[IoId("badd27c5-4a24-48bc-802d-37992a027531")]
+public sealed class pcCsvToAssoc : PancakeComponent<pcCsvToAssoc>, IPancakeLocalizable<pcCsvToAssoc>
 {
-    public override string LocalizedName => Strings.ConstructAssociativeArrayFromCSV;
-    public override string LocalizedDescription => Strings.CreateAListOfAssociativeArraysFromCSVLinesSeeExampleForMoreInformation;
+    public static string StaticLocalizedName => Strings.ConstructAssociativeArrayFromCSV;
+    public static string StaticLocalizedDescription => Strings.CreateAListOfAssociativeArraysFromCSVLinesSeeExampleForMoreInformation;
     protected override void RegisterInputs()
     {
-        AddParam<Param_String>("csv", GH_ParamAccess.list);
+        AddParam<TextParameter>("csv", Access.Twig);
         AddParam("delimiter", ",");
     }
 
     protected override void RegisterOutputs()
     {
-        AddParam("assoc", GH_ParamAccess.list);
+        AddParam<AssociationParameter>("assoc", Access.Twig);
     }
 
     private bool headerless = false;
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        var lines = new List<string>();
-        string delimiter = null;
+        access.GetTwig<string>(0, out var lineTwig);
+        access.GetItem(1, out string delimiter);
 
-        DA.GetDataList(0, lines);
-        DA.GetData(1, ref delimiter);
+        var lines = lineTwig.Items.ToList();
 
         if (lines.Count == 1)
         {
             lines[0] = FileIo.ReadContentIfIsFile(lines[0]);
 
-            var splittedLines = lines[0].Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var splittedLines = lines[0].Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
             lines.Clear();
             lines.AddRange(splittedLines);
         }
@@ -54,7 +53,7 @@ public class pcCsvToAssoc : PancakeComponent
 
         if (string.IsNullOrEmpty(delimiter))
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.DelimiterIsEmpty);
+            access.AddError("Wrong delimiter", Strings.DelimiterIsEmpty);
             return;
         }
 
@@ -65,7 +64,7 @@ public class pcCsvToAssoc : PancakeComponent
             Capacity = lines.Count
         };
 
-        string[] headers = null;
+        string[]? headers = null;
 
         if (!headerless)
         {
@@ -78,7 +77,7 @@ public class pcCsvToAssoc : PancakeComponent
             assocs.Add(ConvertLineToAssoc(headers, lineContent));
         }
 
-        DA.SetDataList(0, assocs);
+        access.SetTwig(0, Garden.TwigFromList(assocs));
     }
 
     private string[] GetHeaders(string headerLine, string[] delimiterArray)
@@ -100,7 +99,7 @@ public class pcCsvToAssoc : PancakeComponent
         return str;
     }
 
-    private static string GetHeaderName(string[] headers, int index)
+    private static string? GetHeaderName(string[]? headers, int index)
     {
         if (headers == null || index >= headers.Length || index < 0)
             return null;
@@ -111,14 +110,14 @@ public class pcCsvToAssoc : PancakeComponent
         return headers[index];
     }
 
-    private GhAssoc ConvertLineToAssoc(string[] headers, string[] content)
+    private GhAssoc ConvertLineToAssoc(string[]? headers, string[] content)
     {
         var assoc = new GhAssoc(content.Length);
 
         for (var i = 0; i < content.Length; i++)
         {
             var header = GetHeaderName(headers, i);
-            var result = _recognizeFormat ? StringUtility.RecognizeType(content[i]) : content[i];
+            var result = _recognizeFormat ? AssocStringUtility.RecognizeType(content[i]) : content[i];
             if (header == null)
             {
                 assoc.Add(result);
@@ -132,59 +131,32 @@ public class pcCsvToAssoc : PancakeComponent
         return assoc;
     }
 
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon => ComponentIcon.CSV2Assoc;
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("badd27c5-4a24-48bc-802d-37992a027531"); }
-    }
-
     private bool _recognizeFormat = true;
-    private bool _parseAsQuantity = true;
+    private bool _parseAsQuantity = false;
 
-    public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+    public bool RecognizeFormat
     {
-        Menu_AppendSeparator(menu);
-        Menu_AppendItem(menu, Strings.RecognizeTypeIfPossible, MnuRecognizeType, true, _recognizeFormat);
-        Menu_AppendItem(menu, Strings.ParseAsQuantityIfPossible, MnuParseAsQuantity, true, _parseAsQuantity);
+        get => _recognizeFormat;
+        set => SetValue(RecognizeTypeOption, _recognizeFormat = value);
     }
 
-    private void MnuParseAsQuantity(object sender, EventArgs e)
+    public bool RecognizeQuantity
     {
-        _parseAsQuantity = !_parseAsQuantity;
-        ExpireSolution(true);
+        get => _parseAsQuantity;
+        set => SetValue(ParseAsQuantityOption, _parseAsQuantity = value);
     }
 
-    private void MnuRecognizeType(object sender, EventArgs e)
+    protected override void ReadConfig()
     {
-        _recognizeFormat = !_recognizeFormat;
-        ExpireSolution(true);
+        _recognizeFormat = GetValue(RecognizeTypeOption, true);
+        _parseAsQuantity = GetValue(ParseAsQuantityOption, false);
     }
+
+    protected override InputOption[][] SimpleOptions => [[
+            new ToggleOption("Recognize type", "Converts text into corresponding types if possible, e.g. into numbers.", RecognizeFormat, x => RecognizeFormat = x, "Recognize type", "Keep text"),
+            new ToggleOption("Recognize quantity", "Converts text into quantities if possible.", RecognizeQuantity, x => RecognizeQuantity = x, "Recognize quantity", "Keep text")
+            ]];
 
     private const string RecognizeTypeOption = "RecognizeType";
     private const string ParseAsQuantityOption = "ParseAsQuantity";
-
-    public override bool Write(GH_IWriter writer)
-    {
-        writer.SetBoolean(RecognizeTypeOption, _recognizeFormat);
-        writer.SetBoolean(ParseAsQuantityOption, _parseAsQuantity);
-        return base.Write(writer);
-    }
-
-    public override bool Read(GH_IReader reader)
-    {
-        reader.TryGetBoolean(RecognizeTypeOption, ref _recognizeFormat);
-        reader.TryGetBoolean(ParseAsQuantityOption, ref _parseAsQuantity);
-
-        return base.Read(reader);
-    }
-
-    private static readonly List<string> InternalKeywords = new List<string>() { "csv" };
-    public override IEnumerable<string> LocalizedKeywords => InternalKeywords;
 }

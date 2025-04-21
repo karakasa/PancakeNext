@@ -1,37 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.Interfaces;
-using Pancake.Utility;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Association;
 
+[IoId("{68D5751E-EFD3-41B5-96D0-C90466B2F58F}")]
 [ComponentCategory("data", 1)]
-public class pcAssocToKv : PancakeComponent
+public class pcAssocToKv : PancakeComponent<pcAssocToKv>, IPancakeLocalizable<pcAssocToKv>
 {
-    public override string LocalizedName => Strings.DeconstructAssociaitveArrayAsKeyValueList;
-    public override string LocalizedDescription => Strings.DeconstructAnAssociativeArrayIntoListOfKeyPathsAndValues;
+    public pcAssocToKv() { }
+    public pcAssocToKv(IReader reader) : base(reader) { }
+    public static string StaticLocalizedName => Strings.DeconstructAssociaitveArrayAsKeyValueList;
+    public static string StaticLocalizedDescription => Strings.DeconstructAnAssociativeArrayIntoListOfKeyPathsAndValues;
     protected override void RegisterInputs()
     {
-        AddParam("assoc");
+        AddParam<AssociationParameter>("assoc");
         AddParam("depth", 0);
     }
     protected override void RegisterOutputs()
     {
-        AddParam<Param_String>("paths", GH_ParamAccess.list);
-        AddParam("value", GH_ParamAccess.list);
+        AddParam<TextParameter>("paths", Access.Twig);
+        AddParam("value", Access.Twig);
     }
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        object o = null;
+        throw new NotImplementedException();
+
+        /*object o = null;
         var depth = 0;
         DA.GetData(0, ref o);
         DA.GetData(1, ref depth);
@@ -51,27 +53,6 @@ public class pcAssocToKv : PancakeComponent
         }
 
         DA.SetDataList(0, names);
-        DA.SetDataList(1, values);
-    }
-
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon
-    {
-        get
-        {
-            //You can add image files to your project resources and access them like this:
-            // return Resources.IconForThisComponent;
-            return ComponentIcon.DeAssocKVL;
-        }
-    }
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("{68D5751E-EFD3-41B5-96D0-C90466B2F58F}"); }
+        DA.SetDataList(1, values);*/
     }
 }

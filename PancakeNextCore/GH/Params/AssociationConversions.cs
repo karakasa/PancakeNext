@@ -44,7 +44,7 @@ public sealed class AssociationConversions : ConversionRepository
                 return Merit.Zilch;
             }
 
-            tuple.Grow(name, Garden.Pear(it.Value));
+            tuple.Grow(name, it.Value.AsPear());
         }
 
         message = "";

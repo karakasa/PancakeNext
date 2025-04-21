@@ -26,7 +26,7 @@ public class ExtendedContextMenu : Feature
     private WireEnds? activeWire;
 
     const Keys ExpectedModifier = Keys.Control | Keys.Shift;
-    const MouseButtons ExpectedButton = MouseButtons.Primary;
+    const MouseButtons ExpectedButton = MouseButtons.Alternate;
 
     private void MouseClickEventHandler(object? sender, MouseEventArgs e)
     {
@@ -36,7 +36,7 @@ public class ExtendedContextMenu : Feature
             if (canvas.Document is not { } doc) return;
 
             if ((Keyboard.Modifiers & ExpectedModifier) != ExpectedModifier) return;
-            if ((e.Buttons & ExpectedButton) != ExpectedButton) return;
+            if ((e.Buttons & ExpectedButton) == 0) return;
 
             var mappedEvent = e.MapToContent(canvas);
             var pick = canvas.ResolvePick(mappedEvent.Location, false, true, true, true, false);
@@ -102,7 +102,7 @@ public class ExtendedContextMenu : Feature
             if (_wireMenu == null || _wireMenu.Items.Count == 0)
                 InitMenu();
 
-            Editor.Instance.Canvas.MouseUp += MouseClickEventHandler;
+            Editor.Instance.Canvas.MouseDown += MouseClickEventHandler;
         }
         catch
         {
@@ -417,7 +417,7 @@ public class ExtendedContextMenu : Feature
         try
         {
             if (Editor.Instance?.Canvas is { } canvas)
-                canvas.MouseUp -= MouseClickEventHandler;
+                canvas.MouseDown -= MouseClickEventHandler;
 
             _enabled = false;
         }

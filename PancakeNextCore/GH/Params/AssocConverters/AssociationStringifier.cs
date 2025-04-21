@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Grasshopper2.Data;
+using GrasshopperIO.DataBase;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,6 +87,10 @@ internal static partial class AssociationStringifier
         }
     }
 
+    internal static string ToJsonLike(IPear? obj, StringConversionType style)
+    {
+        return ToJsonLike(obj?.Item, style);
+    }
     internal static string ToJsonLike(object? obj, StringConversionType style)
     {
         if (obj == null)
@@ -140,7 +146,7 @@ internal static partial class AssociationStringifier
 
         var innerStr = string.Join(", ",
             assoc.GetNamesForExport().Zip(assoc.Values, (name, value) =>
-            $"\"{name}\": \"{AssocStringUtility.EscapeForJson(value?.ToString() ?? "null")}\""));
+            $"\"{name}\": \"{AssocStringUtility.EscapeForJson(value?.Item?.ToString() ?? "null")}\""));
 
         return "{" + innerStr + "}";
     }
@@ -151,7 +157,7 @@ internal static partial class AssociationStringifier
 
         var innerStr = string.Join("&",
             assoc.GetNamesForExport().Zip(assoc.Values, (name, value) =>
-            $"{name}={AssocStringUtility.EscapeForUrl(value?.ToString() ?? "null")}"));
+            $"{name}={AssocStringUtility.EscapeForUrl(value?.Item?.ToString() ?? "null")}"));
 
         return innerStr;
     }

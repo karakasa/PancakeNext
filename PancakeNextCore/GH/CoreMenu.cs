@@ -277,7 +277,7 @@ internal sealed class CoreMenu
 
     private void mnuListInternalSettings()
     {
-        Presenter.ShowWindow<InternalSettingsUi>();
+        Presenter.ShowWindow<FormInternalSettings>();
     }
 
     private void mnuEnableDebugOverlay()

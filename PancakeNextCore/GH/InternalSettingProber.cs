@@ -1,4 +1,5 @@
 ﻿using Grasshopper2;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,6 +16,7 @@ internal interface ISettingAccessor
     bool SetByString(string str);
     string InConfigName { get; }
     string PropertyName { get; }
+    public Delegate[] GetInvocationList();
 }
 internal static class InternalSettingProber
 {
@@ -57,6 +59,8 @@ internal static class InternalSettingProber
     {
         private readonly FieldInfo _pi = pi;
         private readonly Settings.Setting<T> _cachedSetting = (Settings.Setting<T>)pi.GetValue(null)!;
+
+        protected Settings.Setting<T> CachedSetting => _cachedSetting;
         public string GetString()
         {
             return ToString(Get());
@@ -80,6 +84,13 @@ internal static class InternalSettingProber
         public string PropertyName => _pi.Name;
         public T DefaultValue => SettingObject.Default;
         public string GetDefaultString() => ToString(DefaultValue);
+        public Delegate[] GetInvocationList()
+        {
+            var handler = CachedSetting.GetEventHandler<EventArgs>(nameof(Settings.Setting<bool>.Changed));
+            if (handler is null) return [];
+
+            return handler.GetInvocationList();
+        }
     }
     private sealed class IntSetting(FieldInfo pi) : SettingAccessor<int>(pi)
     {
@@ -138,6 +149,9 @@ internal static class InternalSettingProber
         public string GetDefaultString() => "<unknown>";
         public string GetString() => "<unknown>";
         public bool SetByString(string str) => false;
+
+        public Delegate[] GetInvocationList() => [];
+
         public string InConfigName => "<unknown>";
         public string PropertyName => pi.Name;
     }

@@ -1,8 +1,15 @@
 ﻿using Grasshopper2.Data;
+using Grasshopper2.Types.Colour;
+using Grasshopper2.Types.Numeric;
+using Grasshopper2.Types.Shapes;
+using GrasshopperIO;
+using PancakeNextCore.GH.Params;
+using Rhino.Geometry;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -122,5 +129,54 @@ internal static class OptimizedOperators
     {
         if (a is null || b is null) return 0;
         return a.Item.CompareTo(b.Item);
+    }
+
+    public static IEnumerable<IPear?> AsPears(this IEnumerable<object?> objs)
+        => objs.Select(AsPear);
+    public static IPear? AsPear(this object? obj)
+    {
+        return obj switch
+        {
+            null => null,
+            IPear v => v,
+            bool v => Garden.Pear(v),
+            byte v => Garden.Pear(v),
+            sbyte v => Garden.Pear(v),
+            int v => Garden.Pear(v),
+            long v => Garden.Pear(v),
+            uint v => Garden.Pear(v),
+            ulong v => Garden.Pear(v),
+            Guid v => Garden.Pear(v),
+            BigInteger v => Garden.Pear(v),
+            DateTime v => Garden.Pear(v),
+            TimeSpan v => Garden.Pear(v),
+            float v => Garden.Pear(v),
+            double v => Garden.Pear(v),
+            decimal v => Garden.Pear(v),
+            Complex v => Garden.Pear(v),
+            string v => Garden.Pear(v),
+            AbsRelPaths v => Garden.Pear(v),
+            Version v => Garden.Pear(v),
+            Colour v => Garden.Pear(v),
+            Angle v => Garden.Pear(v),
+            Interval v => Garden.Pear(v),
+            Grasshopper2.Data.Path v => Garden.Pear(v),
+            Transform v => Garden.Pear(v),
+            GhAssocBase v => Garden.Pear(v),
+            GhQuantity v => Garden.Pear(v),
+            _ => AsPearRare(obj)
+        };
+    }
+
+    private static IPear? AsPearRare(object obj)
+    {
+        if (obj is ValueType)
+        {
+            return Garden.IPear(obj);
+        }
+        else
+        {
+            return Garden.Pear(obj);
+        }
     }
 }

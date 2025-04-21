@@ -2,100 +2,89 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Grasshopper;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.GH.Params;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
+using Rhino.Commands;
 
 namespace PancakeNextCore.Components.Association;
 
 [ComponentCategory("data", 1)]
-public class pcAssocToCsv : PancakeComponent
+[IoId("fbe31cf6-81e9-41d4-86e5-f8a9d311dc61")]
+public sealed class pcAssocToCsv : PancakeComponent<pcAssocToCsv>, IPancakeLocalizable<pcAssocToCsv>
 {
-    public override string LocalizedName => Strings.AssocToCSV;
-    public override string LocalizedDescription => Strings.ConvertANumberOfAssocsIntoCSVContentYouMayUseExportTXTComponentToWriteTheCSVContentIntoFile;
+    public pcAssocToCsv() { }
+    public pcAssocToCsv(IReader reader) : base(reader) { }
+    public static string StaticLocalizedName => Strings.AssocToCSV;
+    public static string StaticLocalizedDescription => Strings.ConvertANumberOfAssocsIntoCSVContentYouMayUseExportTXTComponentToWriteTheCSVContentIntoFile;
     protected override void RegisterInputs()
     {
-        AddParam("assoc2", GH_ParamAccess.list);
-        AddParam<Param_String>("interestednames", GH_ParamAccess.list);
-        LastAddedParameter.Optional = true;
-        AddParam("delimiter", ",", GH_ParamAccess.item);
+        AddParam<AssociationParameter>("assoc2", Access.Twig);
+        AddParam<TextParameter>("interestednames", Access.Twig, Requirement.MayBeMissing);
+        AddParam("delimiter", ",");
     }
     protected override void RegisterOutputs()
     {
-        AddParam<Param_String>("csv", GH_ParamAccess.item);
+        AddParam<TextParameter>("csv");
     }
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        var inpList = new List<GhAssoc>();
-        var interestedNames = new List<string>();
-        var delimiter = ",";
-        DA.GetDataList(0, inpList);
-        DA.GetDataList(1, interestedNames);
-        DA.GetData(2, ref delimiter);
+        access.GetTwig<GhAssocBase>(0, out var inpList);
+        access.GetTwig<string>(1, out var interestedNames);
+        access.GetItem(2, out string delimiter);
 
         if (string.IsNullOrEmpty(delimiter))
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.DelimiterCannotBeEmpty);
+            access.AddError("Wrong delimiter", Strings.DelimiterCannotBeEmpty);
             return;
         }
 
-        var lazyList = inpList
+        var lazyList = inpList.Items
             .SelectMany(a => a.GetRawNames().Where(n => n != null))
             .Distinct();
 
-        var nameList = (interestedNames.Count == 0 ? lazyList : lazyList.Intersect(interestedNames)).ToArray();
+        var nameList = (interestedNames.ItemCount == 0 ? lazyList : lazyList.Intersect(interestedNames.Items)).ToArray();
 
         if (nameList.Length == 0)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error,
+            access.AddError("No names",
                 Strings.NoValidNamesAreFoundThisComponentWillOnlyExportNamedValues);
             return;
         }
 
-        var dt = new DataTree<object>();
         var emptyValue = string.Empty;
 
         var sb = new StringBuilder();
         sb.AppendLine(string.Join(delimiter, nameList));
 
-        foreach (var it in inpList)
+        foreach (var it in inpList.Items)
         {
             sb.AppendLine(string.Join(delimiter, nameList.Select(n =>
             {
-                if (!it.TryGet(n, out var output))
+                if (!TryGet(it, n, out var output))
                     return emptyValue;
                 return output.ToString();
             })));
         }
 
-        DA.SetData(0, sb.ToString());
+        access.SetItem(0, sb.ToString());
     }
 
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon
+    private static bool TryGet(GhAssocBase it, string n, out object? output)
     {
-        get
+        if (it is GhAssoc assoc)
         {
-            //You can add image files to your project resources and access them like this:
-            // return Resources.IconForThisComponent;
-            return ComponentIcon.Assoc2CSV;
+            var result = assoc.TryGet(n, out var pear);
+            output = pear?.Item;
+            return result;
         }
-    }
 
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("fbe31cf6-81e9-41d4-86e5-f8a9d311dc61"); }
+        output = null;
+        return false;
     }
 }

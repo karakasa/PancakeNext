@@ -1,6 +1,8 @@
-﻿using PancakeNextCore.Utility;
+﻿using Grasshopper2.Data;
+using PancakeNextCore.Utility;
 using PancakeNextCore.Utility.Polyfill;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -131,7 +133,10 @@ internal sealed class XmlIo
         var attributes = na.GetAttributes().Where(attr => !AllowForMagicContent || attr.Key != MagicContentMarker);
 
         object? content = null;
-        var hasInnerContentDefined = AllowForMagicContent && na.TryGetContent(MagicContentMarker, out content) && content is not GhAssocBase;
+        IPear? pear = null;
+        var hasInnerContentDefined = AllowForMagicContent && na.TryGetContent(MagicContentMarker, out pear);
+        content = pear?.Item;
+        hasInnerContentDefined = hasInnerContentDefined && content is not GhAssocBase;
         var nodeListArray = na.GetNodes().ToArray();
 
         if (Expand && !hasInnerContentDefined && nodeListArray.Length == 0)
@@ -337,7 +342,7 @@ internal sealed class XmlIo
                 if (found)
                 {
                     var insideObj = currentAssoc.Get(index);
-                    if (insideObj is GhAtomList atomList)
+                    if (insideObj.Item is GhAtomList atomList)
                     {
                         atomList.Add(assoc);
                     }
@@ -461,20 +466,12 @@ internal sealed class XmlIo
     {
         for (var i = 0; i < obj.Length; i++)
         {
-            switch (obj.Values![i])
+            switch (obj.Values![i]?.Item)
             {
                 case GhAssoc subAssoc:
                     if (subAssoc.Length == 1 && string.Equals(subAssoc.Names?.FirstOrDefault(), MagicContentMarker))
                     {
-                        var val = subAssoc.Values![0];
-                        if (val is string str)
-                        {
-                            obj.Values[i] = str;
-                        }
-                        else
-                        {
-                            obj.Values[i] = val;
-                        }
+                        obj.Values[i] = subAssoc.Values![0];
                     }
                     else
                     {

@@ -3,6 +3,7 @@ using Grasshopper2.Data.Meta;
 using GrasshopperIO;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -11,16 +12,6 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.GH.Params;
 public abstract class GhAssocBase : IStorable, ICloneable
 {
-    private sealed class TemporaryPear : IPear
-    {
-
-        public Type Type => Item!.GetType();
-
-        public object? Item { get; set; }
-
-        public MetaData? Meta => null;
-    }
-
     public GhAssocBase()
     {
     }
@@ -37,7 +28,6 @@ public abstract class GhAssocBase : IStorable, ICloneable
 
     private static readonly Name IoLabelDataCount = new("Count");
     private const string IoLabelData = "Data";
-    private static readonly Name IoLabelPrincipleVal = new("PrincipleVal");
 
     public GhAssocBase(IReader reader)
     {
@@ -47,15 +37,13 @@ public abstract class GhAssocBase : IStorable, ICloneable
 
         EnsureData(count);
 
-        _principleIndex = reader.TryRead(IoLabelPrincipleVal, -1);
-
         for (var i = 0; i < count; i++)
         {
             var location = new Name(IoLabelData, i);
 
             if (reader.FindReader(location) is { } nodeReader)
             {
-                Values.Add(Garden.ReadPear(nodeReader).Item);
+                Values.Add(Garden.ReadPear(nodeReader));
             }
             else
             {
@@ -74,11 +62,6 @@ public abstract class GhAssocBase : IStorable, ICloneable
         var length = Length;
         writer.Integer32(IoLabelDataCount, length);
 
-        if (_principleIndex >= 0)
-            writer.Integer32(IoLabelPrincipleVal, _principleIndex);
-
-        var tempPear = new TemporaryPear();
-
         for (var i = 0; i < length; i++)
         {
             var location = new Name(IoLabelData, i);
@@ -91,14 +74,13 @@ public abstract class GhAssocBase : IStorable, ICloneable
             }
             else
             {
-                tempPear.Item = val;
-                Garden.WritePear(writer.CreateWriter(location), tempPear);
+                Garden.WritePear(writer.CreateWriter(location), val);
             }
         }
     }
 
     public int Length => Values is null ? 0 : Values.Count;
-    public List<object?>? Values { get; protected set; }
+    public List<IPear?>? Values { get; protected set; }
 
     [MemberNotNullWhen(true, nameof(Values))]
     public bool HasValues => Values is not null;
@@ -108,7 +90,7 @@ public abstract class GhAssocBase : IStorable, ICloneable
     {
         if (anticipatedCapacity > 0)
         {
-            Values ??= new List<object?>(anticipatedCapacity);
+            Values ??= new(anticipatedCapacity);
         }
         else
         {
@@ -130,19 +112,24 @@ public abstract class GhAssocBase : IStorable, ICloneable
         return false;
     }
 
-    public object? Get(int index)
+    public IPear? Get(int index)
     {
         IsOutOfRange(index, throwOnError: true);
         return Values![index];
     }
 
-    public void Set(int index, object? value)
+    public void Set(int index, IPear? value)
     {
         IsOutOfRange(index, throwOnError: true);
         Values![index] = value;
     }
 
-    public bool TryGet(int index, out object? output)
+    public void Set(int index, object? value)
+    {
+        Set(index, value.AsPear());
+    }
+
+    public bool TryGet(int index, out IPear? output)
     {
         if (IsOutOfRange(index))
         {
@@ -165,36 +152,17 @@ public abstract class GhAssocBase : IStorable, ICloneable
             return "null";
         return obj.ToString();
     }
-    public object? GetPrincipleValue()
-    {
-        if (!HasValues)
-            throw new ArgumentException("The association is empty.");
 
-        if (IsOutOfRange(_principleIndex))
-            return Values[0];
-
-        return Values[_principleIndex];
-    }
-
-    protected int _principleIndex = -1;
-    public bool SetPrincipleValue(int index)
-    {
-        if (IsOutOfRange(index))
-            return false;
-
-        _principleIndex = index;
-        return true;
-    }
     public override int GetHashCode()
     {
         if (!HasValues) return 0;
 
         return unchecked(-940306134
-            + EqualityComparer<List<object?>>.Default.GetHashCode(Values) * 13);
+            + EqualityComparer<List<IPear?>>.Default.GetHashCode(Values) * 13);
     }
     internal abstract GhAssocBase GenericClone();
     object ICloneable.Clone() => GenericClone();
     public abstract IEnumerable<string> GetNamesForExport();
-    public virtual bool DeepEquals(GhAssocBase? another) => throw new NotSupportedException();
-    internal virtual List<string?>? GetRawNames() => throw new NotSupportedException();
+    public virtual bool DeepEquals(GhAssocBase? another) => throw new UnreachableException();
+    internal virtual List<string?>? GetRawNames() => throw new UnreachableException();
 }
