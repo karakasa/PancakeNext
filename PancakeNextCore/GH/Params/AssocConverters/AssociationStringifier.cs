@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PancakeNextCore.GH.Params.AssocConverters;
 
-internal static class AssociationStringifier
+internal static partial class AssociationStringifier
 {
-    public static string? ToString(object pancakeObj, StringConversionType style)
+    public static string? ToString(GhAssocBase pancakeObj, StringConversionType style)
     {
         if (pancakeObj == null)
             return null;
@@ -19,7 +19,7 @@ internal static class AssociationStringifier
             return ListToJson(list, style);
         }
 
-        if (pancakeObj is GhAssocBase assoc)
+        if (pancakeObj is GhAssoc assoc)
         {
             return AssocToString(assoc, style);
         }
@@ -28,14 +28,6 @@ internal static class AssociationStringifier
     }
 
     private static readonly Dictionary<StringConversionType, string[]> StyleKeywords = [];
-    public enum StringConversionType
-    {
-        Json,
-        AllStringJson,
-        Querystring,
-        Association,
-        Python
-    }
 
     private static class Keyword
     {

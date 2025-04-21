@@ -1,4 +1,5 @@
-﻿using PancakeNextCore.Utility;
+﻿using Eto.Forms;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,6 +13,13 @@ internal class Presenter
     {
         var shownForm = new EtoForms.ReportUi();
         shownForm.SetContent(report, wrap);
+        shownForm.Owner = EtoExtensions.GetGrasshopperWindowAsEto();
+        shownForm.Show();
+    }
+
+    public static void ShowWindow<T>() where T : Form, new()
+    {
+        var shownForm = new T();
         shownForm.Owner = EtoExtensions.GetGrasshopperWindowAsEto();
         shownForm.Show();
     }

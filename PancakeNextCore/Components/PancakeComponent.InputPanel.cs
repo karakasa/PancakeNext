@@ -110,28 +110,39 @@ public abstract partial class PancakeComponent
         }
     }
 
-    protected sealed class PickOneOption<T>(string name, string desc, string sectionName, T initialValue, Action<T> setter, T[] validValues, string[] valueNames) : InputOption
-        where T : IEquatable<T>
+    protected class Pick<T>(string name, T value, string nomenName, string nomenDesc, IIcon? icon = null)
     {
-        public IIcon[]? Icons { get; set; }
-        public string Name { get; set; } = name;
-        public string Description { get; set; } = desc;
+        public string Name { get; } = name;
+        public T Value { get; } = value;
+        public IIcon? Icon { get; } = icon;
+        public string NomenName { get; } = nomenName;
+        public string NomenDesc { get; } = nomenDesc;
+    }
+
+    protected sealed class PickOneOption<T>(string sectionName, T initialValue, Action<T> setter, Pick<T>[] values) : InputOption
+    {
         public T InitialValue { get; set; } = initialValue;
         public Action<T> Setter { get; set; } = setter;
         public string SectionName { get; set; } = sectionName;
-        public T[] ValidValues { get; set; } = validValues;
-        public string[] ValueNames { get; set; } = valueNames;
+        public Pick<T>[] Values { get; set; } = values;
         public override void AppendToBar(PancakeComponent comp, Bar bar)
         {
-            if (ValidValues.Length != ValueNames.Length || (Icons is not null && Icons.Length != ValidValues.Length))
-                throw new Exception("internal exception: PickOneOption.ListLengthMismatch");
-
-            for (var i = 0; i < ValidValues.Length; i++)
+            foreach(var pick in Values)
             {
-                var val = ValidValues[i];
-                var valName = ValueNames[i];
+                var val = pick.Value;
+                var valName = pick.Name;
 
-                var toggle = new RadioToggle(Icons?[i], new(Name, Description, SectionName, SectionName), val.Equals(InitialValue), v =>
+                bool check;
+                if (val is IEquatable<T> equtable)
+                {
+                    check = equtable.Equals(InitialValue);
+                }
+                else
+                {
+                    check = val?.Equals(InitialValue) ?? false;
+                }
+
+                var toggle = new RadioToggle(pick.Icon, new(pick.NomenName, pick.NomenDesc, SectionName, SectionName), check, v =>
                 {
                     if (v)
                     {
@@ -141,7 +152,7 @@ public abstract partial class PancakeComponent
                 })
                 {
                     OnText = valName,
-                    OffText = valName
+                    OffText = valName,
                 };
                 bar.Add(toggle);
             }

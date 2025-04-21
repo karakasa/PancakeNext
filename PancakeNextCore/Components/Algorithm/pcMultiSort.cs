@@ -5,12 +5,11 @@ using Pancake.Attributes;
 using Rhino;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace PancakeNextCore.Components.Algorithm;
 
-[ComponentCategory("data", 0)]
+[ComponentCategory("misc", 0)]
 public class pcMultiSort : PancakeComponent, IGH_VariableParameterComponent
 {
     public override string LocalizedName => Strings.MultiSort;

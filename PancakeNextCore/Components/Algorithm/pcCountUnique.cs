@@ -1,202 +1,193 @@
-﻿using System;
+﻿using Eto.Drawing;
+using Grasshopper2.Components;
+using Grasshopper2.Data;
+using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using GH_IO.Serialization;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Grasshopper.Kernel.Types;
-using Pancake.Attributes;
 
 namespace PancakeNextCore.Components.Algorithm;
 
-[ComponentCategory("data", 0)]
-public class pcCountUnique : PancakeComponent
+[IoId("b521157b-0ed0-5229-940a-7c9c2d9357ee")]
+[ComponentCategory("misc", 0)]
+public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLocalizable<pcCountUnique>
 {
-    public override string LocalizedName => Strings.CountUnique;
-    public override string LocalizedDescription => Strings.ExtractAllUniqueValuesFromAListAndCountTheirOccurences;
+    public pcCountUnique() { }
+    public pcCountUnique(IReader reader) : base(reader) { }
+    public static string StaticLocalizedName => Strings.CountUnique;
+    public static string StaticLocalizedDescription => Strings.ExtractAllUniqueValuesFromAListAndCountTheirOccurences;
     protected override void RegisterInputs()
     {
-        AddParam("key", GH_ParamAccess.list);
+        AddParam("key", Access.Twig);
     }
     protected override void RegisterOutputs()
     {
-        AddParam("keylist", GH_ParamAccess.list);
-        AddParam<Param_Integer>("count", GH_ParamAccess.list);
+        AddParam("keylist", Access.Twig);
+        AddParam<IntegerParameter>("count", Access.Twig);
     }
 
-    private List<object> _keyList = new List<object>();
-
-    private void ClearList()
+    protected override void Process(IDataAccess access)
     {
-        _keyList.Clear();
-    }
-
-    private bool HasReferenceType()
-    {
-        return _keyList.Any(e => !(e is ValueType) && !(e is string));
-    }
-
-    private bool HasNull()
-    {
-        return _keyList.Any(e => e == null);
-    }
-
-    private bool IsAllIComparable()
-    {
-        if (_keyList.Count == 0)
-            return false;
-
-        if (!(_keyList[0] is IComparable))
-            return false;
-
-        var type = _keyList[0].GetType();
-        for (var i = 1; i < _keyList.Count; i++)
+        access.GetITwig(0, out var keyList);
+        
+        if (keyList.ItemCount == 0)
         {
-            if (!_keyList[i].GetType().Equals(type) || !(_keyList[i] is IComparable))
-                return false;
-        }
-
-        return true;
-    }
-
-    private object UnwrapGhGoo(object rawObj)
-    {
-        if (!(rawObj is IGH_Goo goo))
-            return rawObj;
-
-        var obj = goo.ScriptVariable();
-
-        return obj ?? rawObj;
-    }
-
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
-    {
-        ClearList();
-
-        var _tempKeyList = new List<object>();
-        DA.GetDataList(0, _tempKeyList);
-
-        if (_tempKeyList.Count == 0)
-        {
-            ClearList();
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.TheListCannotBeEmpty);
+            access.AddWarning("Empty input", Strings.TheListCannotBeEmpty);
             return;
         }
 
-        _keyList.AddRange(_tempKeyList.Select(UnwrapGhGoo));
-        _tempKeyList.Clear();
-
-        if (HasNull())
+        if (keyList.NullCount > 0)
         {
-            ClearList();
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.KeyCannotBeNull);
+            access.AddError("Wrong keys", Strings.KeyCannotBeNull);
             return;
         }
 
-        if (HasReferenceType())
+        ITwig keysOut;
+        Twig<int> occurenceOut;
+
+        switch (keyList)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark,
-                Strings.SomeOfTheKeysAreNotValueTypeTheResultMayBeWrongCheckCarefully);
+            case Twig<int> listOfInts:
+                FastCountKeys(listOfInts, out var kInt, out occurenceOut, SortIfPossible);
+                keysOut = kInt;
+                break;
+            case Twig<double> listOfDoubles:
+                FastCountKeys(listOfDoubles, out var kDouble, out occurenceOut, SortIfPossible);
+                keysOut = kDouble;
+                break;
+            case Twig<string> listOfStrings:
+                FastCountKeys(listOfStrings, out var kString, out occurenceOut, SortIfPossible);
+                keysOut = kString;
+                break;
+            case Twig<bool> listOfBooleans:
+                FastCountKeys(listOfBooleans, out var kBoolean, out occurenceOut, SortIfPossible);
+                keysOut = kBoolean;
+                break;
+            default:
+                CountKeysFallback(keyList, out keysOut, out occurenceOut, SortIfPossible);
+                break;
         }
 
-        SortKeyValues(out var keysOut, out var valsOut, _sortIfPossible);
-
-        DA.SetDataList(0, keysOut);
-        DA.SetDataList(1, valsOut);
+        access.SetTwig(0, keysOut);
+        access.SetTwig(1, occurenceOut);
     }
 
-    internal class ComparerOfIComparable : IComparer<object>
+    private sealed class CountEntry<T>
     {
-        public int Compare(object x, object y)
-        {
-            return ((IComparable)x).CompareTo(y);
-        }
+        public int Index { get; set; }
+        public Pear<T>? Pear { get; set; }
+        public int Count { get; set; }
     }
 
-    private void SortKeyValues(out List<object> keysOut, out List<int> valsOut, bool sortIfPossible = true)
+    private readonly struct CountEntryFactory : IStructFunc<IPear, CountEntry>
     {
-        IDictionary<object, int> currentDict = null;
+        public CountEntry Invoke(IPear param) => new();
+    }
 
-        if (sortIfPossible && IsAllIComparable())
-        {
-            currentDict = new SortedDictionary<object, int>(new ComparerOfIComparable());
-        }
-        else
-        {
-            currentDict = new Dictionary<object, int>();
-        }
+    private sealed class CountEntry
+    {
+        public int Index { get; set; }
+        public IPear? Pear { get; set; }
+        public int Count { get; set; }
+    }
 
-        for (var i = 0; i < _keyList.Count; i++)
+    private readonly struct CountEntryFactory<T> : IStructFunc<T, CountEntry<T>>
+    {
+        public CountEntry<T> Invoke(T param) => new();
+    }
+
+    private static void FastCountKeys<T>(Twig<T> keyList, out Twig<T> keysOut, out Twig<int> countOut, bool sortIfPossible = true)
+        where T : IComparable<T>, IEquatable<T>
+    {
+        var result = new StructFuncCache<CountEntryFactory<T>, T, CountEntry<T>>(default);
+
+        var index = 0;
+        foreach (var it in keyList.Pears)
         {
-            if (currentDict.ContainsKey(_keyList[i]))
+            var v = it.Item;
+            var entry = result[v];
+            if (entry.Pear is null)
             {
-                currentDict[_keyList[i]]++;
+                entry.Index = index;
+                entry.Pear = it;
+                entry.Count = 1;
             }
             else
             {
-                currentDict[_keyList[i]] = 1;
+                entry.Count++;
             }
+
+            ++index;
         }
 
-        keysOut = currentDict.Keys.ToList();
-        valsOut = currentDict.Values.ToList();
+        KeyValuePair<T, CountEntry<T>>[] kvs = [ .. sortIfPossible
+            ? result.InnerDictionary.OrderBy(kv => kv.Key)
+            : result.InnerDictionary.OrderBy(kv => kv.Value.Index)];
 
-        currentDict.Clear();
-        currentDict = null;
+        keysOut = Garden.TwigFromPears(kvs.Select(kv => kv.Value.Pear));
+        countOut = Garden.TwigFromList(kvs.Select(kv => kv.Value.Count));
     }
 
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon
+    private static void CountKeysFallback(ITwig keyList, out ITwig keysOut, out Twig<int> countOut, bool sortIfPossible = true)
     {
-        get
+        var result = new StructFuncCache<CountEntryFactory, IPear, CountEntry>(default, PearEqualityComparerGeneric.Instance);
+
+        var index = 0;
+        foreach (var it in keyList.Pears)
         {
-            //You can add image files to your project resources and access them like this:
-            // return Resources.IconForThisComponent;
-            return ComponentIcon.CountUnique;
-        }
-    }
+            var entry = result[it];
+            if (entry.Pear is null)
+            {
+                entry.Index = index;
+                entry.Pear = it;
+                entry.Count = 1;
+            }
+            else
+            {
+                entry.Count++;
+            }
 
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("b521157b-0ed0-5229-940a-7c9c2d9357ee"); }
+            ++index;
+        }
+
+        KeyValuePair<IPear, CountEntry>[] kvs = [ .. sortIfPossible
+            ? result.InnerDictionary.OrderBy(kv => kv.Key)
+            : result.InnerDictionary.OrderBy(kv => kv.Value.Index)];
+
+        keysOut = Garden.ITwigFromPears(kvs.Select(kv => kv.Value.Pear));
+        countOut = Garden.TwigFromList(kvs.Select(kv => kv.Value.Count));
     }
 
     private const string SortIfPossibleConfigName = "SortIfPossible";
-    private bool _sortIfPossible = false;
+    private bool _sortIfPossible;
 
-    public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+    public bool SortIfPossible
     {
-        Menu_AppendSeparator(menu);
-        var mnu = Menu_AppendItem(menu, Strings.SortKeysIfPossible, MnuSortIfPossible, true, _sortIfPossible);
-        mnu.ToolTipText = Strings.KeysWillBeSortedIfAllAreComparableAndBelongToASameTypeWhichWillSlowTheComputation;
-        base.AppendAdditionalMenuItems(menu);
+        get => _sortIfPossible;
+        set => SetValue(SortIfPossibleConfigName, _sortIfPossible = value);
+    }
+    private void MnuSortIfPossible(bool newValue)
+    {
+        SortIfPossible = newValue;
+        Expire();
+        Document?.Solution?.DelayedExpire(this);
     }
 
-    private void MnuSortIfPossible(object sender, EventArgs e)
-    {
-        _sortIfPossible = !_sortIfPossible;
-        ExpireSolution(true);
-    }
+    protected override InputOption[][] SimpleOptions => [[
+            new ToggleOption("Sort if possible", "Controls if keys should be sorted", SortIfPossible, MnuSortIfPossible, "Sort keys", "Keep order of keys")
+            {
+                OnColor = OpenColor.Blue5,
+                OffColor = OpenColor.Gray0
+            }
+        ]];
 
-    public override bool Read(GH_IReader reader)
+    protected override void ReadConfig()
     {
-        reader.TryGetBoolean(SortIfPossibleConfigName, ref _sortIfPossible);
-        return base.Read(reader);
-    }
-
-    public override bool Write(GH_IWriter writer)
-    {
-        writer.SetBoolean(SortIfPossibleConfigName, _sortIfPossible);
-        return base.Write(writer);
+        _sortIfPossible = CustomValues.Get(SortIfPossibleConfigName, false);
     }
 }

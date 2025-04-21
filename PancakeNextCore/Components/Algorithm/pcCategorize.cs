@@ -16,6 +16,7 @@ using PancakeNextCore.GH;
 using Eto.Drawing;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Algorithm;
 
@@ -26,10 +27,6 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
     public pcCategorize() {}
     public pcCategorize(IReader reader) : base(reader) {}
 
-    protected override void ReadConfig()
-    {
-        _sortIfPossible = CustomValues.Get(SortIfPossibleConfigName, false);
-    }
     protected override void RegisterInputs()
     {
         AddParam("key", access: Access.Twig);
@@ -95,28 +92,6 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
         access.SetTree(1, valsOut);
     }
 
-    private sealed class PearEqualityComparer<T> : IEqualityComparer<Pear<T>>
-        where T : IEquatable<T>
-    {
-        public static readonly PearEqualityComparer<T> Instance = new();
-        public bool Equals(Pear<T>? x, Pear<T>? y) => x.Item.Equals(y.Item);
-
-        public int GetHashCode(Pear<T> obj) => obj.Item.GetHashCode();
-    }
-
-    private sealed class PearEqualityComparerGeneric : IEqualityComparer<IPear>
-    {
-        public static readonly PearEqualityComparerGeneric Instance = new();
-        public bool Equals(IPear? x, IPear? y) => OptimizedOperators.SameContentQ(x, y);
-
-        public int GetHashCode(IPear obj) => OptimizedOperators.Hashcode(obj);
-    }
-    private sealed class PearComparerGeneric : IComparer<IPear>
-    {
-        public static readonly PearComparerGeneric Instance = new();
-        public int Compare(IPear? x, IPear? y) => OptimizedOperators.Compare(x, y);
-    }
-
     private static void FastSortKeyValues<T>(Twig<T> keyList, ITwig valList, out Twig<T> keysOut, out ITree valsOut, bool sortIfPossible = true)
         where T : IComparable<T>, IEquatable<T>
     {
@@ -166,6 +141,11 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
                 OffColor = OpenColor.Gray0
             }
         ]];
+
+    protected override void ReadConfig()
+    {
+        _sortIfPossible = CustomValues.Get(SortIfPossibleConfigName, false);
+    }
 
     public static string StaticLocalizedName => Strings.Categorize;
 

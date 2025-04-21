@@ -14,12 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Components\Algorithm\pcCountUnique.cs" />
     <Compile Remove="Components\Algorithm\pcMultiSort.cs" />
     <Compile Remove="Components\Association\pcAssocToCSV.cs" />
     <Compile Remove="Components\Association\pcAssocToDatatable.cs" />
     <Compile Remove="Components\Association\pcAssocToKv.cs" />
-    <Compile Remove="Components\Association\pcAssocToString.cs" />
     <Compile Remove="Components\Association\pcConAssoc.cs" />
     <Compile Remove="Components\Association\pcCSVToAssoc.cs" />
     <Compile Remove="Components\Association\pcDeconAssoc.cs" />
@@ -109,12 +107,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Components\Algorithm\pcCountUnique.cs" />
     <None Include="Components\Algorithm\pcMultiSort.cs" />
     <None Include="Components\Association\pcAssocToCSV.cs" />
     <None Include="Components\Association\pcAssocToDatatable.cs" />
     <None Include="Components\Association\pcAssocToKv.cs" />
-    <None Include="Components\Association\pcAssocToString.cs" />
     <None Include="Components\Association\pcConAssoc.cs" />
     <None Include="Components\Association\pcCSVToAssoc.cs" />
     <None Include="Components\Association\pcDeconAssoc.cs" />

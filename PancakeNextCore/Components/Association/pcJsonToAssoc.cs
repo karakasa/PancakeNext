@@ -7,7 +7,6 @@ using PancakeNextCore.GH.Params.AssocConverters;
 using PancakeNextCore.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,14 +65,26 @@ public sealed class pcJsonToAssoc : PancakeComponent<pcJsonToAssoc>, IPancakeLoc
     {
         _parser = GetValue(ConfigParserName, null);
     }
-    static readonly string[] ValidParsers = JsonParserLibrary.Parsers.Select(p => p.Name).ToArray();
+    static readonly Pick<string>[] ValidParsers = CreateParsers().ToArray();
+
+    private static IEnumerable<Pick<string>> CreateParsers()
+    {
+        foreach (var it in JsonParserLibrary.Parsers)
+        {
+            (string, string, string) nameDesc = it.Name switch
+            {
+                "Pancake" => ("Pancake", "Pancake Built-in Parser", "Use the built-in JSON parser, identical to GH1 behavior."),
+                "NSJ" => ("NS", "Newtonsoft.Json", "Use Newtonsoft.Json. This is the most unrestrictive option.\r\nThe parser would allow most formats."),
+                "STJ" => ("STJ", "System.Text.Json", "Use System.Text.Json from the .NET runtime."),
+                _ => (it.Name, it.Name, it.Name)
+            };
+
+            yield return new Pick<string>(nameDesc.Item1, it.Name, nameDesc.Item2, nameDesc.Item3);
+        }
+    }
+
     protected override InputOption[][] SimpleOptions => [[
-            new PickOneOption<string>("Parser", "Pick a parser for parsing JSON. They vary in requirements and performances.", "parser", 
-                initialValue: Parser,
-                valueNames: ValidParsers,
-                validValues: ValidParsers,
-                setter: v => Parser = v
-                )
+            new PickOneOption<string>("Parser", Parser, v => Parser = v, ValidParsers)
             ]];
 
     public static string StaticLocalizedName => "Json to Assoc";

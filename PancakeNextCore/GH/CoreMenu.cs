@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.IO;
-using System.Runtime;
-using System.Text;
-using Eto.Forms;
-using PancakeNextCore.Dataset;
+﻿using Eto.Forms;
 using Grasshopper2.UI;
-using System.Diagnostics.CodeAnalysis;
+using PancakeNextCore.Dataset;
 using PancakeNextCore.Helper;
 using PancakeNextCore.UI;
+using PancakeNextCore.UI.EtoForms;
 using PancakeNextCore.Utility;
+using Rhino.Resources;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Runtime;
+using System.Text;
 
 namespace PancakeNextCore.GH;
 
@@ -268,8 +270,14 @@ internal sealed class CoreMenu
             dropdown.AddToggleEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, () => Config.DevMode, x => Config.DevMode = x);
             dropdown.AddSeparator();
             dropdown.AddEntry("List core components...", mnuListCoreComponents);
-            dropdown.AddEntry("Enable debug overlay", mnuEnableDebugOverlay);
+            dropdown.AddEntry("Enable canvas debug overlay", mnuEnableDebugOverlay);
+            dropdown.AddEntry("List internal settings...", mnuListInternalSettings);
         }
+    }
+
+    private void mnuListInternalSettings()
+    {
+        Presenter.ShowWindow<InternalSettingsUi>();
     }
 
     private void mnuEnableDebugOverlay()

@@ -273,8 +273,9 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
 }
 
 public abstract class PancakeComponent<T> : PancakeComponent
-    where T : IPancakeLocalizable<T>
+    where T : IPancakeLocalizable<T> // Use CRTP to circumvent Nomen creation issues from localized names
 {
+
     protected PancakeComponent() : base(CreateNomen())
     {
     }
