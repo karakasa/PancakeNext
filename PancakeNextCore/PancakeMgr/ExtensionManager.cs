@@ -16,8 +16,8 @@ public class ExtensionManager
 {
     public static ExtensionManager DefaultManager { get; } = new();
 
-    private List<Assembly> _extensionAssemblies;
-    private List<Type> _extensionTypes;
+    private readonly List<Assembly> _extensionAssemblies;
+    private readonly List<Type> _extensionTypes;
 
     private bool IsPancakeExtensionType(Type t) => t.Name == "PancakeNextExtension"
         && t.IsAbstract && t.IsSealed && t.IsClass;
