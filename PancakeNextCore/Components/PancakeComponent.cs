@@ -18,6 +18,7 @@ using Grasshopper2.UI.Canvas;
 using System.Diagnostics.CodeAnalysis;
 using PancakeNextCore.GH;
 using System.Reflection;
+using Grasshopper2.Diagnostics;
 
 namespace PancakeNextCore.Components;
 
@@ -258,6 +259,8 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
     protected void FailInUntrusted(IDataAccess? access = null)
     {
         if (!Config.IsInUntrustedMode) return;
+
+        Logger.Add(Level.Error, $"[Pancake] Requested to run dangerous component {GetType().Name} in the untrusted mode.");
 
         Document?.Solution?.Stop();
         access?.AddError("Access violation", "This feature is disabled in the untrusted mode.");

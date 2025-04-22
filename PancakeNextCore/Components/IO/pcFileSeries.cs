@@ -12,7 +12,7 @@ using Path = System.IO.Path;
 
 namespace PancakeNextCore.Components.IO;
 
-[ComponentCategory("output", 0)]
+[ComponentCategory("output", 2)]
 [IoId("feac04da-23c1-46ec-b2c5-c71d7a74bbdb")]
 public sealed class pcFileSeries : PancakeComponent<pcFileSeries>, IPancakeLocalizable<pcFileSeries>
 {

@@ -1,20 +1,19 @@
-﻿using Grasshopper;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Special;
-using Pancake.Utility;
+﻿using Grasshopper2.Doc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PancakeNextCore.Utility;
+using Grasshopper2.UI;
+using Grasshopper2.SpecialObjects;
 
 namespace PancakeNextCore.Helper;
 
-public class PerformanceSnapshot
+public sealed class PerformanceSnapshot
 {
-    private readonly Dictionary<Guid, string> _states = new Dictionary<Guid, string>();
-    private readonly Dictionary<Guid, int> _elapsed = new Dictionary<Guid, int>();
-    private readonly Dictionary<Guid, Guid[]> _groups = new Dictionary<Guid, Guid[]>();
+    private readonly Dictionary<Guid, int> _elapsed = [];
+    private readonly Dictionary<Guid, Guid[]> _groups = [];
     public int TotalMilliseconds { get; private set; } = 0;
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public DateTime SnapshotTime { get; private set; }
 
     public IEnumerable<KeyValuePair<Guid, int>> ElapsedByGroup
@@ -35,40 +34,46 @@ public class PerformanceSnapshot
     }
 
     public IEnumerable<KeyValuePair<Guid, int>> ElapsedByComponent => _elapsed;
-    private void ReadStates(GH_Document doc, IEnumerable<IGH_DocumentObject> objs = null)
-    {
-        if (objs == null) return;
 
-        objs.DoForEach(obj =>
-        {
-            if (obj is IGH_StateAwareObject stateAware)
-                _states[obj.InstanceGuid] = stateAware.SaveState();
-        });
-    }
-
-    private void ReadGroups(GH_Document doc)
+    private static IEnumerable<T> RecurGroup<T>(GroupObject grp)
     {
-        foreach (var grp in doc.Objects.OfType<GH_Group>())
+        foreach (var it in grp.Content)
         {
-            var objGuids = grp.ObjectsRecursive().Select(obj => obj.InstanceGuid).ToArray();
-            _groups[grp.InstanceGuid] = objGuids;
+            if (it is GroupObject child)
+            {
+                foreach (var it2 in RecurGroup<T>(child))
+                    yield return it2;
+            }
+            else if (it is T t)
+            {
+                yield return t;
+            }
         }
     }
 
-    private void ReadTimeSpan(GH_Document doc)
+    private void ReadGroups(Document doc)
+    {
+        foreach (var grp in doc.Objects.Groups)
+        {
+            var objGuids = RecurGroup<ActiveObject>(grp).Select(obj => obj.InstanceId).ToArray();
+            _groups[grp.InstanceId] = objGuids;
+        }
+    }
+
+    private void ReadTimeSpan(Document doc)
     {
         var sum = 0;
 
-        foreach (var it in doc.Objects.OfType<IGH_ActiveObject>())
+        foreach (var it in doc.Objects.ActiveObjects.OfType<ActiveObject>())
         {
-            var time = (int)it.ProcessorTime.TotalMilliseconds;
-            if (_elapsed.TryGetValue(it.InstanceGuid, out var currentTime))
+            var time = (int)(it.GetDuration() ?? 0);
+            if (_elapsed.TryGetValue(it.InstanceId, out var currentTime))
             {
-                _elapsed[it.InstanceGuid] = time + currentTime;
+                _elapsed[it.InstanceId] = time + currentTime;
             }
             else
             {
-                _elapsed[it.InstanceGuid] = time;
+                _elapsed[it.InstanceId] = time;
             }
             sum += time;
         }
@@ -76,16 +81,11 @@ public class PerformanceSnapshot
         TotalMilliseconds += sum;
     }
 
-    public PerformanceSnapshot(GH_Document doc, IEnumerable<IGH_DocumentObject> stateObjs)
+    public PerformanceSnapshot(Document doc)
     {
         SnapshotTime = DateTime.Now;
-        ReadStates(doc, stateObjs);
         ReadTimeSpan(doc);
         ReadGroups(doc);
-    }
-
-    public PerformanceSnapshot(GH_Document doc) : this(doc, null)
-    {
     }
 
     private PerformanceSnapshot()
@@ -93,10 +93,9 @@ public class PerformanceSnapshot
         SnapshotTime = DateTime.Now;
     }
 
-    public static PerformanceSnapshot CreateFromDoc(GH_Document doc = null)
+    public static PerformanceSnapshot? CreateFromDoc(Document? doc = null)
     {
-        if (doc == null)
-            doc = Instances.ActiveCanvas?.Document;
+        doc ??= Editor.Instance?.Canvas?.Document;
 
         if (doc == null)
             return null;
@@ -104,10 +103,9 @@ public class PerformanceSnapshot
         return new PerformanceSnapshot(doc);
     }
 
-    public static PerformanceSnapshot CreateFromDocAverage(Func<bool> shouldContinue, GH_Document doc = null)
+    public static async Task<PerformanceSnapshot?> CreateFromDocAverage(Func<bool> shouldContinue, Document? doc = null)
     {
-        if (doc == null)
-            doc = Instances.ActiveCanvas?.Document;
+        doc ??= Editor.Instance?.Canvas?.Document;
 
         if (doc == null)
             return null;
@@ -119,7 +117,11 @@ public class PerformanceSnapshot
 
         while (shouldContinue())
         {
-            doc.NewSolution(true, GH_SolutionMode.Silent);
+            await doc.Solution.Start();
+
+            if (doc.Solution.State == SolutionState.Cancelled)
+                return null;
+
             snapshot.ReadTimeSpan(doc);
             ++cnt;
         }

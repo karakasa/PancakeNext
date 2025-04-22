@@ -1,4 +1,5 @@
 ﻿using Eto.Forms;
+using Grasshopper2.Diagnostics;
 using PancakeNextCore.Dataset;
 using System;
 using System.Diagnostics;
@@ -88,7 +89,7 @@ internal static partial class UiHelper
     }
     internal static void MinorError(string errCode, string desc, bool blocking = false)
     {
-        // LogUtility.Warning(errCode + " " + desc ?? string.Empty);
+        Logger.Add(Level.Warning, "[Pancake] " + errCode + " " + desc ?? string.Empty);
         InvokeUi(() => MessageBox.Show(desc, Title, MessageBoxButtons.OK), blocking);
     }
 
@@ -96,7 +97,7 @@ internal static partial class UiHelper
     {
         if (string.IsNullOrEmpty(desc))
             desc = Strings.UiHelper_ErrorReport_Default;
-        // LogUtility.Error(errCode + " " + desc);
+        Logger.Add(Level.Error, "[Pancake] " + errCode + " " + desc);
         InvokeUi(() => MessageBox.Show(string.Format(Strings.UiHelper_ErrorReport_Template, desc, errCode), TitleErr), blocking);
     }
 

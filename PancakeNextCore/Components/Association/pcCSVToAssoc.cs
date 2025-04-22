@@ -18,6 +18,8 @@ namespace PancakeNextCore.Components.Association;
 [IoId("badd27c5-4a24-48bc-802d-37992a027531")]
 public sealed class pcCsvToAssoc : PancakeComponent<pcCsvToAssoc>, IPancakeLocalizable<pcCsvToAssoc>
 {
+    public pcCsvToAssoc() { }
+    public pcCsvToAssoc(IReader reader) : base(reader) { }
     public static string StaticLocalizedName => Strings.ConstructAssociativeArrayFromCSV;
     public static string StaticLocalizedDescription => Strings.CreateAListOfAssociativeArraysFromCSVLinesSeeExampleForMoreInformation;
     protected override void RegisterInputs()

@@ -14,6 +14,8 @@ namespace PancakeNextCore.Components.Association;
 [IoId("6f34ada2-4487-4fd7-bca9-00dd8c500fcd")]
 public sealed class pcMergeAssoc : PancakeComponent<pcMergeAssoc>, IPancakeLocalizable<pcMergeAssoc>
 {
+    public pcMergeAssoc() { }
+    public pcMergeAssoc(IReader reader) : base(reader) { }
     public static string StaticLocalizedDescription => Strings.MergeTwoOrMoreAssociativeArrays;
     public static string StaticLocalizedName => Strings.MergeAssociativeArray;
 

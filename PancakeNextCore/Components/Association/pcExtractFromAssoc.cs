@@ -13,6 +13,8 @@ namespace PancakeNextCore.Components.Association;
 [IoId("f611c939-fe6f-449b-999d-e863608753a0")]
 public sealed class pcExtractFromAssoc : PancakeComponent<pcExtractFromAssoc>, IPancakeLocalizable<pcExtractFromAssoc>
 {
+    public pcExtractFromAssoc() { }
+    public pcExtractFromAssoc(IReader reader) : base(reader) { }
     public static string StaticLocalizedName => Strings.DeconstructAssociativeArrayByKeys;
     public static string StaticLocalizedDescription => Strings.RetrieveDataFromAnAssociativeArrayByKeyPaths;
     protected override void RegisterInputs()

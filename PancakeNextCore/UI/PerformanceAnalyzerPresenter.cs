@@ -1,9 +1,9 @@
-﻿using Grasshopper;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Special;
-using Pancake.Dataset;
-using Pancake.GH.Tweaks;
-using Pancake.Helper;
+﻿using Eto.Drawing;
+using Grasshopper2.Components;
+using Grasshopper2.Doc;
+using Grasshopper2.SpecialObjects;
+using Grasshopper2.UI;
+using PancakeNextCore.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +24,8 @@ public class PerformanceAnalyzerEntry
     public string ObjectName { get; set; }
     public string DisplayTime { get; set; }
     public string DisplayPercentage { get; set; }
-    public string DisplayRunCount { get; set; }
-    public string DisplayTimePerRun { get; set; }
+    // public string DisplayRunCount { get; set; }
+    // public string DisplayTimePerRun { get; set; }
     public int ImageId { get; set; }
 
     public const int NO_IMAGE = -1;
@@ -38,23 +38,18 @@ public enum GroupCriteria
 }
 public static class PerformanceAnalyzerPresenter
 {
-    public static int MinimumElapse = 5;
-    private struct IndividualRecord
+    public static int MinimumElapse { get; set; } = 5;
+    private readonly struct IndividualRecord(string name, int iconId)
     {
-        public string Name;
-        public int IconId;
-        public IndividualRecord(string name, int iconId)
-        {
-            Name = name;
-            IconId = iconId;
-        }
+        public readonly string Name = name;
+        public readonly int IconId = iconId;
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object? obj)
         {
             return obj is IndividualRecord record && Name == record.Name;
         }
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
         }
@@ -65,23 +60,23 @@ public static class PerformanceAnalyzerPresenter
 
         public static bool HasValue => Cache is not null;
     }
-    public static void RefreshContent<TImage>(
-        IFormPerformanceAnalyzer<TImage> ui,
-        Func<IGH_DocumentObject, TImage> iconGetter,
+    public static void RefreshContent(
+        IFormPerformanceAnalyzer ui,
+        Func<IDocumentObject, Image> iconGetter,
         PerformanceSnapshot snapshot,
-        HashSet<Guid> preselected
+        HashSet<Guid>? preselected
         )
     {
-        var doc = Instances.ActiveCanvas?.Document;
+        var doc = Editor.Instance?.Canvas?.Document;
         if (doc == null)
             return;
 
-        HashSet<Guid> focused = null;
+        HashSet<Guid>? focused = null;
 
         if (ui.FocusSelected)
         {
             if ((focused = preselected) is null)
-                focused = new HashSet<Guid>(doc.SelectedObjects().Select(obj => obj.InstanceGuid));
+                focused = new(doc.Objects.SelectedObjects.Select(obj => obj.InstanceId));
 
             if (focused.Count == 0)
                 focused = null;
@@ -92,12 +87,12 @@ public static class PerformanceAnalyzerPresenter
         var totalTime = 0;
         var minorTime = 0;
 
-        Dictionary<Guid, int> imageCache;
+        Dictionary<Type, int> imageCache;
 
         switch (ui.Grouping)
         {
             case GroupCriteria.ByComponent:
-                imageCache = new Dictionary<Guid, int>();
+                imageCache = [];
 
                 foreach (var it in snapshot.ElapsedByComponent.OrderByDescending(comp => comp.Value))
                 {
@@ -109,10 +104,9 @@ public static class PerformanceAnalyzerPresenter
                         continue;
                     }
 
-                    var docObj = doc.FindObject(it.Key, true);
-                    if (docObj is not IGH_ActiveObject) continue;
+                    if (doc.Objects.Find(it.Key) is not ActiveObject docObj) continue;
 
-                    var compId = docObj.ComponentGuid;
+                    var compId = docObj.GetType();
                     var id = -1;
                     if (imageCache.TryGetValue(compId, out var index))
                     {
@@ -125,10 +119,10 @@ public static class PerformanceAnalyzerPresenter
                         imageCache[compId] = id;
                     }
 
-                    var orgNickName = ObjectServer.GetOriginalNickName(compId);
-                    var nickName = docObj.NickName;
+                    var originalName = docObj.Nomen.Name;
+                    var displayName = docObj.DisplayName;
 
-                    var name = nickName != orgNickName && nickName != docObj.Name ? $"{nickName} ({docObj.Name})" : docObj.Name;
+                    var name = !string.IsNullOrEmpty(displayName) ? $"{displayName} ({originalName})" : originalName;
 
                     var entry = new PerformanceAnalyzerEntry
                     {
@@ -139,11 +133,15 @@ public static class PerformanceAnalyzerPresenter
                         DisplayPercentage = ToPercentage(it.Value, snapshot.TotalMilliseconds),
                     };
 
-                    if (docObj is IGH_Component comp && comp.RunCount > 0)
+                    /*int runCount = 0;
+
+                    if (docObj is Component comp && comp.State.Data. > 0)
                     {
                         entry.DisplayRunCount = comp.RunCount.ToString();
                         entry.DisplayTimePerRun = ToTimeString(it.Value / comp.RunCount);
-                    }
+                    }*/
+
+                    // TODO: RunCount is no longer supported. We may need to calculate ourselves or drop the support.
 
                     ui.AddEntry(entry);
                 }
@@ -151,10 +149,10 @@ public static class PerformanceAnalyzerPresenter
 
             case GroupCriteria.ByGroup:
 
-                if (!IconCache<TImage>.HasValue)
-                    IconCache<TImage>.Cache = iconGetter(new GH_Group());
+                if (!IconCache<Image>.HasValue)
+                    IconCache<Image>.Cache = iconGetter(new GroupObject());
 
-                ui.AddEntryImage(IconCache<TImage>.Cache);
+                ui.AddEntryImage(IconCache<Image>.Cache);
 
                 foreach (var it in snapshot.ElapsedByGroup.OrderByDescending(grp => grp.Value))
                 {
@@ -166,9 +164,10 @@ public static class PerformanceAnalyzerPresenter
                         continue;
                     }
 
-                    var group = doc.FindObject(it.Key, true);
-                    if (group is not GH_Group) continue;
-                    var name = string.IsNullOrEmpty(group.NickName) ? "Group" : group.NickName;
+                    var group = doc.Objects.Find(it.Key);
+                    if (group is not GroupObject go) continue;
+
+                    var name = string.IsNullOrEmpty(group.UserName) ? "Group" : group.UserName;
 
                     var entry = new PerformanceAnalyzerEntry
                     {
@@ -184,7 +183,7 @@ public static class PerformanceAnalyzerPresenter
                 break;
 
             case GroupCriteria.ByCategory:
-                imageCache = new Dictionary<Guid, int>();
+                imageCache = [];
                 var records = new Dictionary<IndividualRecord, int>();
 
                 foreach (var it in snapshot.ElapsedByComponent)
@@ -197,10 +196,10 @@ public static class PerformanceAnalyzerPresenter
                         continue;
                     }
 
-                    var docObj = doc.FindObject(it.Key, true);
-                    if (docObj is not IGH_ActiveObject) continue;
+                    var docObj = doc.Objects.Find(it.Key);
+                    if (docObj is not ActiveObject) continue;
 
-                    var compId = docObj.ComponentGuid;
+                    var compId = docObj.GetType();
                     var id = -1;
                     if (imageCache.TryGetValue(compId, out var index))
                     {
@@ -213,10 +212,10 @@ public static class PerformanceAnalyzerPresenter
                         imageCache[compId] = id;
                     }
 
-                    var orgNickName = ObjectServer.GetOriginalNickName(compId);
-                    var nickName = docObj.NickName;
+                    var originalName = docObj.Nomen.Name;
+                    var displayName = docObj.DisplayName;
 
-                    var name = nickName != orgNickName ? $"{nickName} ({docObj.Name})" : docObj.Name;
+                    var name = !string.IsNullOrEmpty(displayName) ? $"{displayName} ({originalName})" : originalName;
 
                     var record = new IndividualRecord(name, id);
                     if (records.TryGetValue(record, out var v))
@@ -280,7 +279,7 @@ public static class PerformanceAnalyzerPresenter
     }
     private static string ToTimeString(int ms)
     {
-        if (MiscConfig.ShowSecondsInPerformanceAnalyzer)
+        if (true /*MiscConfig.ShowSecondsInPerformanceAnalyzer*/)
         {
             return $"{ms / 1000.0:0.0} s";
         }

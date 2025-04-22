@@ -1,32 +1,32 @@
-﻿using System;
+﻿using Grasshopper2.Doc;
+using Grasshopper2.UI;
+using PancakeNextCore.UI;
+using PancakeNextCore.UI.EtoForms;
+using PancakeNextCore.Utility;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using Grasshopper;
-using Grasshopper.Kernel;
-using Pancake.Dataset;
-using Pancake.UI;
-using Pancake.Utility;
 
 namespace PancakeNextCore.Helper;
 
-internal class Performance
+internal static class Performance
 {
-    internal static double GetProcessorTime(GH_Document doc, IEnumerable<IGH_ActiveObject> objs)
+    internal static double GetProcessorTime(Document doc, IEnumerable<ActiveObject>? objs)
     {
-        return objs?.Sum(x => x.ProcessorTime.TotalMilliseconds) ?? GetProcessorTime(doc, doc.ActiveObjects());
+        return objs?.Sum(x => x.GetDuration()) ?? GetProcessorTime(doc, doc.Objects.ActiveObjects.OfType<ActiveObject>());
     }
 
-    internal static double GetProcessorTimeAtom(GH_Document doc, IGH_ActiveObject objs)
+    internal static double GetProcessorTimeAtom(Document doc, ActiveObject? objs)
     {
-        return objs?.ProcessorTime.TotalMilliseconds ?? GetProcessorTime(doc, null);
+        return objs?.GetDuration() ?? GetProcessorTime(doc, null);
     }
 
-    internal static void ShowObjectGroupTimeReport(GH_Document doc, IEnumerable<IGH_ActiveObject> activeObjs,
-        Func<GH_Document, IGH_ActiveObject, double> evaluationFunction = null,
-        Func<IGH_ActiveObject, string> extendInfo = null, Func<GH_Document, string> extendDocInfo = null)
+    /*internal static void ShowObjectGroupTimeReport(Document doc, IEnumerable<ActiveObject> activeObjs,
+        Func<Document, ActiveObject?, double>? evaluationFunction = null,
+        Func<ActiveObject, string>? extendInfo = null, Func<Document, string>? extendDocInfo = null)
     {
         var evaluate = evaluationFunction ?? GetProcessorTimeAtom;
 
@@ -66,7 +66,7 @@ internal class Performance
             var obj = objs[i];
             var extend = extendInfo == null ? "" : $" {extendInfo(obj)}";
             report +=
-                $"    {objTime[i] / selected * 100:00.00}% {SpanFromMs(objTime[i]):G}{extend} {obj.NickName}\r\n";
+                $"    {objTime[i] / selected * 100:00.00}% {SpanFromMs(objTime[i]):G}{extend} {obj.DisplayName}\r\n";
         }
 
         report += "\r\n";
@@ -100,14 +100,14 @@ internal class Performance
         }
 
         Presenter.ShowReportWindow(report);
-    }
+    }*/
 
     private static TimeSpan SpanFromMs(double ms)
     {
         return TimeSpan.FromTicks(Convert.ToInt64(ms * 10000));
     }
 
-    public static void ProfileRepeated(GH_Document doc, IEnumerable<IGH_ActiveObject> ghObjs)
+    /*public static void ProfileRepeated(Document doc, IEnumerable<ActiveObject> ghObjs)
     {
         Cursor.Current = Cursors.WaitCursor;
         Application.DoEvents();
@@ -166,7 +166,7 @@ internal class Performance
         ShowObjectGroupTimeReport(doc, objs,
             (_, obj) => obj == null ? docTotal / runCount : avgTime[obj.InstanceGuid],
             obj => extInfo[obj.InstanceGuid], _ => string.Format(Strings.Performance_ProfileRepeated_Repeated, runCount));
-    }
+    }*/
 
     private static void CalculateJitter(double avg, double max, double min, out double maxOffset, out double minOffset)
     {
@@ -182,73 +182,65 @@ internal class Performance
 
     internal static void ShowEntireDocument()
     {
-        PersistentEtoForm<UI.EtoForms.FormPerformanceAnalyzer>.Close();
-        var doc = Instances.ActiveCanvas?.Document;
+        PersistentEtoForm<FormPerformanceAnalyzer>.Close();
+        var doc = Editor.Instance?.Canvas?.Document;
         if (doc == null)
             return;
 
         var snapshot = PerformanceSnapshot.CreateFromDoc(doc);
-
-        // if (Config.UseEtoWhenPossible)
+        if (snapshot is null)
         {
-            PersistentEtoForm<UI.EtoForms.FormPerformanceAnalyzer>.Show();
-            if (PersistentEtoForm<UI.EtoForms.FormPerformanceAnalyzer>.TryGet(out var form))
-            {
-                form.ShowSnapshot(snapshot);
-                form.BringToFront();
-            }
-
             return;
         }
 
-        //{
-        //    PersistentForm<FormPerformanceAnalyzer>.Show();
-        //    if (PersistentForm<FormPerformanceAnalyzer>.TryGet(out var form))
-        //    {
-        //        form.ShowSnapshot(snapshot);
-        //    }
-        //}
+        PersistentEtoForm<FormPerformanceAnalyzer>.Show();
+        if (PersistentEtoForm<FormPerformanceAnalyzer>.TryGet(out var form))
+        {
+            form.ShowSnapshot(snapshot);
+            form.BringToFront();
+        }
+
+        return;
     }
 
     internal static void ShowSelected()
     {
-        var doc = Instances.ActiveCanvas?.Document;
+        var doc = Editor.Instance?.Canvas?.Document;
         if (doc is null) return;
 
-        var list = doc.SelectedObjects();
-        if (list.Count == 0) return;
+        var list = doc.Objects.SelectedObjects.ToArray();
+        if (list.Length == 0) return;
 
         var snapshot = PerformanceSnapshot.CreateFromDoc(doc);
-
-        // if (Config.UseEtoWhenPossible)
-        {
-            PersistentEtoForm<UI.EtoForms.FormPerformanceAnalyzer>.Close();
-            PersistentEtoForm<UI.EtoForms.FormPerformanceAnalyzer>.Show(
-                () => UI.EtoForms.FormPerformanceAnalyzer.CreateFromSnapshot(
-                    snapshot, true));
-
+        if (snapshot is null)
             return;
-        }
 
-        //PersistentForm<FormPerformanceAnalyzer>.Close();
-        //PersistentForm<FormPerformanceAnalyzer>.Show(
-        //    () => FormPerformanceAnalyzer.CreateFromSnapshot(
-        //       snapshot, true));
+        PersistentEtoForm<FormPerformanceAnalyzer>.Close();
+        PersistentEtoForm<FormPerformanceAnalyzer>.Show(
+            () => UI.EtoForms.FormPerformanceAnalyzer.CreateFromSnapshot(
+                snapshot, true));
+
+        return;
     }
 
     internal static void BenchmarkSelected()
     {
-        var doc = Instances.ActiveCanvas?.Document;
+        var doc = Editor.Instance?.Canvas?.Document;
         if (doc is null) return;
 
-        var list = doc.SelectedObjects();
-        if (list.Count == 0) return;
+        var list = doc.Objects.SelectedObjects.ToArray();
+        if (list.Length == 0) return;
 
+        BenchmarkSelectedAsync(doc, list);
+    }
+
+    private static async void BenchmarkSelectedAsync(Document doc, IDocumentObject[] list)
+    {
         var sw = new Stopwatch();
         sw.Start();
 
         var runCnt = 0;
-        var snapshot = PerformanceSnapshot.CreateFromDocAverage(() =>
+        var snapshot = await PerformanceSnapshot.CreateFromDocAverage(() =>
         {
             ++runCnt;
             return !(runCnt > 5 && (sw.ElapsedMilliseconds > 5000 || runCnt > 100));
@@ -258,62 +250,7 @@ internal class Performance
 
         if (snapshot == null) return;
 
-        // if (Config.UseEtoWhenPossible)
-        {
-            PersistentEtoForm<UI.EtoForms.FormPerformanceAnalyzer>.ShowSeparated(
-            () => UI.EtoForms.FormPerformanceAnalyzer.CreateFromSnapshot(
-                snapshot,
-                list.Select(obj => obj.InstanceGuid)));
-
-            return;
-        }
-
-        //PersistentForm<FormPerformanceAnalyzer>.ShowSeparated(
-        //() => FormPerformanceAnalyzer.CreateFromSnapshot(
-        //    snapshot,
-        //    list.Select(obj => obj.InstanceGuid)));
+        var guids = list.Select(obj => obj.InstanceId).ToArray();
+        UiHelper.InvokeUi(() => PersistentEtoForm.ShowSeparated(() => FormPerformanceAnalyzer.CreateFromSnapshot(snapshot, guids)));
     }
-
-    //private static void ShowTextReport(GH_Document doc, PerformanceSnapshot snapshot, IEnumerable<Guid> focused = null)
-    //{
-    //    var guids = focused == null ? null : new HashSet<Guid>(focused);
-    //    var baseData = focused == null ? snapshot.ElapsedByComponent : snapshot.ElapsedByComponent.Where(kv => guids.Contains(kv.Key));
-    //    var sb = new StringBuilder();
-
-    //    sb.AppendLine($"Total time: {snapshot.TotalMilliseconds} ms");
-    //    sb.AppendLine();
-
-    //    var sum = 0;
-    //    var maxLength = 0;
-
-    //    foreach (var it in baseData
-    //        .Where(kv => kv.Value > 5)
-    //        .OrderByDescending(kv => kv.Value))
-    //    {
-    //        var obj = doc.FindObject(it.Key, true);
-    //        if (obj is null) continue;
-
-    //        var digitLength = it.Value.ToString().Length;
-    //        if (digitLength > maxLength)
-    //            maxLength = digitLength;
-
-    //        sb.Append("    ");
-    //        if (digitLength < maxLength)
-    //            for (var i = 0; i < maxLength - digitLength; i++)
-    //                sb.Append(" ");
-
-    //        sb.Append($"{it.Value} ms: ");
-    //        sb.AppendLine(obj.Name);
-
-    //        sum += it.Value;
-    //    }
-
-    //    if (focused != null)
-    //    {
-    //        sb.AppendLine();
-    //        sb.AppendLine($"Total of selected components: {sum} ms, {100.0 * sum / snapshot.TotalMilliseconds:0.00}%");
-    //    }
-
-    //    Presenter.ShowReportWindow(sb.ToString());
-    //}
 }

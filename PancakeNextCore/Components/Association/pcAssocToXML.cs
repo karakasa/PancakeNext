@@ -11,7 +11,7 @@ using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("io", 0)]
+[ComponentCategory("assoc", 1)]
 [IoId("{83649765-DCCB-4B68-9DF9-B05EEC44FDA2}")]
 public class pcAssocToXml : PancakeComponent<pcAssocToXml>, IPancakeLocalizable<pcAssocToXml>
 {

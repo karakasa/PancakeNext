@@ -247,15 +247,15 @@ internal sealed class CoreMenu
               //  mnuIncludeComponent_Click, PickStream.IncludeComponent, disallowShortcut: true, toolTip: Strings.ControlIfComponentsContainingPersistentDataAreRegardedAsInpdendentInOutputs);
         }
 
-        /*using (var dropdown = menu.AddDropdownEntry(Strings.AnalyzePerformance, out _))
+        using (var dropdown = menu.AddDropdownEntry(Strings.AnalyzePerformance, out _))
         {
-            dropdown.AddEntry(Strings.EntireDocument, (sender, e) => Performance.ShowEntireDocument());
-            dropdown.AddEntry(Strings.Selected, (sender, e) => Performance.ShowSelected());
+            dropdown.AddEntry(Strings.EntireDocument, Performance.ShowEntireDocument);
+            dropdown.AddEntry(Strings.Selected, Performance.ShowSelected);
 
             dropdown.AddSeparator();
 
-            dropdown.AddEntry(Strings.BenchmarkSelectedComponents, (sender, e) => Performance.BenchmarkSelected());
-        }*/
+            dropdown.AddEntry(Strings.BenchmarkSelectedComponents, Performance.BenchmarkSelected);
+        }
 
         var versionString = PancakeInfo.CoreVersion.ToString(4);
 

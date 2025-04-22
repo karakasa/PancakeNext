@@ -11,7 +11,7 @@ using Path = System.IO.Path;
 
 namespace PancakeNextCore.Components.Miscellaneous;
 
-[ComponentCategory("io", 0)]
+[ComponentCategory("io", 2)]
 [IoId("1716e4e4-d58f-4713-91ba-919e7ed8b728")]
 public sealed class pcGhFilePath : PancakeComponent<pcGhFilePath>, IPancakeLocalizable<pcGhFilePath>
 {

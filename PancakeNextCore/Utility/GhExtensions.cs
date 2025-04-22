@@ -1,5 +1,6 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Data.Meta;
+using Grasshopper2.Doc;
 using Grasshopper2.Parameters;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,10 @@ internal static class GhExtensions
     {
         p.Requirement = req;
         return p;
+    }
+
+    public static double? GetDuration(this ActiveObject obj)
+    {
+        return obj.State?.Data?.Duration.TotalMilliseconds;
     }
 }

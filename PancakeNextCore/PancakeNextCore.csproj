@@ -14,11 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\NotAccessedParameters.cs" />
     <Compile Remove="Components\SleepComponent.cs" />
     <Compile Remove="GH\AssociationStringifier.cs" />
     <Compile Remove="Helper\DependencyWalker.cs" />
-    <Compile Remove="Helper\Performance.cs" />
-    <Compile Remove="Helper\PerformanceSnapshot.cs" />
     <Compile Remove="Helper\PickStream.cs" />
     <Compile Remove="Helper\PortabilityReport.cs" />
     <Compile Remove="Helper\TransferSetting.cs" />
@@ -45,14 +44,10 @@
     <Compile Remove="UI\EtoForms\AddonManagerLogic.cs" />
     <Compile Remove="UI\EtoForms\AddonManagerUi.cs" />
     <Compile Remove="UI\EtoForms\PancakeSettingUi.cs" />
-    <Compile Remove="UI\EtoForms\PerformanceAnalyzerLogic.cs" />
-    <Compile Remove="UI\EtoForms\PerformanceAnalyzerUi.cs" />
     <Compile Remove="UI\EtoForms\PortabilityReportLogic.cs" />
     <Compile Remove="UI\EtoForms\PortabilityReportUi.cs" />
     <Compile Remove="UI\EtoForms\TransferSettingUi.cs" />
-    <Compile Remove="UI\IFormPerformanceAnalyzer.cs" />
     <Compile Remove="UI\IFormPortabilityReport.cs" />
-    <Compile Remove="UI\PerformanceAnalyzerPresenter.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -94,10 +89,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Components\NotAccessedParameters.cs" />
     <None Include="Components\SleepComponent.cs" />
     <None Include="Helper\DependencyWalker.cs" />
-    <None Include="Helper\Performance.cs" />
-    <None Include="Helper\PerformanceSnapshot.cs" />
     <None Include="Helper\PickStream.cs" />
     <None Include="Helper\PortabilityReport.cs" />
     <None Include="Helper\TransferSetting.cs" />
@@ -124,14 +118,10 @@
     <None Include="UI\EtoForms\AddonManagerLogic.cs" />
     <None Include="UI\EtoForms\AddonManagerUi.cs" />
     <None Include="UI\EtoForms\PancakeSettingUi.cs" />
-    <None Include="UI\EtoForms\PerformanceAnalyzerLogic.cs" />
-    <None Include="UI\EtoForms\PerformanceAnalyzerUi.cs" />
     <None Include="UI\EtoForms\PortabilityReportLogic.cs" />
     <None Include="UI\EtoForms\PortabilityReportUi.cs" />
     <None Include="UI\EtoForms\TransferSettingUi.cs" />
-    <None Include="UI\IFormPerformanceAnalyzer.cs" />
     <None Include="UI\IFormPortabilityReport.cs" />
-    <None Include="UI\PerformanceAnalyzerPresenter.cs" />
   </ItemGroup>
 
   <ItemGroup>

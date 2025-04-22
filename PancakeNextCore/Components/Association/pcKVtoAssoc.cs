@@ -15,6 +15,8 @@ namespace PancakeNextCore.Components.Association;
 [IoId("1cec82d3-6efb-4abd-b3de-f6023eb8aeff")]
 public sealed class pcKvToAssoc : PancakeComponent<pcKvToAssoc>, IPancakeLocalizable<pcKvToAssoc>
 {
+    public pcKvToAssoc() { }
+    public pcKvToAssoc(IReader reader) : base(reader) { }
     public static string StaticLocalizedName => Strings.ConstructAssociativeArrayByKeys;
     public static string StaticLocalizedDescription => Strings.ConstructOrAdjustAnAssociativeArrayByKeyAndValues;
     protected override void RegisterInputs()

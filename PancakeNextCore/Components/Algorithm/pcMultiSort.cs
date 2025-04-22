@@ -18,6 +18,8 @@ namespace PancakeNextCore.Components.Algorithm;
 [IoId("{14AF2C8E-E79F-4E95-B26E-FD6386170508}")]
 public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocalizable<pcMultiSort>
 {
+    public pcMultiSort() { }
+    public pcMultiSort(IReader reader) : base(reader) { }
     public static string StaticLocalizedName => Strings.MultiSort;
 
     public static string StaticLocalizedDescription => Strings.SortDataByNonNumericOrMultipleKeys;

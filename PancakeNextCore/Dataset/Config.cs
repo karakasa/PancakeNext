@@ -28,16 +28,6 @@ public static class Config
     internal static bool SafeMode = false;
 
     public static bool IsRunningOnMac { get; } = Environment.OSVersion.Platform != PlatformID.Win32NT;
-    public static bool IsRunningOnModernNET { get; } = Environment.Version.Major >= 5;
-    public const bool IsCompiledForModernNET =
-#if NET
-        true
-#else
-        false
-#endif
-        ;
-
-    public static bool IsModernNETMismatched => IsRunningOnModernNET ^ IsCompiledForModernNET;
 
     internal static string Read(string name, string def = "", string safeDef = "")
     {

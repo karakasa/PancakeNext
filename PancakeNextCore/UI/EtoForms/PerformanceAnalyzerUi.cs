@@ -1,10 +1,9 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
-using Grasshopper;
-using Grasshopper.Kernel.Special;
-using Pancake.Dataset;
-using Pancake.GH.Tweaks;
+using Grasshopper2.SpecialObjects;
+using Grasshopper2.UI;
 using PancakeNextCore.UI;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pancake.UI.EtoForms;
+namespace PancakeNextCore.UI.EtoForms;
 
 internal partial class FormPerformanceAnalyzer : Form
 {
@@ -131,26 +130,26 @@ internal partial class FormPerformanceAnalyzer : Form
                     HeaderText = "%",
                     AutoSize = true
                 },
-                new GridColumn
-                {
-                    DataCell = new TextBoxCell
-                    {
-                        Binding = Binding.Property<PerformanceAnalyzerEntry, string>(static e => e.DisplayRunCount),
-                        TextAlignment = TextAlignment.Right
-                    },
-                    HeaderText = "Iteration",
-                    AutoSize = true
-                },
-                new GridColumn
-                {
-                    DataCell = new TextBoxCell
-                    {
-                        Binding = Binding.Property<PerformanceAnalyzerEntry, string>(static e => e.DisplayTimePerRun),
-                        TextAlignment = TextAlignment.Right
-                    },
-                    HeaderText = "Time per run",
-                    AutoSize = true
-                },
+                //new GridColumn
+                //{
+                //    DataCell = new TextBoxCell
+                //    {
+                //        Binding = Binding.Property<PerformanceAnalyzerEntry, string>(static e => e.DisplayRunCount),
+                //        TextAlignment = TextAlignment.Right
+                //    },
+                //    HeaderText = "Iteration",
+                //    AutoSize = true
+                //},
+                //new GridColumn
+                //{
+                //    DataCell = new TextBoxCell
+                //    {
+                //        Binding = Binding.Property<PerformanceAnalyzerEntry, string>(static e => e.DisplayTimePerRun),
+                //        TextAlignment = TextAlignment.Right
+                //    },
+                //    HeaderText = "Time per run",
+                //    AutoSize = true
+                //},
             }
         };
 
@@ -199,7 +198,7 @@ internal partial class FormPerformanceAnalyzer : Form
         };
     }
 
-    private void OnSelectedRowChanged(object sender, EventArgs e)
+    private void OnSelectedRowChanged(object? sender, EventArgs e)
     {
         if (_suspendEvent) return;
 
@@ -208,15 +207,15 @@ internal partial class FormPerformanceAnalyzer : Form
         var guid = entry.ObjectId;
         if (guid == Guid.Empty) return;
 
-        var doc = Instances.ActiveCanvas?.Document;
+        var doc = Editor.Instance?.Canvas?.Document;
         if (doc == null) return;
 
-        var docObj = doc.FindObject(guid, true);
+        var docObj = doc.Objects.Find(guid);
         if (docObj == null) return;
 
-        if (docObj is GH_Group group)
+        if (docObj is GroupObject group)
         {
-            GhGui.ZoomToObjects(group.Objects());
+            GhGui.ZoomToObject(group);
         }
         else
         {
@@ -224,12 +223,12 @@ internal partial class FormPerformanceAnalyzer : Form
         }
     }
 
-    private void OnRefreshClick(object sender, EventArgs e)
+    private void OnRefreshClick(object? sender, EventArgs e)
     {
         RefreshContent();
     }
 
-    private void OnFocusSelectedChanged(object sender, EventArgs e)
+    private void OnFocusSelectedChanged(object? sender, EventArgs e)
     {
         if (_suspendEvent) return;
 
@@ -238,7 +237,7 @@ internal partial class FormPerformanceAnalyzer : Form
         RefreshContent();
     }
 
-    private void OnGroupingCriteriaChanged(object sender, EventArgs e)
+    private void OnGroupingCriteriaChanged(object? sender, EventArgs e)
     {
         if (_suspendEvent) return;
 
