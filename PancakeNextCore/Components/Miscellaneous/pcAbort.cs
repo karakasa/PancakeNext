@@ -7,7 +7,7 @@ using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Miscellaneous;
 
-[ComponentCategory("logic", 0)]
+[ComponentCategory("misc", 1)]
 [IoId("{9CA18FF9-94B8-403B-A25C-39098ECA0EB9}")]
 public sealed class pcAbort : PancakeComponent<pcAbort>, IPancakeLocalizable<pcAbort>
 {

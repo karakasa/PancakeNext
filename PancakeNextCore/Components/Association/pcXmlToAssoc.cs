@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace PancakeNextCore.Components.Association;
 
 [IoId("{FE555B52-23B3-4589-8276-26CF7F9AED57}")]
-[ComponentCategory("assoc")]
+[ComponentCategory("assoc", 1)]
 public sealed class pcXmlToAssoc : PancakeComponent<pcXmlToAssoc>, IPancakeLocalizable<pcXmlToAssoc>
 {
     public pcXmlToAssoc() { }
@@ -66,9 +66,7 @@ public sealed class pcXmlToAssoc : PancakeComponent<pcXmlToAssoc>, IPancakeLocal
 
     protected override InputOption[][] SimpleOptions => [[
             new ToggleOption("Collapse inner content", "Simplify XML by collapsing single inner content of a tag into the tag itself.\r\nDo not use the option if you want to re-export the association to XML.",
-                CollapseAttributes, x => CollapseAttributes = x, "Collapse attributes", "Keep fidelity"){
-                ChapterName = "Simplify input"
-            }
+                CollapseAttributes, x => CollapseAttributes = x, "Collapse attributes", "Keep as it is", "Collapse & Simplify")
             ]];
 
     public static string StaticLocalizedName => Strings.XMLToAssoc;

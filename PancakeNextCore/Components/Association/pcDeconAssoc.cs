@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("data", 1)]
+[ComponentCategory("data", 2)]
 [IoId("43dc642d-3bb6-48a2-90aa-94960105dc6f")]
 public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocalizable<pcDeconAssoc>
 {
@@ -210,7 +210,7 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
                 { OnColor = OpenColor.Blue7 },
         ],
         [
-            new ButtonOption("Fill outputs now", "Fill outputs immediately, from input association to this component.", MnuClickFill, Strings.MatchOutputWithNamedValues)
+            new ButtonOption("Fill outputs now", "Fill outputs immediately, from input association to this component.", MnuClickFill)
         ]];
 
     private void MnuClickFill()

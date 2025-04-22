@@ -14,6 +14,16 @@ public static class PersistentEtoForm
     {
         PersistentEtoForm<T>.ShowSeparated(customNew, customInit);
     }
+
+    public static void Show<T>(Func<T>? customNew = null, Action<T>? customInit = null) where T : Form, new()
+    {
+        PersistentEtoForm<T>.Show(customNew, customInit);
+    }
+
+    public static void Close<T>() where T : Form, new()
+    {
+        PersistentEtoForm<T>.Close();
+    }
 }
 public static class PersistentEtoForm<T> where T : Form, new()
 {

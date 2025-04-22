@@ -37,6 +37,8 @@ internal static class StaticDocObjectHelper
             throw new InvalidOperationException($"Fail to retrieve category for {typeof(T).Name}");
 
         var categoryName = ComponentLibrary.GetCategoryFriendlyName(category.SectionName);
+
+        LocalizationHelper.LocalizeNameAndDescrpition(ref name, ref desc);
         return new Nomen(name, desc, ComponentLibrary.PanelName, categoryName, category.SubPanelIndex, category.Rank);
     }
 }

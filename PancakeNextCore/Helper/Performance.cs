@@ -236,6 +236,8 @@ internal static class Performance
 
     private static async void BenchmarkSelectedAsync(Document doc, IDocumentObject[] list)
     {
+        UiHelper.InvokeUi(() => PersistentEtoForm.Show<FormInProgress>());
+
         var sw = new Stopwatch();
         sw.Start();
 
@@ -247,6 +249,8 @@ internal static class Performance
         }, doc);
 
         sw.Stop();
+
+        UiHelper.InvokeUi(() => PersistentEtoForm.Close<FormInProgress>());
 
         if (snapshot == null) return;
 

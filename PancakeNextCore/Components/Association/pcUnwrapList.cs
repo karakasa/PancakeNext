@@ -9,7 +9,7 @@ using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("data", 2)]
+[ComponentCategory("data", 0)]
 [IoId("0c4ec27b-fdb1-46e0-ae41-bc6f9fa1518a")]
 public sealed class pcUnwrapList : PancakeComponent<pcUnwrapList>, IPancakeLocalizable<pcUnwrapList>
 {

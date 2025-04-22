@@ -11,7 +11,7 @@ using PancakeNextCore.Interfaces;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("assoc", 1)]
+[ComponentCategory("assoc", 2)]
 [IoId("{83649765-DCCB-4B68-9DF9-B05EEC44FDA2}")]
 public class pcAssocToXml : PancakeComponent<pcAssocToXml>, IPancakeLocalizable<pcAssocToXml>
 {
@@ -81,7 +81,7 @@ public class pcAssocToXml : PancakeComponent<pcAssocToXml>, IPancakeLocalizable<
         set => SetValue(ConfigExpand, _expand = value);
     }
 
-    const string ChapterName = "Format output";
+    const string ChapterName = "XML Header";
 
     protected override InputOption[][] SimpleOptions => [
         [

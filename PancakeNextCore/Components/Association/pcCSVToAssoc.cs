@@ -155,8 +155,8 @@ public sealed class pcCsvToAssoc : PancakeComponent<pcCsvToAssoc>, IPancakeLocal
     }
 
     protected override InputOption[][] SimpleOptions => [[
-            new ToggleOption("Recognize type", "Converts text into corresponding types if possible, e.g. into numbers.", RecognizeFormat, x => RecognizeFormat = x, "Recognize type", "Keep text"),
-            new ToggleOption("Recognize quantity", "Converts text into quantities if possible.", RecognizeQuantity, x => RecognizeQuantity = x, "Recognize quantity", "Keep text")
+            new ToggleOption("Recognize type", "Converts text into corresponding types if possible, e.g. into numbers.", RecognizeFormat, x => RecognizeFormat = x, "Number", "Number", "Recognize text"),
+            new ToggleOption("Recognize quantity", "Converts text into quantities if possible.", RecognizeQuantity, x => RecognizeQuantity = x, "Quantity", "Quantity", "Recognize text")
             ]];
 
     private const string RecognizeTypeOption = "RecognizeType";

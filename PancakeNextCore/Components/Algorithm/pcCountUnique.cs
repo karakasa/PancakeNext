@@ -14,7 +14,7 @@ using System.Linq;
 namespace PancakeNextCore.Components.Algorithm;
 
 [IoId("b521157b-0ed0-5229-940a-7c9c2d9357ee")]
-[ComponentCategory("data", 0)]
+[ComponentCategory("misc", 0)]
 public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLocalizable<pcCountUnique>
 {
     public pcCountUnique() { }

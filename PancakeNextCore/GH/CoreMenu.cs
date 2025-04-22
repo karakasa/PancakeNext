@@ -223,8 +223,8 @@ internal sealed class CoreMenu
 
         menu.AddLabel(Strings.CoreMenu_AddMenuFeatures_Tweaks, "tweaks");
         menu.AddFeatureEntry(Strings.EnableExtendedContextMenu, ExtendedContextMenu.Name, toolTip: Strings.AddsAContextMenuWhenYouRightClickCertain);
-        menu.AddFeatureEntry("Param access overlay", OverlayInfo.Name);
-        menu.AddFeatureEntry("Param content hint", ParamContentHint.Name);
+        menu.AddFeatureEntry(Strings.EnableParamAccessOverlay, OverlayInfo.Name);
+        menu.AddFeatureEntry(Strings.ParamContentHint, ParamContentHint.Name);
 
         menu.AddSeparator();
 
@@ -270,9 +270,16 @@ internal sealed class CoreMenu
             dropdown.AddToggleEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, () => Config.DevMode, x => Config.DevMode = x);
             dropdown.AddSeparator();
             dropdown.AddEntry("List core components...", mnuListCoreComponents);
+            dropdown.AddEntry("Internal settings...", mnuListInternalSettings);
+            dropdown.AddSeparator();
             dropdown.AddEntry("Enable canvas debug overlay", mnuEnableDebugOverlay);
-            dropdown.AddEntry("List internal settings...", mnuListInternalSettings);
+            dropdown.AddEntry("Benchmark canvas performance", mnuBenchmarkCanvas);
         }
+    }
+
+    private void mnuBenchmarkCanvas()
+    {
+        CanvasDebug.BenchmarkFps();
     }
 
     private void mnuListInternalSettings()

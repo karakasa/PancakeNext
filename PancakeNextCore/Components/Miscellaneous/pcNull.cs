@@ -7,7 +7,7 @@ using System;
 
 namespace PancakeNextCore.Components.Miscellaneous;
 
-[ComponentCategory("qty", 0)]
+[ComponentCategory("misc", 1)]
 [IoId("41edd829-c471-42e8-ba05-6d6d35460f37")]
 public sealed class pcNull : PancakeComponent<pcNull>, IPancakeLocalizable<pcNull>
 {

@@ -7,8 +7,8 @@ internal static partial class ComponentLibrary
         Param("0", "0", "0", Strings.Data0);
         Param("1", "1", "1", Strings.Data1);
         //Param("(pre-)option", "(Pre-)Option", "(Pre)Opt", Strings.ConnectToExportAsComponent);
-        Param("+infinity", "+Infinity", "+��", Strings.PositiveInfinityAsIn10);
-        Param("-infinity", "-Infinity", "-��", Strings.NeagtiveInfinityAsIn10);
+        Param("+infinity", "+Infinity", "+∞", Strings.PositiveInfinityAsIn10);
+        Param("-infinity", "-Infinity", "-∞", Strings.NeagtiveInfinityAsIn10);
         Param("adjustedquantity", "Adjusted Quantity", "Q", Strings.AdjustedQuantity);
         Param("amount", "Amount", "A", Strings.Amount);
         Param("amount2", "Amount", "A", Strings.AmountInside);

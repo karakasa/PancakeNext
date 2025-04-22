@@ -21,7 +21,7 @@ using PancakeNextCore.Utility;
 namespace PancakeNextCore.Components.Algorithm;
 
 [IoId("b521157b-0ed0-4229-940a-7c9c2d9357ee")]
-[ComponentCategory("data")]
+[ComponentCategory("misc")]
 public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocalizable<pcCategorize>
 {
     public pcCategorize() {}

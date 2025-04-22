@@ -235,11 +235,11 @@
   <data name="CoreMenu_mnuEnableVersionWaterstamp_Click_WarningDisableGH" xml:space="preserve">
     <value>该功能只会到下次启动本文件前临时禁用版本跟踪。要完全禁用该文件中的版本跟踪，请点击“移除 Grasshopper 脚本中的版本跟踪信息”。</value>
   </data>
-  <data name="CoreMenu_mnuHangProtection_Click_InfoDisableHang" xml:space="preserve">
-    <value>您正在禁用未响应保护，该过程将至多持续 15 秒。</value>
-  </data>
   <data name="CoreMenu_mnuHangProtection_Click_HotSwitchingFail" xml:space="preserve">
     <value>无法立即禁用未响应保护，该功能将在下一次启动 Rhino 后被禁用。</value>
+  </data>
+  <data name="CoreMenu_mnuHangProtection_Click_InfoDisableHang" xml:space="preserve">
+    <value>您正在禁用未响应保护，该过程将至多持续 15 秒。</value>
   </data>
   <data name="UiHelper_PancakeTitle" xml:space="preserve">
     <value>Pancake</value>
@@ -278,9 +278,6 @@
     <value>所有引用的封包将被跳过。
 </value>
   </data>
-  <data name="Presenter_UpdateVersionItemDispatch_New_version__0__is_available_" xml:space="preserve">
-    <value>新版本 {0} 可用</value>
-  </data>
   <data name="ClusterOp_MergeDuplicatedInputs_IfTheClusterIsLinkedWithAFileTheFileWillBeModifiedImmediatelyRN" xml:space="preserve">
     <value>如果某个封包链接到了某个文件，该文件将被立即修改。
 </value>
@@ -306,6 +303,9 @@
   </data>
   <data name="LibraryInfo_CheckLibInfo_Ameba" xml:space="preserve">
     <value>Ameba 需要安装及云密钥配置，请参阅 http://www.food4rhino.com/app/ameba-rhino</value>
+  </data>
+  <data name="Presenter_UpdateVersionItemDispatch_New_version__0__is_available_" xml:space="preserve">
+    <value>新版本 {0} 可用</value>
   </data>
   <data name="Downgrade_DowngradeComponents__0__successful___1__failed_" xml:space="preserve">
     <value>{0} 个成功，{1} 个失败。</value>
@@ -420,11 +420,11 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="CoreMenu_AddMenuFeatures_ManageAddons" xml:space="preserve">
     <value>加载项...</value>
   </data>
-  <data name="CoreMenu_AddMenuFeatures_Undo_history" xml:space="preserve">
-    <value>撤销历史...</value>
-  </data>
   <data name="CoreMenu_AddMenuFeatures_Transfer_settings" xml:space="preserve">
     <value>迁移...</value>
+  </data>
+  <data name="CoreMenu_AddMenuFeatures_Undo_history" xml:space="preserve">
+    <value>撤销历史...</value>
   </data>
   <data name="CannotRetrieveUndoHistory" xml:space="preserve">
     <value>无法读取撤销历史。</value>
@@ -739,11 +739,11 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="BenchmarkSelectedComponents" xml:space="preserve">
     <value>测量选中组件的运行时间</value>
   </data>
-  <data name="AllExistingFilesAndSettingsWillBeOverridedOnlyTheChosenItemsWillBeAffected" xml:space="preserve">
-    <value>所有设置及已经存在的文件将会被覆盖。</value>
-  </data>
   <data name="TheExportedFileMayContainSensitiveInformationNeverSendItToUntrustedRecipients" xml:space="preserve">
     <value>导出的设置包有可能包含隐私敏感信息，请勿将其发送给不受信任的接收者。</value>
+  </data>
+  <data name="AllExistingFilesAndSettingsWillBeOverridedOnlyTheChosenItemsWillBeAffected" xml:space="preserve">
+    <value>所有设置及已经存在的文件将会被覆盖。</value>
   </data>
   <data name="EnableExtendedContextMenu" xml:space="preserve">
     <value>扩充右键菜单</value>
@@ -757,71 +757,50 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="EnableParamAccessOverlay" xml:space="preserve">
     <value>提示参数访问方式</value>
   </data>
-  <data name="YouAreUsingAPreReleaseBuild" xml:space="preserve">
-    <value>你正在使用预发行版</value>
-  </data>
-  <data name="GHSettings" xml:space="preserve">
-    <value>Grasshopper 设置</value>
-  </data>
-  <data name="PancakeConfig" xml:space="preserve">
-    <value>Pancake 设置</value>
-  </data>
-  <data name="GHLibraries" xml:space="preserve">
-    <value>Grasshopper 第三方插件</value>
-  </data>
-  <data name="LastModification" xml:space="preserve">
-    <value>最后一次修改</value>
-  </data>
-  <data name="YouAreUsingTheLatestVersion" xml:space="preserve">
-    <value>你正在使用最新版本</value>
-  </data>
   <data name="LoadingDemand" xml:space="preserve">
     <value>加载方式</value>
   </data>
   <data name="ShippedWithRhino" xml:space="preserve">
     <value>与 Rhino 一同提供?</value>
   </data>
-  <data name="FollowingPairsAreCoincidentOnTheCanvas" xml:space="preserve">
-    <value>重叠组件</value>
+  <data name="LastModification" xml:space="preserve">
+    <value>最后一次修改</value>
   </data>
   <data name="FollowingQuantityInvolvedOperatorsWillOnlyWorkOnRhino6" xml:space="preserve">
     <value>只能在 Rhino 6 中工作的数量运算符</value>
   </data>
-  <data name="Input" xml:space="preserve">
-    <value>输入</value>
+  <data name="FollowingPairsAreCoincidentOnTheCanvas" xml:space="preserve">
+    <value>重叠组件</value>
   </data>
-  <data name="Output" xml:space="preserve">
-    <value>输出</value>
+  <data name="GHLibraries" xml:space="preserve">
+    <value>Grasshopper 第三方插件</value>
   </data>
-  <data name="Logic" xml:space="preserve">
-    <value>流程</value>
+  <data name="PancakeConfig" xml:space="preserve">
+    <value>Pancake 设置</value>
   </data>
-  <data name="DataOrganization" xml:space="preserve">
-    <value>数据管理</value>
+  <data name="GHSettings" xml:space="preserve">
+    <value>Grasshopper 设置</value>
   </data>
-  <data name="QuantityCategory" xml:space="preserve">
-    <value>数量</value>
+  <data name="YouAreUsingTheLatestVersion" xml:space="preserve">
+    <value>你正在使用最新版本</value>
   </data>
-  <data name="SelectAllIndependentInputsThatAffectTheSelectedComponent" xml:space="preserve">
-    <value>选中所有会影响到选中组件的独立输入。</value>
+  <data name="YouAreUsingAPreReleaseBuild" xml:space="preserve">
+    <value>你正在使用预发行版</value>
   </data>
-  <data name="SelectAllComponentsThatAffectOrAreAffectedByTheSelectedComponent" xml:space="preserve">
-    <value>选中所有影响选中组件，或被选中组件影响的对象。</value>
+  <data name="ThisFeatureWillInternalizeAllReferencedGeometryInYourScriptAsIfYouClickInternalizeInAllOfTheMenus" xml:space="preserve">
+    <value>嵌入脚本中所有引用的几何对象。如此，当前脚本将不会依赖于 Rhino 文件。</value>
   </data>
-  <data name="SelectAllComponentsThatAreAffectedByTheSelectedComponent" xml:space="preserve">
-    <value>选中所有受选中组件影响的组件。</value>
-  </data>
-  <data name="ExportImportSettingsToFromABundleFile" xml:space="preserve">
-    <value>从设置包导入设置，或导出设置到包文件。</value>
+  <data name="ThisFeatureDowngradesCertainBasicComponentsToTheirRhino5Equivalent" xml:space="preserve">
+    <value>将部分基础组件降级到 Rhino 5 下的版本，以便脚本可以在低版本中打开。</value>
   </data>
   <data name="StudysWhatExternalResourcesTheCurrentScriptRequiresAndShowAReport" xml:space="preserve">
     <value>显示当前脚本所依赖的外部资源。</value>
   </data>
-  <data name="ThisFeatureMonitorsIfAnyNewLibrary" xml:space="preserve">
-    <value>监控是否有任何新加载项被锁定。如果有的话提示以进行下一步操作。</value>
-  </data>
   <data name="PancakeWillDoAnEmergencySaveIf" xml:space="preserve">
     <value>如果 Grasshopper 失去响应太久，Pancake 将会紧急保存脚本文件。</value>
+  </data>
+  <data name="ThisFeatureMonitorsIfAnyNewLibrary" xml:space="preserve">
+    <value>监控是否有任何新加载项被锁定。如果有的话提示以进行下一步操作。</value>
   </data>
   <data name="AddsAContextMenuWhenYouRightClickCertain" xml:space="preserve">
     <value>当按住 Ctrl+Shift 右击部分对象时，弹出包含扩充功能的菜单。</value>
@@ -832,11 +811,17 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="SelectAllComponentsThatAffectTheSelectedComponent" xml:space="preserve">
     <value>选中所有会影响到选中组件的组件。</value>
   </data>
-  <data name="ThisFeatureDowngradesCertainBasicComponentsToTheirRhino5Equivalent" xml:space="preserve">
-    <value>将部分基础组件降级到 Rhino 5 下的版本，以便脚本可以在低版本中打开。</value>
+  <data name="SelectAllComponentsThatAreAffectedByTheSelectedComponent" xml:space="preserve">
+    <value>选中所有受选中组件影响的组件。</value>
   </data>
-  <data name="ThisFeatureWillInternalizeAllReferencedGeometryInYourScriptAsIfYouClickInternalizeInAllOfTheMenus" xml:space="preserve">
-    <value>嵌入脚本中所有引用的几何对象。如此，当前脚本将不会依赖于 Rhino 文件。</value>
+  <data name="SelectAllComponentsThatAffectOrAreAffectedByTheSelectedComponent" xml:space="preserve">
+    <value>选中所有影响选中组件，或被选中组件影响的对象。</value>
+  </data>
+  <data name="SelectAllIndependentInputsThatAffectTheSelectedComponent" xml:space="preserve">
+    <value>选中所有会影响到选中组件的独立输入。</value>
+  </data>
+  <data name="SelectAllIndependentOutputsThatAffectTheSelectedComponent" xml:space="preserve">
+    <value>选中所有选中组件影响到的独立输出。</value>
   </data>
   <data name="ControlIfComponentsContainingPersistentDataAreRegardedAsInpdendentInOutputs" xml:space="preserve">
     <value>控制是否将设置了初始值的组件也视为独立输入/输出。</value>
@@ -847,43 +832,58 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="RefreshNamesOfClusterInputInTheOuterDocumentIfYouHaveChangedThemInsideTheCluster" xml:space="preserve">
     <value>刷新封包的参数名称，使之与内部更新过的名称同步。</value>
   </data>
-  <data name="SelectAllIndependentOutputsThatAffectTheSelectedComponent" xml:space="preserve">
-    <value>选中所有选中组件影响到的独立输出。</value>
-  </data>
   <data name="ControlIfPancakeWouldSkipClusterDefinedInExternalFilesDuringAnyClusterOperation" xml:space="preserve">
     <value>控制 Pancake 是否应该跳过引用的封包。</value>
+  </data>
+  <data name="ExportImportSettingsToFromABundleFile" xml:space="preserve">
+    <value>从设置包导入设置，或导出设置到包文件。</value>
   </data>
   <data name="ObjectAttributesDesc" xml:space="preserve">
     <value>对象属性。默认情况下导出组件不适用该结构中的图层信息，右键单击组件来改变这一行为。
 你可以使用 Elefront 或 Human 来生成对象属性。
 你可以查阅手册来了解具体哪些属性可用。</value>
   </data>
-  <data name="ThisComponentImportsGeometriesDirectlyIntoGH" xml:space="preserve">
-    <value>此组件将几何体直接导入 Grasshopper 中。</value>
+  <data name="Input" xml:space="preserve">
+    <value>输入</value>
   </data>
-  <data name="pcecExportOption" xml:space="preserve">
-    <value>{0} Export Option: {0} 导出选项</value>
+  <data name="Output" xml:space="preserve">
+    <value>输出</value>
   </data>
-  <data name="AddUnitToANumberToConvertItIntoAQuantityWhenTheUnitIsNotSuppliedDocumentUnitIsUsedRNUseParseStringComponentToCreateAFeetInchLengthQuantity" xml:space="preserve">
-    <value>将数字和单位组合来创建数量，默认单位为当前文档的长度单位。使用 解析文本（Parse String）组件来创建英制长度。</value>
+  <data name="Logic" xml:space="preserve">
+    <value>流程</value>
+  </data>
+  <data name="QuantityCategory" xml:space="preserve">
+    <value>数量</value>
+  </data>
+  <data name="DataOrganization" xml:space="preserve">
+    <value>数据管理</value>
+  </data>
+  <data name="ConstructAssociativeArrayFromCSV" xml:space="preserve">
+    <value>CSV to Assoc: 从 CSV 创建关联</value>
+  </data>
+  <data name="CreateAListOfAssociativeArraysFromCSVLinesSeeExampleForMoreInformation" xml:space="preserve">
+    <value>从 CSV 数据创建一组关联。您可以查阅范例文件获取更多信息。</value>
   </data>
   <data name="AssociativeArrayToDatatable" xml:space="preserve">
     <value>Assoc to Datatable: 关联到数据表</value>
   </data>
+  <data name="CreateADatatableASetOfHeadersAndValuesSoThatDataCanBeUsedByLunchBoxHumanUIEtcOrExportedOnlyNamedValueWillBeExtractedRNByDefaultEachColumnIsStoredAsOneBranchUseTheOptionInTheContextMenuToStoreEntriesAsBranches" xml:space="preserve">
+    <value>创建由表头和数据组成的数据表，该结构可以被 LunchBox、Human UI 等插件使用。您可以在右键菜单中选择转置输出。</value>
+  </data>
   <data name="AssociativeArrayToString" xml:space="preserve">
     <value>Assoc to String: 关联到文本</value>
   </data>
-  <data name="CalculateTheNextFilenameInAFilepathSeries" xml:space="preserve">
-    <value>计算在文件名序列中下一个/下一组可用的文件名。</value>
+  <data name="ConvertAnAssociativeArrayToAStringOfCertainStyleSuchAsJsonPythonEtcRightClickTheComponentToChooseStyle" xml:space="preserve">
+    <value>将关联转换成特定格式的文本，譬如 Json、Python dict等。您可以在右键菜单中指定格式。</value>
   </data>
   <data name="Categorize" xml:space="preserve">
     <value>Categorize: 分类</value>
   </data>
-  <data name="CategorizeByIndex" xml:space="preserve">
-    <value>Categorize By Index: 根据序数分类</value>
-  </data>
   <data name="CategorizeValuesByKeys" xml:space="preserve">
     <value>根据所属的分类来归类数据。</value>
+  </data>
+  <data name="CategorizeByIndex" xml:space="preserve">
+    <value>Categorize By Index: 根据序数分类</value>
   </data>
   <data name="CategorizeValuesByIntegerKeysComparedToTheGenericVersionThisComponentHasBetterPerformance" xml:space="preserve">
     <value>根据所属的分类序数来归类数据。此组件与非限定序数的组件相比速度更快。</value>
@@ -891,11 +891,17 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="ConstructAssociativeArray" xml:space="preserve">
     <value>Construct Assoc: 创建关联</value>
   </data>
+  <data name="CreateAnAssociativeArrayFromAListOfItemsAnAssociativeArrayWillBeTreatedAsOneSingleElementDuringGrasshopperTreeManipulationThereforeStructureManipulationWouldBeEasier" xml:space="preserve">
+    <value>从值创建关联。</value>
+  </data>
+  <data name="FilepathSeries" xml:space="preserve">
+    <value>Filepath Series: 文件序列</value>
+  </data>
+  <data name="CalculateTheNextFilenameInAFilepathSeries" xml:space="preserve">
+    <value>计算在文件名序列中下一个/下一组可用的文件名。</value>
+  </data>
   <data name="ConstructAssociativeArrayByKeys" xml:space="preserve">
     <value>Key-values to Assoc: 从键值列表创建关联</value>
-  </data>
-  <data name="ConstructAssociativeArrayFromCSV" xml:space="preserve">
-    <value>CSV to Assoc: 从 CSV 创建关联</value>
   </data>
   <data name="ConstructOrAdjustAnAssociativeArrayByKeyAndValues" xml:space="preserve">
     <value>从键-值列表创建或修改关联。</value>
@@ -903,47 +909,38 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="ConstructQuantity" xml:space="preserve">
     <value>Construct Quantity: 创建数量</value>
   </data>
-  <data name="ConvertAQuantityToADecimalLengthWithDesignatedUnit" xml:space="preserve">
-    <value>将数量转换到指定单位的公制长度数量。</value>
-  </data>
-  <data name="ConvertAQuantityToAFeetInchLengthWithDesignatedUnit" xml:space="preserve">
-    <value>将数量转换到指定单位的英制长度数量。</value>
-  </data>
-  <data name="ConvertAnAssociativeArrayToAStringOfCertainStyleSuchAsJsonPythonEtcRightClickTheComponentToChooseStyle" xml:space="preserve">
-    <value>将关联转换成特定格式的文本，譬如 Json、Python dict等。您可以在右键菜单中指定格式。</value>
+  <data name="AddUnitToANumberToConvertItIntoAQuantityWhenTheUnitIsNotSuppliedDocumentUnitIsUsedRNUseParseStringComponentToCreateAFeetInchLengthQuantity" xml:space="preserve">
+    <value>将数字和单位组合来创建数量，默认单位为当前文档的长度单位。使用 解析文本（Parse String）组件来创建英制长度。</value>
   </data>
   <data name="CountUnique" xml:space="preserve">
     <value>Count Unique: 统计唯一值</value>
   </data>
-  <data name="CreateADatatableASetOfHeadersAndValuesSoThatDataCanBeUsedByLunchBoxHumanUIEtcOrExportedOnlyNamedValueWillBeExtractedRNByDefaultEachColumnIsStoredAsOneBranchUseTheOptionInTheContextMenuToStoreEntriesAsBranches" xml:space="preserve">
-    <value>创建由表头和数据组成的数据表，该结构可以被 LunchBox、Human UI 等插件使用。您可以在右键菜单中选择转置输出。</value>
-  </data>
-  <data name="CreateAListOfAssociativeArraysFromCSVLinesSeeExampleForMoreInformation" xml:space="preserve">
-    <value>从 CSV 数据创建一组关联。您可以查阅范例文件获取更多信息。</value>
-  </data>
-  <data name="CreateAnAssociativeArrayFromAListOfItemsAnAssociativeArrayWillBeTreatedAsOneSingleElementDuringGrasshopperTreeManipulationThereforeStructureManipulationWouldBeEasier" xml:space="preserve">
-    <value>从值创建关联。</value>
+  <data name="ExtractAllUniqueValuesFromAListAndCountTheirOccurences" xml:space="preserve">
+    <value>提取列表中所有不重复的值，并统计它们出现的次数。</value>
   </data>
   <data name="DecomposeAnAssociativeArrayIntoItems" xml:space="preserve">
     <value>从关联提取数据。</value>
   </data>
-  <data name="DeconstructAFeetInchLengthQuantityToItsComponents" xml:space="preserve">
-    <value>提取英制长度中的数字信息。</value>
-  </data>
-  <data name="DeconstructAnAssociativeArrayIntoListOfKeyPathsAndValues" xml:space="preserve">
-    <value>将关联转换为一组键-值。</value>
+  <data name="DeconstructAssociativeArray" xml:space="preserve">
+    <value>Deconstruct Assoc: 分解关联</value>
   </data>
   <data name="DeconstructAssociaitveArrayAsKeyValueList" xml:space="preserve">
     <value>Assoc to Key-values: 关联到键值列表</value>
   </data>
-  <data name="DeconstructAssociativeArray" xml:space="preserve">
-    <value>Deconstruct Assoc: 分解关联</value>
+  <data name="DeconstructAnAssociativeArrayIntoListOfKeyPathsAndValues" xml:space="preserve">
+    <value>将关联转换为一组键-值。</value>
+  </data>
+  <data name="DeconstructAssociativeArrayByKeys" xml:space="preserve">
+    <value>Extract from Assoc: 提取关联中的指定键</value>
+  </data>
+  <data name="RetrieveDataFromAnAssociativeArrayByKeyPaths" xml:space="preserve">
+    <value>根据键名路径提取关联中的数据。</value>
   </data>
   <data name="DeconstructFeetInchLength" xml:space="preserve">
     <value>Deconstruct Feet-Inch Length: 分解英制长度</value>
   </data>
-  <data name="DeconstructAssociativeArrayByKeys" xml:space="preserve">
-    <value>Extract from Assoc: 提取关联中的指定键</value>
+  <data name="DeconstructAFeetInchLengthQuantityToItsComponents" xml:space="preserve">
+    <value>提取英制长度中的数字信息。</value>
   </data>
   <data name="DeconstructQuantity" xml:space="preserve">
     <value>Deconstruct Quantity: 分解数量</value>
@@ -954,8 +951,8 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="DefaultValue" xml:space="preserve">
     <value>Default Value: 默认值</value>
   </data>
-  <data name="DefinitionPath" xml:space="preserve">
-    <value>Definition Path: 脚本路径</value>
+  <data name="OutputsDefaultValueDIfValueVIsNotProvidedSuchAsAnEmptyClusterInputOutputsTheProvidedValueOtherwiseTheComponentActsAsAFilterForOptionalClusterInput" xml:space="preserve">
+    <value>如果输入 V 是空的话，则输出 D 默认值，否则输出 V 的值。该组件可用于构建封包的可选参数。</value>
   </data>
   <data name="Deserialize" xml:space="preserve">
     <value>Deserialize: 反序列化</value>
@@ -963,11 +960,18 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="DeserializeAStringIntoItsOriginalObject" xml:space="preserve">
     <value>将文本反序列化，转换成其代表的原始对象。</value>
   </data>
-  <data name="NativeExport" xml:space="preserve">
-    <value>Export {0}: 导出 {0}</value>
+  <data name="Export3DMDescription" xml:space="preserve">
+    <value>该组件将 Grasshopper 中的几何体直接导出到 Rhino 3DM 文件中。
+该组件不依赖于 Rhino 的用户界面，因而更快更稳定；不过该组件不支持所有的几何体或对象属性。
+右键单击组件以获取更多选项。</value>
   </data>
   <data name="Export3DM" xml:space="preserve">
     <value>Export 3DM: 导出 3DM</value>
+  </data>
+  <data name="ExportAsDesc" xml:space="preserve">
+    <value>将 Grasshopper 中的几何体导出到任何 Rhino 支持导出的格式中。
+该组件依赖于 Rhino 的用户界面与 Export 命令，因而您在使用时不能有其他命令在运行。
+右键单击组件以获取更多选项。</value>
   </data>
   <data name="ExportAs" xml:space="preserve">
     <value>Export As: 导出为</value>
@@ -975,29 +979,33 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="ExportSTL" xml:space="preserve">
     <value>Export STL: 导出 STL</value>
   </data>
+  <data name="ExportSTLDesc" xml:space="preserve">
+    <value>该组件将 Grasshopper 中的网格直接导出到 STL 文件。
+该组件不依赖于 Rhino。</value>
+  </data>
   <data name="ExportTXT" xml:space="preserve">
     <value>Export TXT: 导出 TXT</value>
   </data>
-  <data name="ExtractAllUniqueValuesFromAListAndCountTheirOccurences" xml:space="preserve">
-    <value>提取列表中所有不重复的值，并统计它们出现的次数。</value>
-  </data>
-  <data name="FilepathSeries" xml:space="preserve">
-    <value>Filepath Series: 文件序列</value>
-  </data>
-  <data name="QtyOpDesc" xml:space="preserve">
-    <value>对数量进行四则运算。Rhino 6 用户也可以使用 Grasshopper 自带的加、减、乘、累加组件。您可以查看范例获取更多信息。</value>
+  <data name="ThisComponentExportsTextToAFile" xml:space="preserve">
+    <value>该组件导出文本文件。</value>
   </data>
   <data name="GetMetadata" xml:space="preserve">
     <value>Get Metadata: 读取元数据</value>
   </data>
+  <data name="RetrieveMetadataFromAnObject" xml:space="preserve">
+    <value>从对象中读取元数据。</value>
+  </data>
+  <data name="DefinitionPath" xml:space="preserve">
+    <value>Definition Path: 脚本路径</value>
+  </data>
   <data name="GetThePathOfCurrentGrasshopperDefinitionFileSoThatYouCanReferenceFilesWhereverTheyAre" xml:space="preserve">
     <value>获得当前 Grasshopper 脚本的路径及文件名。这样你就可以简单的引用同目录的其他资源。</value>
   </data>
-  <data name="NativeImport" xml:space="preserve">
-    <value>Import {0}: 导入 {0}</value>
-  </data>
   <data name="ImportFrom" xml:space="preserve">
     <value>Import From: 导入到 GH</value>
+  </data>
+  <data name="ImportGeometriesFromARhinoSupportedFormatThisComponentRelysOnRhinoSImportCommand" xml:space="preserve">
+    <value>向 Grasshopper 导入几何对象。该组件依赖于 Rhino 的 Import 命令。</value>
   </data>
   <data name="ImportToDocument" xml:space="preserve">
     <value>Import To Document: 导入到 Rhino</value>
@@ -1005,20 +1013,30 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="ImportGeometriesToTheCurrentRhinoDocumentThisComponentRelysOnRhinoSImportCommand" xml:space="preserve">
     <value>向当前 Rhino 文档导入几何对象。该组件依赖于 Rhino 的 Import 命令。</value>
   </data>
-  <data name="ImportGeometriesFromARhinoSupportedFormatThisComponentRelysOnRhinoSImportCommand" xml:space="preserve">
-    <value>向 Grasshopper 导入几何对象。该组件依赖于 Rhino 的 Import 命令。</value>
+  <data name="MergeTwoOrMoreAssociativeArrays" xml:space="preserve">
+    <value>合并两个或多个关联。</value>
   </data>
   <data name="MergeAssociativeArray" xml:space="preserve">
     <value>Merge Assoc: 合并关联</value>
   </data>
-  <data name="MergeTwoOrMoreAssociativeArrays" xml:space="preserve">
-    <value>合并两个或多个关联。</value>
+  <data name="NativeExportDesc" xml:space="preserve">
+    <value>该组件将 Grasshopper 中的几何体直接导出到 {0} 文件。
+该组件不依赖于 Export 命令。</value>
+  </data>
+  <data name="NativeExport" xml:space="preserve">
+    <value>Export {0}: 导出 {0}</value>
+  </data>
+  <data name="NativeImport" xml:space="preserve">
+    <value>Import {0}: 导入 {0}</value>
+  </data>
+  <data name="ThisComponentImportsGeometriesDirectlyIntoGH" xml:space="preserve">
+    <value>此组件将几何体直接导入 Grasshopper 中。</value>
   </data>
   <data name="NullValues" xml:space="preserve">
     <value>Null Values: 空值</value>
   </data>
-  <data name="OutputsDefaultValueDIfValueVIsNotProvidedSuchAsAnEmptyClusterInputOutputsTheProvidedValueOtherwiseTheComponentActsAsAFilterForOptionalClusterInput" xml:space="preserve">
-    <value>如果输入 V 是空的话，则输出 D 默认值，否则输出 V 的值。该组件可用于构建封包的可选参数。</value>
+  <data name="ProvideSpecialValuesSuchAsNullNaNInfinity" xml:space="preserve">
+    <value>提供例如空、NaN、正负无穷的特殊值。</value>
   </data>
   <data name="ParseString" xml:space="preserve">
     <value>Parse String: 解析文本</value>
@@ -1026,20 +1044,11 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="ParseFormattedStringToItsCorrectTypeCurrentlyThisComponentSupportsIntegerNumberBooleanGuidLengthQuantityDatetimePointDomain12DColourAndJsonSeeExamplesOrManualForMoreInformation" xml:space="preserve">
     <value>解析格式化的文本，并还原为对应的格式。当前该组件支持整数、小数、逻辑值（真/假）、全局唯一标识符（GUID）、长度数量、日期时间、点、范围（1/2维）、颜色与 Json。您可以查看范例获取更多信息。</value>
   </data>
-  <data name="PostponeDataUntilSignalIsReceived" xml:space="preserve">
-    <value>推迟数据流直至收到信号</value>
-  </data>
-  <data name="ProvideSpecialValuesSuchAsNullNaNInfinity" xml:space="preserve">
-    <value>提供例如空、NaN、正负无穷的特殊值。</value>
-  </data>
   <data name="QuantityOperator" xml:space="preserve">
     <value>Quantity Operator: 数量运算</value>
   </data>
-  <data name="RetrieveDataFromAnAssociativeArrayByKeyPaths" xml:space="preserve">
-    <value>根据键名路径提取关联中的数据。</value>
-  </data>
-  <data name="RetrieveMetadataFromAnObject" xml:space="preserve">
-    <value>从对象中读取元数据。</value>
+  <data name="QtyOpDesc" xml:space="preserve">
+    <value>对数量进行四则运算。Rhino 6 用户也可以使用 Grasshopper 自带的加、减、乘、累加组件。您可以查看范例获取更多信息。</value>
   </data>
   <data name="Serialize" xml:space="preserve">
     <value>Serialize: 序列化</value>
@@ -1047,57 +1056,36 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="SerializeASerializableObjectIntoString" xml:space="preserve">
     <value>将对象序列化成文本。</value>
   </data>
-  <data name="SetMetadataDesc" xml:space="preserve">
-    <value>给对象设定元数据。该组件的输出依然是几何体，并且经过大部分单射组件（如移动）操作后元数据仍然会保留。</value>
-  </data>
-  <data name="SetMetadata" xml:space="preserve">
-    <value>Set Metadata: 设置元数据</value>
-  </data>
-  <data name="SetPrecision" xml:space="preserve">
-    <value>Set Precision: 设置精度</value>
-  </data>
   <data name="SetPrincipleValue" xml:space="preserve">
     <value>Set Principle Value: 设置主值</value>
-  </data>
-  <data name="SetThePrecisionOfAQuantityPrecisionMayHaveDifferentMeaningsOnDifferentQuantitiesSeeManualOrExampleForMoreInformation" xml:space="preserve">
-    <value>设置数量的精度。精度对不同类型的数量有不同的含义。您可以查看范例获得更多信息。</value>
   </data>
   <data name="SetPValDesc" xml:space="preserve">
     <value>设置关联的主值。当关联被用在不支持关联的对象上时，这个关联就会表现得像主值一样。
 除非首个元素是文本，关联默认将首个元素作为主值。</value>
   </data>
+  <data name="SetMetadata" xml:space="preserve">
+    <value>Set Metadata: 设置元数据</value>
+  </data>
+  <data name="SetMetadataDesc" xml:space="preserve">
+    <value>给对象设定元数据。该组件的输出依然是几何体，并且经过大部分单射组件（如移动）操作后元数据仍然会保留。</value>
+  </data>
   <data name="Shuffle" xml:space="preserve">
     <value>Shuffle: 打乱顺序</value>
   </data>
-  <data name="ExportSTLDesc" xml:space="preserve">
-    <value>该组件将 Grasshopper 中的网格直接导出到 STL 文件。
-该组件不依赖于 Rhino。</value>
-  </data>
-  <data name="ExportAsDesc" xml:space="preserve">
-    <value>将 Grasshopper 中的几何体导出到任何 Rhino 支持导出的格式中。
-该组件依赖于 Rhino 的用户界面与 Export 命令，因而您在使用时不能有其他命令在运行。
-右键单击组件以获取更多选项。</value>
-  </data>
-  <data name="Export3DMDescription" xml:space="preserve">
-    <value>该组件将 Grasshopper 中的几何体直接导出到 Rhino 3DM 文件中。
-该组件不依赖于 Rhino 的用户界面，因而更快更稳定；不过该组件不支持所有的几何体或对象属性。
-右键单击组件以获取更多选项。</value>
-  </data>
-  <data name="NativeExportDesc" xml:space="preserve">
-    <value>该组件将 Grasshopper 中的几何体直接导出到 {0} 文件。
-该组件不依赖于 Export 命令。</value>
-  </data>
-  <data name="pcecExportOptionDesc" xml:space="preserve">
-    <value>{0} 的导出选项模板</value>
-  </data>
-  <data name="ThisComponentExportsTextToAFile" xml:space="preserve">
-    <value>该组件导出文本文件。</value>
+  <data name="UseFisherYatesAlgorithmToShuffleAList" xml:space="preserve">
+    <value>使用 Fisher-Yates 算法打乱列表的顺序。</value>
   </data>
   <data name="ToDecimalLength" xml:space="preserve">
     <value>To Decimal Length: 转换到公制长度</value>
   </data>
+  <data name="ConvertAQuantityToADecimalLengthWithDesignatedUnit" xml:space="preserve">
+    <value>将数量转换到指定单位的公制长度数量。</value>
+  </data>
   <data name="ToFeetInchLength" xml:space="preserve">
     <value>To Feet &amp; Inch Length: 转换到英制长度</value>
+  </data>
+  <data name="ConvertAQuantityToAFeetInchLengthWithDesignatedUnit" xml:space="preserve">
+    <value>将数量转换到指定单位的英制长度数量。</value>
   </data>
   <data name="UnwrapList" xml:space="preserve">
     <value>Unwrap List: 分解原子化列表</value>
@@ -1105,29 +1093,41 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="UnwrappedAnAtomListToItsOriginalContent" xml:space="preserve">
     <value>把原子化列表分解成它包含的内容。</value>
   </data>
-  <data name="UseFisherYatesAlgorithmToShuffleAList" xml:space="preserve">
-    <value>使用 Fisher-Yates 算法打乱列表的顺序。</value>
+  <data name="WaitUntil" xml:space="preserve">
+    <value>Wait Until: 直到</value>
+  </data>
+  <data name="PostponeDataUntilSignalIsReceived" xml:space="preserve">
+    <value>推迟数据流直至收到信号</value>
   </data>
   <data name="WrapList" xml:space="preserve">
     <value>Wrap List: 创建原子化列表</value>
   </data>
-  <data name="WaitUntil" xml:space="preserve">
-    <value>Wait Until: 直到</value>
-  </data>
   <data name="WrapAListToAnAtomListWhichIsAListButBeingTreatedAsOneSingleElement" xml:space="preserve">
     <value>创建原子化的列表。原子化列表包含一组数据，但在 Grasshopper 的树/列表/结构操作中被视为单个对象。</value>
   </data>
-  <data name="Quantity" xml:space="preserve">
-    <value>Quantity: 数量</value>
+  <data name="SetPrecision" xml:space="preserve">
+    <value>Set Precision: 设置精度</value>
   </data>
-  <data name="RepresentAnAmountAndItsAssociatedLengthUnit" xml:space="preserve">
-    <value>代表由数和单位构成的数量。</value>
+  <data name="SetThePrecisionOfAQuantityPrecisionMayHaveDifferentMeaningsOnDifferentQuantitiesSeeManualOrExampleForMoreInformation" xml:space="preserve">
+    <value>设置数量的精度。精度对不同类型的数量有不同的含义。您可以查看范例获得更多信息。</value>
+  </data>
+  <data name="pcecExportOption" xml:space="preserve">
+    <value>{0} Export Option: {0} 导出选项</value>
+  </data>
+  <data name="pcecExportOptionDesc" xml:space="preserve">
+    <value>{0} 的导出选项模板</value>
   </data>
   <data name="SetupTooltip_TrueOnlyButton" xml:space="preserve">
     <value>True Only Button: 真值按钮</value>
   </data>
   <data name="TrueOnlyBtn_WhenClickedTheButtonObjectOnlyRaisesRecomputationOneTime" xml:space="preserve">
     <value>该按钮只会在点击时触发一次假到真的重新计算。自带的按钮会在之后再触发一次真到假的重新计算。</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity: 数量</value>
+  </data>
+  <data name="RepresentAnAmountAndItsAssociatedLengthUnit" xml:space="preserve">
+    <value>代表由数和单位构成的数量。</value>
   </data>
   <data name="LanguageTraits" xml:space="preserve">
     <value>zh-Hans</value>
@@ -1136,366 +1136,20 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
     <value>中性名：{0}
 {1}</value>
   </data>
-  <data name="WhetherToExportNURBSAsNURBSOtherwiseAsMeshDefaultFalse" xml:space="preserve">
-    <value>控制是否将 NURBS 导出为 NURBS，否则导出为网格。默认为假。</value>
+  <data name="Data0" xml:space="preserve">
+    <value>数据 0</value>
   </data>
-  <data name="WhetherToExportMaterialAsPhongMaterialDefaultTrueOtherwiseTheyWillBeExportedAsLambert" xml:space="preserve">
-    <value>控制是否将材质导出为 Phong 类型，否则导出为 Lambert 类型。默认为真。</value>
+  <data name="Data1" xml:space="preserve">
+    <value>数据 1</value>
   </data>
-  <data name="WhetherTheDefaultValueIsUsed" xml:space="preserve">
-    <value>是否返回的是默认值</value>
-  </data>
-  <data name="WhereToStoreTheFileFilenameAndExtensionShouldBeIncluded" xml:space="preserve">
-    <value>保存文件的位置，包括路径和扩展名。</value>
-  </data>
-  <data name="VersionOfTheSketchupExportAvailableOnesAre" xml:space="preserve">
-    <value>SketchUp 导出版本。0 为使用上一次导出的设置。可用的版本包括 3、4、5、6、7、8、2013、2014、2015。</value>
-  </data>
-  <data name="ValuesOfTheTable" xml:space="preserve">
-    <value>表值</value>
-  </data>
-  <data name="ValueS" xml:space="preserve">
-    <value>值</value>
-  </data>
-  <data name="Unit" xml:space="preserve">
-    <value>单位</value>
-  </data>
-  <data name="TypeOfUnit" xml:space="preserve">
-    <value>单位类型</value>
-  </data>
-  <data name="TypeOfParsedResultSeeExampleForMoreInformation" xml:space="preserve">
-    <value>解析结果的类型。您可以查看样例获得更多信息。</value>
-  </data>
-  <data name="TrueForBinaryOutputAndFalseForASCIIOutput" xml:space="preserve">
-    <value>是否导出二进制格式，否则导出 ASCII 纯文本格式。</value>
-  </data>
-  <data name="TheVersionOfRhinoFileYouWantToExport" xml:space="preserve">
-    <value>导出 Rhino 文件的版本。默认为当前版本。如果您把该组件用在 PreOpt 上，不要使用这个选项。</value>
-  </data>
-  <data name="TheVersionOf3dmFile" xml:space="preserve">
-    <value>导出 Rhino 文件的版本。可以从 2 到当前版本，0 为当前版本。默认为 0。</value>
-  </data>
-  <data name="TheValueFromClusterInput" xml:space="preserve">
-    <value>封包输入值</value>
-  </data>
-  <data name="TheTypeOfSATExportByDefaultItUsesTheOneFromLastTime" xml:space="preserve">
-    <value>SAT 导出类型。默认使用上一次导出时的设置。</value>
-  </data>
-  <data name="TheTypeOfIGESExportDefinedInIGESExportDialogByDefaultItUsesTheOneFromLastTime" xml:space="preserve">
-    <value>IGES 导出类型。默认使用上一次导出时的设置。</value>
-  </data>
-  <data name="TheTextYouWantToExport" xml:space="preserve">
-    <value>需要导出的文本</value>
-  </data>
-  <data name="ThePlaceWhereSTLFileWillBeSaved" xml:space="preserve">
-    <value>保存 STL 的文件路径</value>
-  </data>
-  <data name="TheOutputAtomList" xml:space="preserve">
-    <value>创建的原子化列表</value>
-  </data>
-  <data name="TheInputAtomListYouMayAlsoUseTheDataWrapperFromMetahopper" xml:space="preserve">
-    <value>原子化列表。您也可以使用 MetaHopper Wrap List 所生成的列表。</value>
-  </data>
-  <data name="TheGeometryYouWantToExport" xml:space="preserve">
-    <value>需要导出的几何体</value>
-  </data>
-  <data name="TheFinalCommandExecuted" xml:space="preserve">
-    <value>最终执行的命令</value>
-  </data>
-  <data name="TheFeetInchQuantityToBeDecomposed" xml:space="preserve">
-    <value>需要提取信息的英制长度单位</value>
-  </data>
-  <data name="TheDesiredUnitToConvertToAFeetInchLengthUseToFeetInchLengthComponentInstead" xml:space="preserve">
-    <value>需要转换到的单位。您可以使用“转换到英制长度”来转换到 英尺-英寸 的复合单位。</value>
-  </data>
-  <data name="TheComponentWillNotTryAnythingElseOtherThanDesiredTypes" xml:space="preserve">
-    <value>尝试解析的类型。默认没有限制。</value>
-  </data>
-  <data name="SignalData" xml:space="preserve">
-    <value>信号</value>
-  </data>
-  <data name="ShuffledList" xml:space="preserve">
-    <value>打乱后的列表</value>
-  </data>
-  <data name="SetTrueToConductTheImport" xml:space="preserve">
-    <value>设置为真以导出</value>
-  </data>
-  <data name="SetToTrueToSaveTheFile" xml:space="preserve">
-    <value>设置为真以保存文件</value>
-  </data>
-  <data name="SetToTrueToResetInternalCounterResettingWonTBypass" xml:space="preserve">
-    <value>设置为真以重置内部计数器。重置计数器不会跳过已有文件检测。我们推荐您使用右键菜单中的命令来重置，而不是使用此参数。</value>
-  </data>
-  <data name="SetToTrueToGenerateTheNextFilepath" xml:space="preserve">
-    <value>设置为真以生成下一个/一组文件路径</value>
-  </data>
-  <data name="SetToTrueToConductTheExportUseTrueOnlyButton" xml:space="preserve">
-    <value>设置为真以导出。请使用切换开关（Toggle button）或 Pancake 的真值按钮（True-only button）。不要使用自带的按钮。</value>
-  </data>
-  <data name="SerializedObjectInBase64Format" xml:space="preserve">
-    <value>序列化的对象</value>
-  </data>
-  <data name="SecondOperand" xml:space="preserve">
-    <value>运算符右边</value>
-  </data>
-  <data name="SchemaOfSTEPExportAvailableValuesAreAP203ConfigControlDesignAP214AutomotiveDesignAndAP214AutomotiveDesignCC2" xml:space="preserve">
-    <value>STEP 导出的配置文件。可选的值有 AP203ConfigControlDesign、AP214AutomotiveDesign、AP214AutomotiveDesignCC2。</value>
-  </data>
-  <data name="ReturnsIfTheActionIsSuccessful" xml:space="preserve">
-    <value>操作是否成功</value>
-  </data>
-  <data name="ReturnIfInternalAccuracyHasLostDuringPrecisionResettingRN" xml:space="preserve">
-    <value>内部精度是否有损失。
-如果内部精度没有损失，你可以无损的再转换回原来的单位、状态。</value>
-  </data>
-  <data name="Result" xml:space="preserve">
-    <value>结果</value>
-  </data>
-  <data name="RandomSeed" xml:space="preserve">
-    <value>随机数种子</value>
-  </data>
-  <data name="QuantityToBeDeconstructed" xml:space="preserve">
-    <value>要提取信息的数量</value>
-  </data>
-  <data name="QuantityToBeConvertedRNIfTheInputIsNotAnQuantityButANumberTheDocument" xml:space="preserve">
-    <value>要转换的数量。
-如果输入是一个数而不是一个数量，那么会假定其使用当前文档的单位。</value>
-  </data>
-  <data name="QuantityToBeConverted" xml:space="preserve">
-    <value>要转换的数量</value>
-  </data>
-  <data name="PostponedData" xml:space="preserve">
-    <value>推迟的数据</value>
-  </data>
-  <data name="PrecisionRNForDecimalQuantitiesThePrecisionIsHowManyDigits" xml:space="preserve">
-    <value>精度。
-对于公制单位而言，精度是小数点后保留几位。
-对于英制单位而言，精度是最小舍入的分数。比如，64 的精度则该单位的最小精度为 64分之1；在此种情况下，精度不一定要是 2 的幂。</value>
+  <data name="ConnectToExportAsComponent" xml:space="preserve">
+    <value>连接到 导出为 组件</value>
   </data>
   <data name="PositiveInfinityAsIn10" xml:space="preserve">
     <value>正无穷，+1/0</value>
   </data>
   <data name="NeagtiveInfinityAsIn10" xml:space="preserve">
     <value>负无穷，-1/0</value>
-  </data>
-  <data name="NaNAsIn00" xml:space="preserve">
-    <value>未定值，0/0</value>
-  </data>
-  <data name="Paths" xml:space="preserve">
-    <value>路径</value>
-  </data>
-  <data name="Path" xml:space="preserve">
-    <value>路径</value>
-  </data>
-  <data name="ParsedResultIfSomethingCannotBeDeterminedTheResultWillBeNull" xml:space="preserve">
-    <value>解析后的对象。如果无法解析输入，输出则为空。</value>
-  </data>
-  <data name="PancakeWillMoveTheBasePointOfMeshToOriginWhichHelpsPostprocessing" xml:space="preserve">
-    <value>Pancake 将会把网格移到坐标原点以便后续处理。如果您需要拼装多个对象，一般而言需要将本选项设置为假。</value>
-  </data>
-  <data name="OutputValue" xml:space="preserve">
-    <value>输出值</value>
-  </data>
-  <data name="OutputString" xml:space="preserve">
-    <value>输出文本</value>
-  </data>
-  <data name="OutputQuantity" xml:space="preserve">
-    <value>输出数量</value>
-  </data>
-  <data name="OptionsOfImport" xml:space="preserve">
-    <value>导入选项</value>
-  </data>
-  <data name="OptionsOfExportYouCanFeedItWithOtherComponentsOrManualData" xml:space="preserve">
-    <value>到处选项。您既可以使用选项模板，也可以手动指定，也可以不设置。</value>
-  </data>
-  <data name="OptionalByDefault4" xml:space="preserve">
-    <value>可选。默认为 4。</value>
-  </data>
-  <data name="OperatorWhichCanBeOrOrOrOrOr" xml:space="preserve">
-    <value>运算符，可以是 + 或 - 或 * 或 / 或 \ （整除） 或 % （求余数）或 max（求较大值）或 min（求较小值）。</value>
-  </data>
-  <data name="OnlyGeometriesOnTheDesignatedLayersWillBeImported" xml:space="preserve">
-    <value>不会导入在指定图层之外的几何体。</value>
-  </data>
-  <data name="OmitColorsOfBlackObjects" xml:space="preserve">
-    <value>跳过黑色对象的颜色</value>
-  </data>
-  <data name="ObjectToSerialize" xml:space="preserve">
-    <value>要序列化的对象</value>
-  </data>
-  <data name="ObjectDeserialized" xml:space="preserve">
-    <value>反序列化后的对象</value>
-  </data>
-  <data name="Object" xml:space="preserve">
-    <value>对象</value>
-  </data>
-  <data name="NumeratorOfInchFraction" xml:space="preserve">
-    <value>英寸的分子</value>
-  </data>
-  <data name="NullTheDefaultEmptyRepresentationOfNETFramework" xml:space="preserve">
-    <value>空值</value>
-  </data>
-  <data name="NamedValueAsTheNewPrincipleValueYouMustProvideANameOrAnIndex" xml:space="preserve">
-    <value>将有名称的值作为主键。您要么提供一个序数作为主键，要么提供一个名称作为主键。</value>
-  </data>
-  <data name="MeshToBeExported" xml:space="preserve">
-    <value>要导出的网格</value>
-  </data>
-  <data name="MapYAxisToZAxisByDefaultFalse" xml:space="preserve">
-    <value>映射 Y 轴到 Z 轴。默认为假。</value>
-  </data>
-  <data name="MapRhinoZAxisToFBXYAxisDefaultFalse" xml:space="preserve">
-    <value>映射 Z 轴到 Y 轴。默认为假。</value>
-  </data>
-  <data name="LogIfAvailable" xml:space="preserve">
-    <value>日志（如果存在）</value>
-  </data>
-  <data name="ListToBeShuffled" xml:space="preserve">
-    <value>要打乱的列表</value>
-  </data>
-  <data name="ListOfCategorizedKeys" xml:space="preserve">
-    <value>分类后的键</value>
-  </data>
-  <data name="LeaveEmptyForDefaultAvailableChoicesAreVersion7" xml:space="preserve">
-    <value>默认留空（使用上一次导出的设置）。可选的值包括 Version7Binary、Version7Ascii、Version6Binary、Version6Ascii。</value>
-  </data>
-  <data name="LayerToPutTheGeometriesByDefaultThisInputWillOverrideObjAttr" xml:space="preserve">
-    <value>放置几何体的图层。默认这个输入会覆盖 ObjAttr （如果有）中的设置。</value>
-  </data>
-  <data name="LayerPaths" xml:space="preserve">
-    <value>图层路径</value>
-  </data>
-  <data name="Keys" xml:space="preserve">
-    <value>键</value>
-  </data>
-  <data name="ItemsExtracted" xml:space="preserve">
-    <value>提取的元素</value>
-  </data>
-  <data name="ItemsToBeComposedAsAList" xml:space="preserve">
-    <value>要组合的元素</value>
-  </data>
-  <data name="IntegerPartOfInch" xml:space="preserve">
-    <value>英寸的整数部分</value>
-  </data>
-  <data name="IntegerPartOfFeet" xml:space="preserve">
-    <value>英尺的整数部分</value>
-  </data>
-  <data name="InputString" xml:space="preserve">
-    <value>输入文本</value>
-  </data>
-  <data name="InputListOnlyNamedValuesWillBeExtracted" xml:space="preserve">
-    <value>输入列表。只会提取有名称的值。</value>
-  </data>
-  <data name="IndexAsTheNewPrincipleValueYouMustProvideANameOrAnIndex" xml:space="preserve">
-    <value>将某个序数的值作为主键。您要么提供一个序数作为主键，要么提供一个名称作为主键。</value>
-  </data>
-  <data name="ImportedGeometry" xml:space="preserve">
-    <value>导入的几何体</value>
-  </data>
-  <data name="IfOptionalOrEmptyCurrentDocumentUnitWillBeUsed" xml:space="preserve">
-    <value>如果为空，会使用当前文档单位。</value>
-  </data>
-  <data name="IfEmptyANewAssocWillBeCreated" xml:space="preserve">
-    <value>如果为空，将会创建一个新的关联（而不是修改已有的关联）。</value>
-  </data>
-  <data name="HeadersOfTheTable" xml:space="preserve">
-    <value>表头</value>
-  </data>
-  <data name="GUIDsOfImportedGeometry" xml:space="preserve">
-    <value>导入几何体的全局统一标识符（GUID）</value>
-  </data>
-  <data name="GeneralOptionsOfExportConnectRhinoFileOptionsToThisInputIfNeeded" xml:space="preserve">
-    <value>导出的基本选项。您可以置空或使用 3DM 导出选项。</value>
-  </data>
-  <data name="ForExampleDSTLExport0StlWithoutQuoteWillResultInDSTLExport" xml:space="preserve">
-    <value>比如 'D:\STLExport\{0}.stl'（不含引号）会生成 'D:\STLExport\1.stl'、'D:\STLExport\2.stl'，以此类推。采用 String.Format 格式。您可以参阅手册来获得详细信息。</value>
-  </data>
-  <data name="FirstOperand" xml:space="preserve">
-    <value>运算符左边</value>
-  </data>
-  <data name="FileToBeImported" xml:space="preserve">
-    <value>要导入的文件</value>
-  </data>
-  <data name="FilePathList" xml:space="preserve">
-    <value>下一组路径</value>
-  </data>
-  <data name="FilePath" xml:space="preserve">
-    <value>下一个路径</value>
-  </data>
-  <data name="FileNameOfCurrentDefinition" xml:space="preserve">
-    <value>当前脚本的文件名</value>
-  </data>
-  <data name="EntireLengthInDecimalFeet" xml:space="preserve">
-    <value>以小数英尺表示的总长度</value>
-  </data>
-  <data name="DirectorySeparatorOfCurrentOperatingSystem" xml:space="preserve">
-    <value>当前系统的目录路径分隔符</value>
-  </data>
-  <data name="DirectoryOfWhereTheCurrentDefinitionIsStored" xml:space="preserve">
-    <value>当前脚本保存的目录。该值不包括最后的路径分隔符。</value>
-  </data>
-  <data name="DifferenceBetweenFractionRepresentationAndActualValueInFeet" xml:space="preserve">
-    <value>单位分数表示与小数表示之间的误差，以英尺表达。</value>
-  </data>
-  <data name="DenominatorOfInchFraction" xml:space="preserve">
-    <value>英寸的分母</value>
-  </data>
-  <data name="DelimiterByDefaultSlash" xml:space="preserve">
-    <value>分隔符。默认为 '/'</value>
-  </data>
-  <data name="DelimiterByDefault" xml:space="preserve">
-    <value>分隔符。默认为 ','</value>
-  </data>
-  <data name="DefaultValueIfTheClusterInputIsEmpty" xml:space="preserve">
-    <value>封包输入为空时的默认值</value>
-  </data>
-  <data name="DefaultTrue" xml:space="preserve">
-    <value>默认为真。</value>
-  </data>
-  <data name="DefaultTrueOtherwisePlanarRegionsWillBeConvertedIntoMesh" xml:space="preserve">
-    <value>默认为真。否则平面区域将会转换成网格。</value>
-  </data>
-  <data name="DefaultFalseControlIfPancakeShouldOverwriteTheDestinationFile" xml:space="preserve">
-    <value>默认为假。控制 Pancake 是否应该覆盖文件。</value>
-  </data>
-  <data name="DefaultFalse" xml:space="preserve">
-    <value>默认为假。</value>
-  </data>
-  <data name="DefaultDefaultSeeTheDefinitionInRhinoExportDialog" xml:space="preserve">
-    <value>默认为 'default'。您可以查看 Rhino 导出对话框中的定义。</value>
-  </data>
-  <data name="DefaultDecidedByRhinocerosTheProcedureCannotBeAutomatic" xml:space="preserve">
-    <value>默认由 Rhino 决定。不推荐修改此设置。</value>
-  </data>
-  <data name="Default2Must2" xml:space="preserve">
-    <value>默认为 2。必须大于等于 2。</value>
-  </data>
-  <data name="Default1DoesnTOutputMultipleNames" xml:space="preserve">
-    <value>默认为 -1（不输出一组路径）</value>
-  </data>
-  <data name="Default1" xml:space="preserve">
-    <value>默认为 1</value>
-  </data>
-  <data name="DecimalInch" xml:space="preserve">
-    <value>英寸的小数</value>
-  </data>
-  <data name="Data1" xml:space="preserve">
-    <value>数据 1</value>
-  </data>
-  <data name="Data0" xml:space="preserve">
-    <value>数据 0</value>
-  </data>
-  <data name="Data" xml:space="preserve">
-    <value>数据</value>
-  </data>
-  <data name="CSVLinesReadByReadFileEtc" xml:space="preserve">
-    <value>CSV 行数据。可以从 Read File 等组件获取。</value>
-  </data>
-  <data name="CounterOfFirstFile" xml:space="preserve">
-    <value>首个文件的序数</value>
-  </data>
-  <data name="CountOfEachKeyInAccordanceToKL" xml:space="preserve">
-    <value>每个键的出现次数</value>
   </data>
   <data name="AdjustedQuantity" xml:space="preserve">
     <value>调整后的数量</value>
@@ -1506,38 +1160,384 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="AmountInside" xml:space="preserve">
     <value>内部的数量</value>
   </data>
-  <data name="AssocToSet" xml:space="preserve">
-    <value>要设置的元数据</value>
+  <data name="EntireLengthInDecimalFeet" xml:space="preserve">
+    <value>以小数英尺表示的总长度</value>
   </data>
   <data name="AssociativeArray" xml:space="preserve">
     <value>关联</value>
   </data>
-  <data name="ByDefaultDeterminedByRhinoceros" xml:space="preserve">
-    <value>默认由 Rhino 决定</value>
+  <data name="InputListOnlyNamedValuesWillBeExtracted" xml:space="preserve">
+    <value>输入列表。只会提取有名称的值。</value>
   </data>
-  <data name="CategorizedValuesInAccordanceToKL" xml:space="preserve">
-    <value>分类后的值</value>
+  <data name="IfEmptyANewAssocWillBeCreated" xml:space="preserve">
+    <value>如果为空，将会创建一个新的关联（而不是修改已有的关联）。</value>
   </data>
-  <data name="ConnectToExportAsComponent" xml:space="preserve">
-    <value>连接到 导出为 组件</value>
+  <data name="AssocToSet" xml:space="preserve">
+    <value>要设置的元数据</value>
   </data>
-  <data name="ConstructedQuantity" xml:space="preserve">
-    <value>创建的数量</value>
+  <data name="TheInputAtomListYouMayAlsoUseTheDataWrapperFromMetahopper" xml:space="preserve">
+    <value>原子化列表。您也可以使用 MetaHopper Wrap List 所生成的列表。</value>
+  </data>
+  <data name="TheOutputAtomList" xml:space="preserve">
+    <value>创建的原子化列表</value>
+  </data>
+  <data name="TheTextYouWantToExport" xml:space="preserve">
+    <value>需要导出的文本</value>
+  </data>
+  <data name="CountOfEachKeyInAccordanceToKL" xml:space="preserve">
+    <value>每个键的出现次数</value>
+  </data>
+  <data name="CounterOfFirstFile" xml:space="preserve">
+    <value>首个文件的序数</value>
+  </data>
+  <data name="CSVLinesReadByReadFileEtc" xml:space="preserve">
+    <value>CSV 行数据。可以从 Read File 等组件获取。</value>
+  </data>
+  <data name="DefaultTrue" xml:space="preserve">
+    <value>默认为真。</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>数据</value>
+  </data>
+  <data name="PostponedData" xml:space="preserve">
+    <value>推迟的数据</value>
+  </data>
+  <data name="WhetherTheDefaultValueIsUsed" xml:space="preserve">
+    <value>是否返回的是默认值</value>
+  </data>
+  <data name="DefaultValueIfTheClusterInputIsEmpty" xml:space="preserve">
+    <value>封包输入为空时的默认值</value>
+  </data>
+  <data name="DelimiterByDefault" xml:space="preserve">
+    <value>分隔符。默认为 ','</value>
+  </data>
+  <data name="DelimiterByDefaultSlash" xml:space="preserve">
+    <value>分隔符。默认为 '/'</value>
+  </data>
+  <data name="TheComponentWillNotTryAnythingElseOtherThanDesiredTypes" xml:space="preserve">
+    <value>尝试解析的类型。默认没有限制。</value>
+  </data>
+  <data name="DirectoryOfWhereTheCurrentDefinitionIsStored" xml:space="preserve">
+    <value>当前脚本保存的目录。该值不包括最后的路径分隔符。</value>
+  </data>
+  <data name="DirectorySeparatorOfCurrentOperatingSystem" xml:space="preserve">
+    <value>当前系统的目录路径分隔符</value>
   </data>
   <data name="ControlWhetherToDropPreviewMeshWithoutPreviewMesh" xml:space="preserve">
     <value>控制是否丢弃预览网格。开启后导出的文件会更小但是打开会更慢。默认为假。</value>
   </data>
-  <data name="ControlIfTextureIsSavedDefaultTrue" xml:space="preserve">
-    <value>控制是否保存纹理 。默认为真</value>
+  <data name="DifferenceBetweenFractionRepresentationAndActualValueInFeet" xml:space="preserve">
+    <value>单位分数表示与小数表示之间的误差，以英尺表达。</value>
   </data>
-  <data name="ControlIfPluginDataIsSavedDefaultTrue" xml:space="preserve">
-    <value>控制是否保存插件数据。默认为真</value>
+  <data name="SetToTrueToConductTheExportUseTrueOnlyButton" xml:space="preserve">
+    <value>设置为真以导出。请使用切换开关（Toggle button）或 Pancake 的真值按钮（True-only button）。不要使用自带的按钮。</value>
+  </data>
+  <data name="TheFinalCommandExecuted" xml:space="preserve">
+    <value>最终执行的命令</value>
+  </data>
+  <data name="DefaultFalse" xml:space="preserve">
+    <value>默认为假。</value>
+  </data>
+  <data name="DefaultTrueOtherwisePlanarRegionsWillBeConvertedIntoMesh" xml:space="preserve">
+    <value>默认为真。否则平面区域将会转换成网格。</value>
+  </data>
+  <data name="IntegerPartOfFeet" xml:space="preserve">
+    <value>英尺的整数部分</value>
+  </data>
+  <data name="FileToBeImported" xml:space="preserve">
+    <value>要导入的文件</value>
+  </data>
+  <data name="WhereToStoreTheFileFilenameAndExtensionShouldBeIncluded" xml:space="preserve">
+    <value>保存文件的位置，包括路径和扩展名。</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>下一个路径</value>
+  </data>
+  <data name="SetToTrueToGenerateTheNextFilepath" xml:space="preserve">
+    <value>设置为真以生成下一个/一组文件路径</value>
+  </data>
+  <data name="ImportedGeometry" xml:space="preserve">
+    <value>导入的几何体</value>
+  </data>
+  <data name="GUIDsOfImportedGeometry" xml:space="preserve">
+    <value>导入几何体的全局统一标识符（GUID）</value>
+  </data>
+  <data name="TheGeometryYouWantToExport" xml:space="preserve">
+    <value>需要导出的几何体</value>
+  </data>
+  <data name="HeadersOfTheTable" xml:space="preserve">
+    <value>表头</value>
+  </data>
+  <data name="DecimalInch" xml:space="preserve">
+    <value>英寸的小数</value>
+  </data>
+  <data name="DenominatorOfInchFraction" xml:space="preserve">
+    <value>英寸的分母</value>
+  </data>
+  <data name="NumeratorOfInchFraction" xml:space="preserve">
+    <value>英寸的分子</value>
+  </data>
+  <data name="IntegerPartOfInch" xml:space="preserve">
+    <value>英寸的整数部分</value>
+  </data>
+  <data name="IndexAsTheNewPrincipleValueYouMustProvideANameOrAnIndex" xml:space="preserve">
+    <value>将某个序数的值作为主键。您要么提供一个序数作为主键，要么提供一个名称作为主键。</value>
+  </data>
+  <data name="ItemsExtracted" xml:space="preserve">
+    <value>提取的元素</value>
+  </data>
+  <data name="ItemsToBeComposedAsAList" xml:space="preserve">
+    <value>要组合的元素</value>
+  </data>
+  <data name="Keys" xml:space="preserve">
+    <value>键</value>
+  </data>
+  <data name="ListOfCategorizedKeys" xml:space="preserve">
+    <value>分类后的键</value>
+  </data>
+  <data name="LayerToPutTheGeometriesByDefaultThisInputWillOverrideObjAttr" xml:space="preserve">
+    <value>放置几何体的图层。默认这个输入会覆盖 ObjAttr （如果有）中的设置。</value>
+  </data>
+  <data name="LayerPaths" xml:space="preserve">
+    <value>图层路径</value>
+  </data>
+  <data name="OnlyGeometriesOnTheDesignatedLayersWillBeImported" xml:space="preserve">
+    <value>不会导入在指定图层之外的几何体。</value>
+  </data>
+  <data name="ListToBeShuffled" xml:space="preserve">
+    <value>要打乱的列表</value>
+  </data>
+  <data name="ShuffledList" xml:space="preserve">
+    <value>打乱后的列表</value>
+  </data>
+  <data name="FilePathList" xml:space="preserve">
+    <value>下一组路径</value>
+  </data>
+  <data name="LogIfAvailable" xml:space="preserve">
+    <value>日志（如果存在）</value>
+  </data>
+  <data name="ReturnIfInternalAccuracyHasLostDuringPrecisionResettingRN" xml:space="preserve">
+    <value>内部精度是否有损失。
+如果内部精度没有损失，你可以无损的再转换回原来的单位、状态。</value>
+  </data>
+  <data name="MapYAxisToZAxisByDefaultFalse" xml:space="preserve">
+    <value>映射 Y 轴到 Z 轴。默认为假。</value>
+  </data>
+  <data name="MapRhinoZAxisToFBXYAxisDefaultFalse" xml:space="preserve">
+    <value>映射 Z 轴到 Y 轴。默认为假。</value>
+  </data>
+  <data name="WhetherToExportMaterialAsPhongMaterialDefaultTrueOtherwiseTheyWillBeExportedAsLambert" xml:space="preserve">
+    <value>控制是否将材质导出为 Phong 类型，否则导出为 Lambert 类型。默认为真。</value>
+  </data>
+  <data name="MeshToBeExported" xml:space="preserve">
+    <value>要导出的网格</value>
+  </data>
+  <data name="Default2Must2" xml:space="preserve">
+    <value>默认为 2。必须大于等于 2。</value>
+  </data>
+  <data name="FileNameOfCurrentDefinition" xml:space="preserve">
+    <value>当前脚本的文件名</value>
+  </data>
+  <data name="NamedValueAsTheNewPrincipleValueYouMustProvideANameOrAnIndex" xml:space="preserve">
+    <value>将有名称的值作为主键。您要么提供一个序数作为主键，要么提供一个名称作为主键。</value>
+  </data>
+  <data name="NaNAsIn00" xml:space="preserve">
+    <value>未定值，0/0</value>
+  </data>
+  <data name="NullTheDefaultEmptyRepresentationOfNETFramework" xml:space="preserve">
+    <value>空值</value>
+  </data>
+  <data name="WhetherToExportNURBSAsNURBSOtherwiseAsMeshDefaultFalse" xml:space="preserve">
+    <value>控制是否将 NURBS 导出为 NURBS，否则导出为网格。默认为假。</value>
+  </data>
+  <data name="ObjectDeserialized" xml:space="preserve">
+    <value>反序列化后的对象</value>
+  </data>
+  <data name="Object" xml:space="preserve">
+    <value>对象</value>
+  </data>
+  <data name="ObjectToSerialize" xml:space="preserve">
+    <value>要序列化的对象</value>
+  </data>
+  <data name="ReturnsIfTheActionIsSuccessful" xml:space="preserve">
+    <value>操作是否成功</value>
+  </data>
+  <data name="SetTrueToConductTheImport" xml:space="preserve">
+    <value>设置为真以导出</value>
+  </data>
+  <data name="OmitColorsOfBlackObjects" xml:space="preserve">
+    <value>跳过黑色对象的颜色</value>
+  </data>
+  <data name="FirstOperand" xml:space="preserve">
+    <value>运算符左边</value>
+  </data>
+  <data name="SecondOperand" xml:space="preserve">
+    <value>运算符右边</value>
+  </data>
+  <data name="OperatorWhichCanBeOrOrOrOrOr" xml:space="preserve">
+    <value>运算符，可以是 + 或 - 或 * 或 / 或 \ （整除） 或 % （求余数）或 max（求较大值）或 min（求较小值）。</value>
+  </data>
+  <data name="OptionsOfImport" xml:space="preserve">
+    <value>导入选项</value>
+  </data>
+  <data name="OptionsOfExportYouCanFeedItWithOtherComponentsOrManualData" xml:space="preserve">
+    <value>到处选项。您既可以使用选项模板，也可以手动指定，也可以不设置。</value>
+  </data>
+  <data name="OutputValue" xml:space="preserve">
+    <value>输出值</value>
+  </data>
+  <data name="DefaultFalseControlIfPancakeShouldOverwriteTheDestinationFile" xml:space="preserve">
+    <value>默认为假。控制 Pancake 是否应该覆盖文件。</value>
+  </data>
+  <data name="ParsedResultIfSomethingCannotBeDeterminedTheResultWillBeNull" xml:space="preserve">
+    <value>解析后的对象。如果无法解析输入，输出则为空。</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="Paths" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="ForExampleDSTLExport0StlWithoutQuoteWillResultInDSTLExport" xml:space="preserve">
+    <value>比如 'D:\STLExport\{0}.stl'（不含引号）会生成 'D:\STLExport\1.stl'、'D:\STLExport\2.stl'，以此类推。采用 String.Format 格式。您可以参阅手册来获得详细信息。</value>
+  </data>
+  <data name="OptionalByDefault4" xml:space="preserve">
+    <value>可选。默认为 4。</value>
+  </data>
+  <data name="PrecisionRNForDecimalQuantitiesThePrecisionIsHowManyDigits" xml:space="preserve">
+    <value>精度。
+对于公制单位而言，精度是小数点后保留几位。
+对于英制单位而言，精度是最小舍入的分数。比如，64 的精度则该单位的最小精度为 64分之1；在此种情况下，精度不一定要是 2 的幂。</value>
+  </data>
+  <data name="GeneralOptionsOfExportConnectRhinoFileOptionsToThisInputIfNeeded" xml:space="preserve">
+    <value>导出的基本选项。您可以置空或使用 3DM 导出选项。</value>
+  </data>
+  <data name="ConstructedQuantity" xml:space="preserve">
+    <value>创建的数量</value>
+  </data>
+  <data name="TheFeetInchQuantityToBeDecomposed" xml:space="preserve">
+    <value>需要提取信息的英制长度单位</value>
+  </data>
+  <data name="QuantityToBeDeconstructed" xml:space="preserve">
+    <value>要提取信息的数量</value>
+  </data>
+  <data name="QuantityToBeConverted" xml:space="preserve">
+    <value>要转换的数量</value>
+  </data>
+  <data name="OutputQuantity" xml:space="preserve">
+    <value>输出数量</value>
+  </data>
+  <data name="QuantityToBeConvertedRNIfTheInputIsNotAnQuantityButANumberTheDocument" xml:space="preserve">
+    <value>要转换的数量。
+如果输入是一个数而不是一个数量，那么会假定其使用当前文档的单位。</value>
+  </data>
+  <data name="Default1DoesnTOutputMultipleNames" xml:space="preserve">
+    <value>默认为 -1（不输出一组路径）</value>
+  </data>
+  <data name="PancakeWillMoveTheBasePointOfMeshToOriginWhichHelpsPostprocessing" xml:space="preserve">
+    <value>Pancake 将会把网格移到坐标原点以便后续处理。如果您需要拼装多个对象，一般而言需要将本选项设置为假。</value>
+  </data>
+  <data name="SetToTrueToResetInternalCounterResettingWonTBypass" xml:space="preserve">
+    <value>设置为真以重置内部计数器。重置计数器不会跳过已有文件检测。我们推荐您使用右键菜单中的命令来重置，而不是使用此参数。</value>
+  </data>
+  <data name="Result" xml:space="preserve">
+    <value>结果</value>
+  </data>
+  <data name="TrueForBinaryOutputAndFalseForASCIIOutput" xml:space="preserve">
+    <value>是否导出二进制格式，否则导出 ASCII 纯文本格式。</value>
   </data>
   <data name="ControlIfOnlyGeometryIsSavedDefaultFalse" xml:space="preserve">
     <value>控制是否仅保存几何体。默认为假</value>
   </data>
   <data name="ControlIfNoteIsSavedDefaultTrue" xml:space="preserve">
     <value>控制是否保存备注。默认为真</value>
+  </data>
+  <data name="SetToTrueToSaveTheFile" xml:space="preserve">
+    <value>设置为真以保存文件</value>
+  </data>
+  <data name="ThePlaceWhereSTLFileWillBeSaved" xml:space="preserve">
+    <value>保存 STL 的文件路径</value>
+  </data>
+  <data name="ControlIfPluginDataIsSavedDefaultTrue" xml:space="preserve">
+    <value>控制是否保存插件数据。默认为真</value>
+  </data>
+  <data name="ControlIfTextureIsSavedDefaultTrue" xml:space="preserve">
+    <value>控制是否保存纹理 。默认为真</value>
+  </data>
+  <data name="SchemaOfSTEPExportAvailableValuesAreAP203ConfigControlDesignAP214AutomotiveDesignAndAP214AutomotiveDesignCC2" xml:space="preserve">
+    <value>STEP 导出的配置文件。可选的值有 AP203ConfigControlDesign、AP214AutomotiveDesign、AP214AutomotiveDesignCC2。</value>
+  </data>
+  <data name="DefaultDefaultSeeTheDefinitionInRhinoExportDialog" xml:space="preserve">
+    <value>默认为 'default'。您可以查看 Rhino 导出对话框中的定义。</value>
+  </data>
+  <data name="TheTypeOfIGESExportDefinedInIGESExportDialogByDefaultItUsesTheOneFromLastTime" xml:space="preserve">
+    <value>IGES 导出类型。默认使用上一次导出时的设置。</value>
+  </data>
+  <data name="TheTypeOfSATExportByDefaultItUsesTheOneFromLastTime" xml:space="preserve">
+    <value>SAT 导出类型。默认使用上一次导出时的设置。</value>
+  </data>
+  <data name="RandomSeed" xml:space="preserve">
+    <value>随机数种子</value>
+  </data>
+  <data name="SerializedObjectInBase64Format" xml:space="preserve">
+    <value>序列化的对象</value>
+  </data>
+  <data name="SignalData" xml:space="preserve">
+    <value>信号</value>
+  </data>
+  <data name="Default1" xml:space="preserve">
+    <value>默认为 1</value>
+  </data>
+  <data name="OutputString" xml:space="preserve">
+    <value>输出文本</value>
+  </data>
+  <data name="InputString" xml:space="preserve">
+    <value>输入文本</value>
+  </data>
+  <data name="ByDefaultDeterminedByRhinoceros" xml:space="preserve">
+    <value>默认由 Rhino 决定</value>
+  </data>
+  <data name="TypeOfParsedResultSeeExampleForMoreInformation" xml:space="preserve">
+    <value>解析结果的类型。您可以查看样例获得更多信息。</value>
+  </data>
+  <data name="IfOptionalOrEmptyCurrentDocumentUnitWillBeUsed" xml:space="preserve">
+    <value>如果为空，会使用当前文档单位。</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>单位</value>
+  </data>
+  <data name="TheDesiredUnitToConvertToAFeetInchLengthUseToFeetInchLengthComponentInstead" xml:space="preserve">
+    <value>需要转换到的单位。您可以使用“转换到英制长度”来转换到 英尺-英寸 的复合单位。</value>
+  </data>
+  <data name="DefaultDecidedByRhinocerosTheProcedureCannotBeAutomatic" xml:space="preserve">
+    <value>默认由 Rhino 决定。不推荐修改此设置。</value>
+  </data>
+  <data name="TypeOfUnit" xml:space="preserve">
+    <value>单位类型</value>
+  </data>
+  <data name="ValueS" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="TheValueFromClusterInput" xml:space="preserve">
+    <value>封包输入值</value>
+  </data>
+  <data name="ValuesOfTheTable" xml:space="preserve">
+    <value>表值</value>
+  </data>
+  <data name="CategorizedValuesInAccordanceToKL" xml:space="preserve">
+    <value>分类后的值</value>
+  </data>
+  <data name="TheVersionOfRhinoFileYouWantToExport" xml:space="preserve">
+    <value>导出 Rhino 文件的版本。默认为当前版本。如果您把该组件用在 PreOpt 上，不要使用这个选项。</value>
+  </data>
+  <data name="LeaveEmptyForDefaultAvailableChoicesAreVersion7" xml:space="preserve">
+    <value>默认留空（使用上一次导出的设置）。可选的值包括 Version7Binary、Version7Ascii、Version6Binary、Version6Ascii。</value>
+  </data>
+  <data name="VersionOfTheSketchupExportAvailableOnesAre" xml:space="preserve">
+    <value>SketchUp 导出版本。0 为使用上一次导出的设置。可用的版本包括 3、4、5、6、7、8、2013、2014、2015。</value>
+  </data>
+  <data name="TheVersionOf3dmFile" xml:space="preserve">
+    <value>导出 Rhino 文件的版本。可以从 2 到当前版本，0 为当前版本。默认为 0。</value>
   </data>
   <data name="LocalName0RN1" xml:space="preserve">
     <value>本地名：{0}
@@ -1556,142 +1556,132 @@ Pancake 仅能在所有修改者都安装了本插件的情况下追踪文件。
   <data name="DisablePancakeComponentsWarning" xml:space="preserve">
     <value>禁用后，任何包含 Pancake 组件的脚本将无法正常工作，您也无法添加 Pancake 组件到任何一个脚本中。</value>
   </data>
-  <data name="SaveSTLTo" xml:space="preserve">
-    <value>保存 STL 到...</value>
+  <data name="VersionIsUnsupported" xml:space="preserve">
+    <value>不支持的版本。</value>
   </data>
-  <data name="WrongType" xml:space="preserve">
-    <value>不支持的类型。</value>
+  <data name="pcecSKP_SolveInstance_MinimumFaceCountMustBeGreaterOrEqualThan2" xml:space="preserve">
+    <value>最小面数必须大于等于 2。</value>
   </data>
-  <data name="EmptyTuple" xml:space="preserve">
-    <value>空的关联</value>
+  <data name="pcneIges_CustomInvoke_UnexpectedErrorInLocatingIgesExportFunction" xml:space="preserve">
+    <value>在定位 IgesExport 时遇到未知错误</value>
   </data>
-  <data name="Key0DoesnTExist" xml:space="preserve">
-    <value>键 {0} 不存在。</value>
+  <data name="pcneIges_RegisterAdditionalInputParams_YouNeedToUseSetIGESLayerLevelMap" xml:space="preserve">
+    <value> 您需要先使用 Rhino 的 SetIGESLayerLevelMap 命令把 Rhino 图层映射为 IGES 的图层 (level)。</value>
   </data>
-  <data name="DeserializationFailed" xml:space="preserve">
-    <value>反序列化失败。</value>
+  <data name="pcneIges_RegisterAdditionalInputParams_TheIGESExportOptionComponent" xml:space="preserve">
+    <value>本组件不支持“IGES 导出选项”(IGES Export Option)。</value>
   </data>
-  <data name="ReadFailed" xml:space="preserve">
-    <value>读取失败。</value>
+  <data name="RhinoVersionNotSupported" xml:space="preserve">
+    <value>不支持的 Rhino 版本。</value>
   </data>
-  <data name="CannotCreateType" xml:space="preserve">
-    <value>创建对象失败。</value>
+  <data name="InputGeometryHasDifferentAmountOfBranchesFromThatOfFile" xml:space="preserve">
+    <value>输入几何体的 Branch 数量和输入的文件数量不同。这可能会导致预料之外的结果。
+一个文件应当对应一个几何体列表（或单个几何体）。</value>
   </data>
-  <data name="RNOverrideLayer" xml:space="preserve">
-    <value>,
-覆盖图层</value>
-  </data>
-  <data name="InputTypeNotSupported" xml:space="preserve">
-    <value>不支持输入类型</value>
-  </data>
-  <data name="TypeNotSerializable" xml:space="preserve">
-    <value>输入对象不可序列化。</value>
-  </data>
-  <data name="KeyCannotBeNull" xml:space="preserve">
-    <value>键不能为空值。</value>
-  </data>
-  <data name="Layer" xml:space="preserve">
-    <value>图层</value>
-  </data>
-  <data name="FlipTheOutput" xml:space="preserve">
-    <value>转置输出</value>
-  </data>
-  <data name="CompatibleMode" xml:space="preserve">
-    <value>兼容模式</value>
-  </data>
-  <data name="_0IsNotAValidName" xml:space="preserve">
-    <value>名称 {0} 无效。</value>
-  </data>
-  <data name="_0ObjectSCannotBeExported" xml:space="preserve">
-    <value>无法导出 {0} 个对象。</value>
-  </data>
-  <data name="ABindedGroupOfNamesAndValues" xml:space="preserve">
-    <value>一组名称（键）与对应的值</value>
-  </data>
-  <data name="Adding0Failed" xml:space="preserve">
-    <value>添加 {0} 失败</value>
-  </data>
-  <data name="AlsoCopyAttributesFromGHReferences" xml:space="preserve">
-    <value>从 GH 几何引用复制属性</value>
-  </data>
-  <data name="AnOrderedListOfItemsButBeingTreatedLikeOneSingleItem" xml:space="preserve">
-    <value>有序列表，但是在大多数组件中的行为与单个元素相同</value>
-  </data>
-  <data name="AnotherRhinoCommandIsRunningExportAborted" xml:space="preserve">
-    <value>Rhino 正在运行另外的命令。终止导出。</value>
-  </data>
-  <data name="AssemblyNotFound" xml:space="preserve">
-    <value>找不到程序集 "{0}"。</value>
-  </data>
-  <data name="AtomList" xml:space="preserve">
-    <value>原子化列表</value>
-  </data>
-  <data name="BlocksCannotBeImportedInExperimentalMode" xml:space="preserve">
-    <value>实验模式下不能导入块。</value>
-  </data>
-  <data name="ByDefaultEachEntryIsStoredAsOneBranchNotFlippedIfTheOutputIsFlippedEachColumnIsStoredAsOneBranch" xml:space="preserve">
-    <value>默认情况下，输出数据树的每个 Branch 是一条数据；开启本选项后，每个 Branch 是一列。</value>
-  </data>
-  <data name="CannotDeleteTheTargetFile" xml:space="preserve">
-    <value>无法删除目标文件。</value>
-  </data>
-  <data name="CannotDetermineTheDataType" xml:space="preserve">
-    <value>无法确定数据类型。</value>
-  </data>
-  <data name="CannotDetermineTheNextIndexAfter10000SearchEs" xml:space="preserve">
-    <value>无法确定下个序数。</value>
-  </data>
-  <data name="CannotLoadTheExporterPluginFor0" xml:space="preserve">
-    <value>无法加载 {0} 格式的导出插件。请检查您的 Rhino 安装是否完整。</value>
-  </data>
-  <data name="CannotLoadTheImporterPluginFor0PleaseCheckIfYourRhinoInstallationIsComplete" xml:space="preserve">
-    <value>无法加载 {0} 格式的导入插件。请检查您的 Rhino 安装是否完整。</value>
-  </data>
-  <data name="CannotWriteToTheFile" xml:space="preserve">
-    <value>无法写入文件。</value>
-  </data>
-  <data name="CleanUpLayers" xml:space="preserve">
-    <value>保持图层状态</value>
-  </data>
-  <data name="ClickHereToRaiseRecomputation" xml:space="preserve">
-    <value>单击这里来引发后续运算。</value>
-  </data>
-  <data name="CompatibleModeIsOnPancakeCannotDetermineIfTheExportIsSuccessfulSeeCommandHistoryForMoreInfoCheckYourOutputFileCarefully" xml:space="preserve">
-    <value>兼容模式已启动。Pancake 将无法确定导出是否成功。您可以检查 Rhino 命令历史获取有关信息。</value>
-  </data>
-  <data name="ConversionError" xml:space="preserve">
-    <value>转换错误。</value>
-  </data>
-  <data name="CopyAttributesFromRhinoReferences" xml:space="preserve">
-    <value>从 Rhino 几何引用复制属性</value>
-  </data>
-  <data name="CopyAttributesRNfromRHGHRef" xml:space="preserve">
-    <value>从 RH 和 GH
-引用复制属性</value>
+  <data name="DonTCopyAttributes" xml:space="preserve">
+    <value>不复制属性</value>
   </data>
   <data name="CopyAttributesRNfromRHRef" xml:space="preserve">
     <value>从 RH
 引用复制属性</value>
   </data>
-  <data name="CopyAttributesAndOverrideLayerCannotBeEnabledAtTheSameTimeInThisComponentOverridenLayersAreIgnored" xml:space="preserve">
-    <value>复制属性和覆盖图层不能同时启用。覆盖的图层已忽略。</value>
+  <data name="CopyAttributesRNfromRHGHRef" xml:space="preserve">
+    <value>从 RH 和 GH
+引用复制属性</value>
+  </data>
+  <data name="RNOverrideLayer" xml:space="preserve">
+    <value>,
+覆盖图层</value>
+  </data>
+  <data name="OverrideLayerWithComponentInput" xml:space="preserve">
+    <value>总是使用组件的图层输入</value>
+  </data>
+  <data name="OverrideLayerDesc" xml:space="preserve">
+    <value>一旦启用，无论提供的对象属性或从文档中复制来的属性为何，
+图层设置都会使用本组件的 Layer 输入。</value>
   </data>
   <data name="CopyAttributesDesc" xml:space="preserve">
     <value>启用后，如果要导出的对象是一个几何引用（Referenced XXX），
 属性将会从其引用的 Rhino 对象复制。</value>
   </data>
+  <data name="AlsoCopyAttributesFromGHReferences" xml:space="preserve">
+    <value>从 GH 几何引用复制属性</value>
+  </data>
+  <data name="CopyAttributesFromRhinoReferences" xml:space="preserve">
+    <value>从 Rhino 几何引用复制属性</value>
+  </data>
   <data name="CopyFromRhinoDesc" xml:space="preserve">
     <value>启用后，如果导出的对象是 RhinoObject 或 Rhino 文件内对象的全局唯一标识符（Guid），
 Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用（Referenced XXX）。</value>
   </data>
-  <data name="CurrentlyBinarySTLExportingCanOnlyWorkOnLittleEndianSystems" xml:space="preserve">
-    <value>只支持在小端序系统上输出二进制 STL 文件。</value>
+  <data name="_0ObjectSCannotBeExported" xml:space="preserve">
+    <value>无法导出 {0} 个对象。</value>
   </data>
-  <data name="DecimalLength" xml:space="preserve">
-    <value>公制长度</value>
+  <data name="InvalidObjectAttributes" xml:space="preserve">
+    <value>无效的对象属性</value>
+  </data>
+  <data name="CannotDeleteTheTargetFile" xml:space="preserve">
+    <value>无法删除目标文件。</value>
+  </data>
+  <data name="Nonstandard" xml:space="preserve">
+    <value>非标准</value>
+  </data>
+  <data name="ObjectAttributesAreNotSupported" xml:space="preserve">
+    <value>{0} 属性不受支持。考虑使用 Human 的 CreateAttributes 组件。</value>
+  </data>
+  <data name="ObjectAttributes" xml:space="preserve">
+    <value>对象属性</value>
+  </data>
+  <data name="Layer" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="LayerIsIgnoredDueToRhino5Limitations" xml:space="preserve">
+    <value>Rhino 5 不支持图层导出。</value>
+  </data>
+  <data name="SomeGeometryAreNotSupported" xml:space="preserve">
+    <value>不支持某些几何体。</value>
+  </data>
+  <data name="TargetFileExistsAndOverwriteIsFalse" xml:space="preserve">
+    <value>目标文件已存在并且 Overwrite（覆写）为假。</value>
+  </data>
+  <data name="ListLengthMismatch" xml:space="preserve">
+    <value>{0} 的长度错误。请检查输入是否符合要求。</value>
   </data>
   <data name="DelimiterIsEmpty" xml:space="preserve">
     <value>分隔符为空。</value>
+  </data>
+  <data name="RecognizeTypeIfPossible" xml:space="preserve">
+    <value>尝试识别类型</value>
+  </data>
+  <data name="ParseAsQuantityIfPossible" xml:space="preserve">
+    <value>尝试解析数量</value>
+  </data>
+  <data name="NoValidNamesAreFoundThisComponentWillOnlyExportNamedValues" xml:space="preserve">
+    <value>没有有效的名称。此组件只会导出有名字的值。</value>
+  </data>
+  <data name="FlipTheOutput" xml:space="preserve">
+    <value>转置输出</value>
+  </data>
+  <data name="ByDefaultEachEntryIsStoredAsOneBranchNotFlippedIfTheOutputIsFlippedEachColumnIsStoredAsOneBranch" xml:space="preserve">
+    <value>默认情况下，输出数据树的每个 Branch 是一条数据；开启本选项后，每个 Branch 是一列。</value>
+  </data>
+  <data name="KeyAndValueListMustHaveTheSameLength" xml:space="preserve">
+    <value>键列表与值列表长度必须相同。</value>
+  </data>
+  <data name="TheListCannotBeEmpty" xml:space="preserve">
+    <value>列表不能为空。</value>
+  </data>
+  <data name="KeyCannotBeNull" xml:space="preserve">
+    <value>键不能为空值。</value>
+  </data>
+  <data name="SomeOfTheKeysAreNotValueTypeTheResultMayBeWrongCheckCarefully" xml:space="preserve">
+    <value>某些键不是值类型。结果有可能出错，请仔细的检查。</value>
+  </data>
+  <data name="SortKeysIfPossible" xml:space="preserve">
+    <value>尝试排序键</value>
+  </data>
+  <data name="KeysWillBeSortedIfAllAreComparableAndBelongToASameTypeWhichWillSlowTheComputation" xml:space="preserve">
+    <value>如果键属于同一类型并且可比较，Pancake 会把它们排序。</value>
   </data>
   <data name="DisableOptimization" xml:space="preserve">
     <value>禁用优化</value>
@@ -1699,120 +1689,86 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="DisablingOptimizationMayReduceMemoryUsage" xml:space="preserve">
     <value>禁用优化后会减少内存占用，但会增加运算时间。</value>
   </data>
-  <data name="DoNotOperateGrasshopperOrRhinoDuringExportOtherwiseTheProgramMayBeFreezed" xml:space="preserve">
-    <value>请不要在到处过程中操作 Rhino 或 Grasshopper。否则程序可能会卡死。</value>
+  <data name="LengthOfNamesMustBeEqualToThatOfValues" xml:space="preserve">
+    <value>名称列表与值列表长度必须相同。</value>
   </data>
-  <data name="DoNotUseTheVanillaButtonUseTrueOnlyButtonFromPancakeOrToggleButton" xml:space="preserve">
-    <value>请不要使用自带的按钮。您可以使用 Pancake 的真值按钮，或者自带的切换开关。</value>
-  </data>
-  <data name="DonTCopyAttributes" xml:space="preserve">
-    <value>不复制属性</value>
-  </data>
-  <data name="DueToPancakeSMethodVisibilityHiddenLockedCannotBeExportedWithThisComponent" xml:space="preserve">
-    <value>由于功能先知，对象可见性（隐藏/锁定）不能被导出。</value>
-  </data>
-  <data name="ErrorDuringDeserialization" xml:space="preserve">
-    <value>反序列化错误。</value>
-  </data>
-  <data name="ErrorDuringImport" xml:space="preserve">
-    <value>导入错误。</value>
-  </data>
-  <data name="ErrorDuringInvocation" xml:space="preserve">
-    <value>反射调用错误。</value>
-  </data>
-  <data name="ErrorDuringSerialization" xml:space="preserve">
-    <value>序列化错误。</value>
-  </data>
-  <data name="ErrorOccuredDuringAssigningMetadata" xml:space="preserve">
-    <value>设定元数据时出错。</value>
-  </data>
-  <data name="ExperimentalMode" xml:space="preserve">
-    <value>实验模式</value>
-  </data>
-  <data name="ExperimentalModeDoesnTSupportImportOptions" xml:space="preserve">
-    <value>实验模式下此组件不支持导入选项。</value>
-  </data>
-  <data name="ExportFailedSeeRhinoCommandHistoryForMoreInformation" xml:space="preserve">
-    <value>导出失败。您可以检查 Rhino 命令历史来获得更多信息。</value>
-  </data>
-  <data name="FileDoesnTExist" xml:space="preserve">
-    <value>文件不存在。</value>
-  </data>
-  <data name="FeetAndInchLength" xml:space="preserve">
-    <value>英制长度</value>
-  </data>
-  <data name="FailToRelocateTheMesh" xml:space="preserve">
-    <value>无法移动网格。</value>
-  </data>
-  <data name="FailToSet0" xml:space="preserve">
-    <value>无法设置 {0}</value>
-  </data>
-  <data name="FailToTriangulateTheMesh" xml:space="preserve">
-    <value>无法三角化网格。</value>
-  </data>
-  <data name="FileHasnTBeenSavedOrTheComponentIsInsideACluster" xml:space="preserve">
-    <value>文件尚未保存或者该组件在封包中。</value>
-  </data>
-  <data name="GenericTypeIsNotSupportedAsOfNow" xml:space="preserve">
-    <value>暂不支持泛型。</value>
-  </data>
-  <data name="GuidReferencesCannotBeUsedInCompatibleMode" xml:space="preserve">
-    <value>兼容模式下不支持全局统一标识符（GUID）。</value>
-  </data>
-  <data name="InvalidObjectAttributes" xml:space="preserve">
-    <value>无效的对象属性</value>
-  </data>
-  <data name="InvalidOperand" xml:space="preserve">
-    <value>无效的操作数</value>
+  <data name="InputTypeNotSupported" xml:space="preserve">
+    <value>不支持输入类型</value>
   </data>
   <data name="InvalidPathAt0" xml:space="preserve">
     <value>{0} 处无效的路径</value>
   </data>
-  <data name="InvalidPattern" xml:space="preserve">
-    <value>无效的格式</value>
+  <data name="FailToSet0" xml:space="preserve">
+    <value>无法设置 {0}</value>
   </data>
-  <data name="InvalidQuantity" xml:space="preserve">
-    <value>无效的数量</value>
+  <data name="Unit0IsNotSupported" xml:space="preserve">
+    <value>不支持的单位 {0}。</value>
   </data>
-  <data name="InvalidStartingIndex" xml:space="preserve">
-    <value>无效的起始序数</value>
+  <data name="NoActiveRhinoDocument" xml:space="preserve">
+    <value>没有打开状态的 Rhino 文档</value>
   </data>
-  <data name="KeyAndValueListMustHaveTheSameLength" xml:space="preserve">
-    <value>键列表与值列表长度必须相同。</value>
+  <data name="ConversionError" xml:space="preserve">
+    <value>转换错误。</value>
   </data>
-  <data name="LayerIsIgnoredDueToRhino5Limitations" xml:space="preserve">
-    <value>Rhino 5 不支持图层导出。</value>
-  </data>
-  <data name="LessObjectsAreSelected" xml:space="preserve">
-    <value>Pancake 选中了比预期少的对象。部分对象可能有可见性问题。</value>
-  </data>
-  <data name="LengthOfNamesMustBeEqualToThatOfValues" xml:space="preserve">
-    <value>名称列表与值列表长度必须相同。</value>
-  </data>
-  <data name="IllegalPatternFormat" xml:space="preserve">
-    <value>无效的格式</value>
-  </data>
-  <data name="ImportObjectAttributes" xml:space="preserve">
-    <value>导入对象属性</value>
-  </data>
-  <data name="IncorrectPathFormat" xml:space="preserve">
-    <value>错误的路径格式</value>
+  <data name="Key0DoesnTExist" xml:space="preserve">
+    <value>键 {0} 不存在。</value>
   </data>
   <data name="Index0DoesnTExist" xml:space="preserve">
     <value>序数 {0} 不存在。</value>
   </data>
-  <data name="Index0IsOutOfRange" xml:space="preserve">
-    <value>序数 {0} 超出范围。</value>
+  <data name="NoValidNamesAreFound" xml:space="preserve">
+    <value>没有有效的名称。</value>
   </data>
-  <data name="InitializationErrorMakeSureYouAreUsingTheLatestSROfRhino6" xml:space="preserve">
-    <value>初始化错误。请确认您在使用最新补丁的 Rhino。</value>
+  <data name="MatchOutputWithNamedValues" xml:space="preserve">
+    <value>用命名值的名称填充组件输出</value>
   </data>
-  <data name="InputIsNotAnAssoc" xml:space="preserve">
-    <value>输入不是关联</value>
+  <data name="ThisOperationWouldDisconnectAllExistingRecipients" xml:space="preserve">
+    <value>该操作将断开所有与下游组件的连接。</value>
   </data>
-  <data name="InputGeometryHasDifferentAmountOfBranchesFromThatOfFile" xml:space="preserve">
-    <value>输入几何体的 Branch 数量和输入的文件数量不同。这可能会导致预料之外的结果。
-一个文件应当对应一个几何体列表（或单个几何体）。</value>
+  <data name="IncorrectPathFormat" xml:space="preserve">
+    <value>错误的路径格式</value>
+  </data>
+  <data name="Path0NotFound" xml:space="preserve">
+    <value>没有找到路径 {0} 。</value>
+  </data>
+  <data name="WrongType" xml:space="preserve">
+    <value>不支持的类型。</value>
+  </data>
+  <data name="WrongGHSerializationFormat" xml:space="preserve">
+    <value>错误的序列化格式。</value>
+  </data>
+  <data name="AssemblyNotFound" xml:space="preserve">
+    <value>找不到程序集 "{0}"。</value>
+  </data>
+  <data name="TypeNotFound" xml:space="preserve">
+    <value>不存在的类型 "{0}"</value>
+  </data>
+  <data name="TypeNotSerializable" xml:space="preserve">
+    <value>输入对象不可序列化。</value>
+  </data>
+  <data name="CannotCreateType" xml:space="preserve">
+    <value>创建对象失败。</value>
+  </data>
+  <data name="DeserializationFailed" xml:space="preserve">
+    <value>反序列化失败。</value>
+  </data>
+  <data name="ReadFailed" xml:space="preserve">
+    <value>读取失败。</value>
+  </data>
+  <data name="ErrorDuringDeserialization" xml:space="preserve">
+    <value>反序列化错误。</value>
+  </data>
+  <data name="UnrecognizedType0" xml:space="preserve">
+    <value>无法识别的类型 {0}</value>
+  </data>
+  <data name="Adding0Failed" xml:space="preserve">
+    <value>添加 {0} 失败</value>
+  </data>
+  <data name="Rhino5DoesnTSupportExportWithGroups" xml:space="preserve">
+    <value>Rhino 5 不支持导出组。</value>
+  </data>
+  <data name="InputContainsBlocksBlocksWereReconstructedAndNestedBlocksWereExplodedIfExistCarefullyCheckTheOutputFile" xml:space="preserve">
+    <value>输入包含块。由于 API 限制，Pancake 炸开了嵌套的块并重新构造了块。请检查输出文件以确保样式没有发生改变。</value>
   </data>
   <data name="InputContainsTextsTheyWereReconstructedDueToAPILimitationCarefullyCheckTheOutputFile" xml:space="preserve">
     <value>输入包括文本。由于 API 限制，Pancake 重新构造了这些文本。请检查输出文件以确保样式没有发生改变。</value>
@@ -1823,88 +1779,208 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="InputContainsReferencedGeometriesNotAllAttributesAreSupportedCarefullyCheckTheOutputFile" xml:space="preserve">
     <value>输入包括引用的几何体。Pancake 不支持所有属性。请检查输出文件以确保样式没有发生改变。</value>
   </data>
-  <data name="InputContainsBlocksBlocksWereReconstructedAndNestedBlocksWereExplodedIfExistCarefullyCheckTheOutputFile" xml:space="preserve">
-    <value>输入包含块。由于 API 限制，Pancake 炸开了嵌套的块并重新构造了块。请检查输出文件以确保样式没有发生改变。</value>
-  </data>
-  <data name="KeysWillBeSortedIfAllAreComparableAndBelongToASameTypeWhichWillSlowTheComputation" xml:space="preserve">
-    <value>如果键属于同一类型并且可比较，Pancake 会把它们排序。</value>
-  </data>
-  <data name="ListLengthMismatch" xml:space="preserve">
-    <value>{0} 的长度错误。请检查输入是否符合要求。</value>
-  </data>
-  <data name="MatchOutputWithNamedValues" xml:space="preserve">
-    <value>用命名值的名称填充组件输出</value>
-  </data>
-  <data name="MetadataMustBeAnAssocOrAnWrappedList" xml:space="preserve">
-    <value>元数据必须是关联、原子化列表、文本之一。</value>
+  <data name="DoNotOperateGrasshopperOrRhinoDuringExportOtherwiseTheProgramMayBeFreezed" xml:space="preserve">
+    <value>请不要在到处过程中操作 Rhino 或 Grasshopper。否则程序可能会卡死。</value>
   </data>
   <data name="MultipleTargetExportCannotBeUsedInCompatibleMode" xml:space="preserve">
     <value>兼容模式下不可使用多目标导出。</value>
   </data>
-  <data name="NoActiveRhinoDocument" xml:space="preserve">
-    <value>没有打开状态的 Rhino 文档</value>
+  <data name="WhenExportingRhinoFileYouCannotUsePreOptAndOptAtTheSameTime" xml:space="preserve">
+    <value>导出 Rhino 文件时，您不能同时使用 Opt 与 PreOpt。</value>
   </data>
-  <data name="NoExtensionIsIncludedInThePath" xml:space="preserve">
-    <value>文件路径中没有扩展名，扩展名应该是 STL。这可能是有意的不过我们仍推荐您检查保存路径。</value>
+  <data name="AnotherRhinoCommandIsRunningExportAborted" xml:space="preserve">
+    <value>Rhino 正在运行另外的命令。终止导出。</value>
   </data>
-  <data name="Nonstandard" xml:space="preserve">
-    <value>非标准</value>
+  <data name="ExportFailedSeeRhinoCommandHistoryForMoreInformation" xml:space="preserve">
+    <value>导出失败。您可以检查 Rhino 命令历史来获得更多信息。</value>
   </data>
-  <data name="NormalState" xml:space="preserve">
-    <value>未按下的状态</value>
+  <data name="CompatibleModeIsOnPancakeCannotDetermineIfTheExportIsSuccessfulSeeCommandHistoryForMoreInfoCheckYourOutputFileCarefully" xml:space="preserve">
+    <value>兼容模式已启动。Pancake 将无法确定导出是否成功。您可以检查 Rhino 命令历史获取有关信息。</value>
   </data>
-  <data name="NoValidNamesAreFound" xml:space="preserve">
-    <value>没有有效的名称。</value>
+  <data name="GuidReferencesCannotBeUsedInCompatibleMode" xml:space="preserve">
+    <value>兼容模式下不支持全局统一标识符（GUID）。</value>
   </data>
-  <data name="NoValidNamesAreFoundThisComponentWillOnlyExportNamedValues" xml:space="preserve">
-    <value>没有有效的名称。此组件只会导出有名字的值。</value>
-  </data>
-  <data name="ObjectAttributes" xml:space="preserve">
-    <value>对象属性</value>
-  </data>
-  <data name="ObjectAttributesAreNotSupported" xml:space="preserve">
-    <value>{0} 属性不受支持。考虑使用 Human 的 CreateAttributes 组件。</value>
-  </data>
-  <data name="OnceEnabledLayersCreatedByPancakeWillBeRemovedAfterTheExport" xml:space="preserve">
-    <value>一旦启用，Pancake 会在导出后清理创建的临时图层。并且默认图层会保持。</value>
-  </data>
-  <data name="OnceEnabledLayersCreatedByPancakeWillBeRemovedAfterTheImport" xml:space="preserve">
-    <value>一旦启用，Pancake 会在导入后清理创建的临时图层。</value>
+  <data name="CompatibleMode" xml:space="preserve">
+    <value>兼容模式</value>
   </data>
   <data name="OnceEnabledThereWillBeNoChanceExportFreezingGrasshopper" xml:space="preserve">
     <value>一旦启用，Grasshopper 将无可能在导出后失去响应。
 但是这会导致 OK 输出不可用，并且您将无法进行多目标导出。</value>
   </data>
+  <data name="CurrentlyBinarySTLExportingCanOnlyWorkOnLittleEndianSystems" xml:space="preserve">
+    <value>只支持在小端序系统上输出二进制 STL 文件。</value>
+  </data>
+  <data name="ThePathParameterShouldnTBeAFolder" xml:space="preserve">
+    <value>Path 输入不应是文件夹/目录。您需要指定一个确定的文件名，譬如“D:\Export\1.stl”（不含引号），或考虑使用“文件序列”(Filepath Series)组件来生成路径。</value>
+  </data>
+  <data name="TargetFileAlreadyExistsSTL" xml:space="preserve">
+    <value>目标文件已存在。如果您想输出一系列 STL 文件，考虑使用“文件序列”(Filepath Series)组件来生成路径。</value>
+  </data>
+  <data name="NoExtensionIsIncludedInThePath" xml:space="preserve">
+    <value>文件路径中没有扩展名，扩展名应该是 STL。这可能是有意的不过我们仍推荐您检查保存路径。</value>
+  </data>
+  <data name="TheMeshIsNotClosed" xml:space="preserve">
+    <value>网格未封闭。</value>
+  </data>
+  <data name="FailToTriangulateTheMesh" xml:space="preserve">
+    <value>无法三角化网格。</value>
+  </data>
+  <data name="FailToRelocateTheMesh" xml:space="preserve">
+    <value>无法移动网格。</value>
+  </data>
+  <data name="SaveSTLTo" xml:space="preserve">
+    <value>保存 STL 到...</value>
+  </data>
+  <data name="CannotWriteToTheFile" xml:space="preserve">
+    <value>无法写入文件。</value>
+  </data>
+  <data name="InvalidStartingIndex" xml:space="preserve">
+    <value>无效的起始序数</value>
+  </data>
+  <data name="InvalidPattern" xml:space="preserve">
+    <value>无效的格式</value>
+  </data>
+  <data name="IllegalPatternFormat" xml:space="preserve">
+    <value>无效的格式</value>
+  </data>
+  <data name="CannotDetermineTheNextIndexAfter10000SearchEs" xml:space="preserve">
+    <value>无法确定下个序数。</value>
+  </data>
+  <data name="ResetInternalCounter" xml:space="preserve">
+    <value>重置计数器</value>
+  </data>
+  <data name="TreatGHReferenceGeometryAsRhinoObject" xml:space="preserve">
+    <value>将 GH 引用几何体视为 Rhino 对象</value>
+  </data>
+  <data name="UserdataNotFound" xml:space="preserve">
+    <value>找不到元数据。</value>
+  </data>
+  <data name="UnknownGeometryType" xml:space="preserve">
+    <value>未知的几何体类型。</value>
+  </data>
+  <data name="FileHasnTBeenSavedOrTheComponentIsInsideACluster" xml:space="preserve">
+    <value>文件尚未保存或者该组件在封包中。</value>
+  </data>
+  <data name="ExperimentalModeDoesnTSupportImportOptions" xml:space="preserve">
+    <value>实验模式下此组件不支持导入选项。</value>
+  </data>
+  <data name="ImportObjectAttributes" xml:space="preserve">
+    <value>导入对象属性</value>
+  </data>
+  <data name="OnceEnabledLayersCreatedByPancakeWillBeRemovedAfterTheExport" xml:space="preserve">
+    <value>一旦启用，Pancake 会在导出后清理创建的临时图层。并且默认图层会保持。</value>
+  </data>
+  <data name="CleanUpLayers" xml:space="preserve">
+    <value>保持图层状态</value>
+  </data>
+  <data name="SomeObjectsCannotBeRemovedDuringCleanupAndMayRemainInTheDocument" xml:space="preserve">
+    <value>无法删除某些对象。您可能会在 Rhino 文档中看到残留。</value>
+  </data>
+  <data name="DoNotUseTheVanillaButtonUseTrueOnlyButtonFromPancakeOrToggleButton" xml:space="preserve">
+    <value>请不要使用自带的按钮。您可以使用 Pancake 的真值按钮，或者自带的切换开关。</value>
+  </data>
+  <data name="LessObjectsAreSelected" xml:space="preserve">
+    <value>Pancake 选中了比预期少的对象。部分对象可能有可见性问题。</value>
+  </data>
+  <data name="UnexpectedErrorNothingToExport" xml:space="preserve">
+    <value>未知错误。没有可导出的几何体。</value>
+  </data>
+  <data name="CopyAttributesAndOverrideLayerCannotBeEnabledAtTheSameTimeInThisComponentOverridenLayersAreIgnored" xml:space="preserve">
+    <value>复制属性和覆盖图层不能同时启用。覆盖的图层已忽略。</value>
+  </data>
+  <data name="ReferencedInstanceObjectsMustHaveAttributesCopiedFromTheDocument" xml:space="preserve">
+    <value>Pancake 必须从文档复制引用块对象的属性。</value>
+  </data>
+  <data name="DueToPancakeSMethodVisibilityHiddenLockedCannotBeExportedWithThisComponent" xml:space="preserve">
+    <value>由于功能先知，对象可见性（隐藏/锁定）不能被导出。</value>
+  </data>
+  <data name="TheExporterPluginFor0DoesnTExist" xml:space="preserve">
+    <value>{0} 导出插件不存在。请确认您的 Rhino 安装是完整的。</value>
+  </data>
+  <data name="UnexpectedErrorWhenLoadingTheExporterFor0" xml:space="preserve">
+    <value>加载 {0} 导出插件时遇到了未知错误。</value>
+  </data>
+  <data name="CannotLoadTheExporterPluginFor0" xml:space="preserve">
+    <value>无法加载 {0} 格式的导出插件。请检查您的 Rhino 安装是否完整。</value>
+  </data>
+  <data name="ErrorDuringInvocation" xml:space="preserve">
+    <value>反射调用错误。</value>
+  </data>
+  <data name="FileDoesnTExist" xml:space="preserve">
+    <value>文件不存在。</value>
+  </data>
+  <data name="InitializationErrorMakeSureYouAreUsingTheLatestSROfRhino6" xml:space="preserve">
+    <value>初始化错误。请确认您在使用最新补丁的 Rhino。</value>
+  </data>
+  <data name="ErrorDuringImport" xml:space="preserve">
+    <value>导入错误。</value>
+  </data>
+  <data name="SomeObjectsCannotBeDeletedYouMaySeeLeftoverInTheCurrentRhinoDocument" xml:space="preserve">
+    <value>无法删除某些对象。您可能会在 Rhino 文档中看到残留。</value>
+  </data>
+  <data name="BlocksCannotBeImportedInExperimentalMode" xml:space="preserve">
+    <value>实验模式下不能导入块。</value>
+  </data>
+  <data name="OnceEnabledLayersCreatedByPancakeWillBeRemovedAfterTheImport" xml:space="preserve">
+    <value>一旦启用，Pancake 会在导入后清理创建的临时图层。</value>
+  </data>
+  <data name="ExperimentalMode" xml:space="preserve">
+    <value>实验模式</value>
+  </data>
+  <data name="UseExperimentalHeadlessModeIntroducedInRhinoWIPRNThisMayCauseFailureOrMakeRhinoStuckInCommandLineYouNeedToTypeEnterToRemoveTheFreeze" xml:space="preserve">
+    <value>使用 Rhino WIP 中实验性的 Headless 模式。
+这可能会导致操作失败，或导致 Rhino 卡在命令输入（您需要按回车键来解除）。</value>
+  </data>
+  <data name="TheImporterPluginFor0DoesnTExist" xml:space="preserve">
+    <value>{0} 导入插件不存在。请确认您的 Rhino 安装是完整的。</value>
+  </data>
+  <data name="UnexpectedErrorWhenLoadingTheImporterFor0" xml:space="preserve">
+    <value>加载 {0} 导入插件时遇到了未知错误。</value>
+  </data>
+  <data name="CannotLoadTheImporterPluginFor0PleaseCheckIfYourRhinoInstallationIsComplete" xml:space="preserve">
+    <value>无法加载 {0} 格式的导入插件。请检查您的 Rhino 安装是否完整。</value>
+  </data>
+  <data name="CannotDetermineTheDataType" xml:space="preserve">
+    <value>无法确定数据类型。</value>
+  </data>
+  <data name="InvalidOperand" xml:space="preserve">
+    <value>无效的操作数</value>
+  </data>
   <data name="OperatorNotSupported" xml:space="preserve">
     <value>不支持的运算符</value>
   </data>
-  <data name="OverrideLayerDesc" xml:space="preserve">
-    <value>一旦启用，无论提供的对象属性或从文档中复制来的属性为何，
-图层设置都会使用本组件的 Layer 输入。</value>
+  <data name="GenericTypeIsNotSupportedAsOfNow" xml:space="preserve">
+    <value>暂不支持泛型。</value>
   </data>
-  <data name="OverrideLayerWithComponentInput" xml:space="preserve">
-    <value>总是使用组件的图层输入</value>
+  <data name="ErrorDuringSerialization" xml:space="preserve">
+    <value>序列化错误。</value>
   </data>
-  <data name="ParseAsQuantityIfPossible" xml:space="preserve">
-    <value>尝试解析数量</value>
+  <data name="TheObjectCannotBeSerialized" xml:space="preserve">
+    <value>无法序列化该对象。</value>
   </data>
-  <data name="Path0NotFound" xml:space="preserve">
-    <value>没有找到路径 {0} 。</value>
+  <data name="InputIsNotAnAssoc" xml:space="preserve">
+    <value>输入不是关联</value>
   </data>
-  <data name="pcecSKP_SolveInstance_MinimumFaceCountMustBeGreaterOrEqualThan2" xml:space="preserve">
-    <value>最小面数必须大于等于 2。</value>
+  <data name="YouShouldProvideEitherIndexOrNameInsteadOfNoneOrBoth" xml:space="preserve">
+    <value>您应该提供序数（Index）或者名称（Name）之一。</value>
   </data>
-  <data name="pcneIges_CustomInvoke_UnexpectedErrorInLocatingIgesExportFunction" xml:space="preserve">
-    <value>在定位 IgesExport 时遇到未知错误</value>
+  <data name="Index0IsOutOfRange" xml:space="preserve">
+    <value>序数 {0} 超出范围。</value>
   </data>
-  <data name="pcneIges_RegisterAdditionalInputParams_TheIGESExportOptionComponent" xml:space="preserve">
-    <value>本组件不支持“IGES 导出选项”(IGES Export Option)。</value>
-  </data>
-  <data name="pcneIges_RegisterAdditionalInputParams_YouNeedToUseSetIGESLayerLevelMap" xml:space="preserve">
-    <value> 您需要先使用 Rhino 的 SetIGESLayerLevelMap 命令把 Rhino 图层映射为 IGES 的图层 (level)。</value>
+  <data name="_0IsNotAValidName" xml:space="preserve">
+    <value>名称 {0} 无效。</value>
   </data>
   <data name="PointIsNotSupported" xml:space="preserve">
     <value>暂不支持点对象。</value>
+  </data>
+  <data name="MetadataMustBeAnAssocOrAnWrappedList" xml:space="preserve">
+    <value>元数据必须是关联、原子化列表、文本之一。</value>
+  </data>
+  <data name="TypeIsNotSupportedTryConvertIntoBRepFirst" xml:space="preserve">
+    <value>不受支持的对象。您可以尝试先转换为 BRep。</value>
+  </data>
+  <data name="ErrorOccuredDuringAssigningMetadata" xml:space="preserve">
+    <value>设定元数据时出错。</value>
   </data>
   <data name="PrecisionMustBeGreaterThan0" xml:space="preserve">
     <value>精度必须大于 0</value>
@@ -1915,122 +1991,46 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="PrecisionIsHigherThanTheInternalPrecisionYouMayNotSeeAnyChangesWithThisValue" xml:space="preserve">
     <value>指定的精度比数量的内部精度更高。您可能看不到任何差别。</value>
   </data>
-  <data name="PressedState" xml:space="preserve">
-    <value>按下的状态</value>
+  <data name="InvalidQuantity" xml:space="preserve">
+    <value>无效的数量</value>
   </data>
-  <data name="RecognizeTypeIfPossible" xml:space="preserve">
-    <value>尝试识别类型</value>
+  <data name="ABindedGroupOfNamesAndValues" xml:space="preserve">
+    <value>一组名称（键）与对应的值</value>
   </data>
-  <data name="ReferencedInstanceObjectsMustHaveAttributesCopiedFromTheDocument" xml:space="preserve">
-    <value>Pancake 必须从文档复制引用块对象的属性。</value>
+  <data name="EmptyTuple" xml:space="preserve">
+    <value>空的关联</value>
+  </data>
+  <data name="AtomList" xml:space="preserve">
+    <value>原子化列表</value>
+  </data>
+  <data name="AnOrderedListOfItemsButBeingTreatedLikeOneSingleItem" xml:space="preserve">
+    <value>有序列表，但是在大多数组件中的行为与单个元素相同</value>
+  </data>
+  <data name="DecimalLength" xml:space="preserve">
+    <value>公制长度</value>
   </data>
   <data name="RepresentADecimalLength" xml:space="preserve">
     <value>代表公制长度</value>
   </data>
+  <data name="FeetAndInchLength" xml:space="preserve">
+    <value>英制长度</value>
+  </data>
   <data name="RepresentAnFeetInchLength" xml:space="preserve">
     <value>代表英制（英寸-英尺）长度</value>
   </data>
-  <data name="ResetInternalCounter" xml:space="preserve">
-    <value>重置计数器</value>
+  <data name="ClickHereToRaiseRecomputation" xml:space="preserve">
+    <value>单击这里来引发后续运算。</value>
   </data>
-  <data name="Rhino5DoesnTSupportExportWithGroups" xml:space="preserve">
-    <value>Rhino 5 不支持导出组。</value>
+  <data name="NormalState" xml:space="preserve">
+    <value>未按下的状态</value>
   </data>
-  <data name="RhinoVersionNotSupported" xml:space="preserve">
-    <value>不支持的 Rhino 版本。</value>
-  </data>
-  <data name="SomeGeometryAreNotSupported" xml:space="preserve">
-    <value>不支持某些几何体。</value>
-  </data>
-  <data name="SomeObjectsCannotBeDeletedYouMaySeeLeftoverInTheCurrentRhinoDocument" xml:space="preserve">
-    <value>无法删除某些对象。您可能会在 Rhino 文档中看到残留。</value>
-  </data>
-  <data name="SomeObjectsCannotBeRemovedDuringCleanupAndMayRemainInTheDocument" xml:space="preserve">
-    <value>无法删除某些对象。您可能会在 Rhino 文档中看到残留。</value>
-  </data>
-  <data name="SortKeysIfPossible" xml:space="preserve">
-    <value>尝试排序键</value>
-  </data>
-  <data name="SomeOfTheKeysAreNotValueTypeTheResultMayBeWrongCheckCarefully" xml:space="preserve">
-    <value>某些键不是值类型。结果有可能出错，请仔细的检查。</value>
-  </data>
-  <data name="WrongGHSerializationFormat" xml:space="preserve">
-    <value>错误的序列化格式。</value>
-  </data>
-  <data name="YouShouldProvideEitherIndexOrNameInsteadOfNoneOrBoth" xml:space="preserve">
-    <value>您应该提供序数（Index）或者名称（Name）之一。</value>
-  </data>
-  <data name="WhenExportingRhinoFileYouCannotUsePreOptAndOptAtTheSameTime" xml:space="preserve">
-    <value>导出 Rhino 文件时，您不能同时使用 Opt 与 PreOpt。</value>
-  </data>
-  <data name="VersionIsUnsupported" xml:space="preserve">
-    <value>不支持的版本。</value>
-  </data>
-  <data name="UserdataNotFound" xml:space="preserve">
-    <value>找不到元数据。</value>
-  </data>
-  <data name="UseExperimentalHeadlessModeIntroducedInRhinoWIPRNThisMayCauseFailureOrMakeRhinoStuckInCommandLineYouNeedToTypeEnterToRemoveTheFreeze" xml:space="preserve">
-    <value>使用 Rhino WIP 中实验性的 Headless 模式。
-这可能会导致操作失败，或导致 Rhino 卡在命令输入（您需要按回车键来解除）。</value>
-  </data>
-  <data name="UnrecognizedType0" xml:space="preserve">
-    <value>无法识别的类型 {0}</value>
-  </data>
-  <data name="UnknownGeometryType" xml:space="preserve">
-    <value>未知的几何体类型。</value>
-  </data>
-  <data name="Unit0IsNotSupported" xml:space="preserve">
-    <value>不支持的单位 {0}。</value>
-  </data>
-  <data name="UnexpectedErrorWhenLoadingTheImporterFor0" xml:space="preserve">
-    <value>加载 {0} 导入插件时遇到了未知错误。</value>
-  </data>
-  <data name="UnexpectedErrorWhenLoadingTheExporterFor0" xml:space="preserve">
-    <value>加载 {0} 导出插件时遇到了未知错误。</value>
-  </data>
-  <data name="UnexpectedErrorNothingToExport" xml:space="preserve">
-    <value>未知错误。没有可导出的几何体。</value>
+  <data name="PressedState" xml:space="preserve">
+    <value>按下的状态</value>
   </data>
   <data name="UnblockNotice" xml:space="preserve">
     <value>请注意 Pancake 将会自动解锁文件而不会进行安全方面的确认。
 您可以通过重启“插件锁定监测”来关闭此功能。
 您是否想启用本功能？</value>
-  </data>
-  <data name="TypeNotFound" xml:space="preserve">
-    <value>不存在的类型 "{0}"</value>
-  </data>
-  <data name="TypeIsNotSupportedTryConvertIntoBRepFirst" xml:space="preserve">
-    <value>不受支持的对象。您可以尝试先转换为 BRep。</value>
-  </data>
-  <data name="ThisOperationWouldDisconnectAllExistingRecipients" xml:space="preserve">
-    <value>该操作将断开所有与下游组件的连接。</value>
-  </data>
-  <data name="TreatGHReferenceGeometryAsRhinoObject" xml:space="preserve">
-    <value>将 GH 引用几何体视为 Rhino 对象</value>
-  </data>
-  <data name="ThePathParameterShouldnTBeAFolder" xml:space="preserve">
-    <value>Path 输入不应是文件夹/目录。您需要指定一个确定的文件名，譬如“D:\Export\1.stl”（不含引号），或考虑使用“文件序列”(Filepath Series)组件来生成路径。</value>
-  </data>
-  <data name="TargetFileExistsAndOverwriteIsFalse" xml:space="preserve">
-    <value>目标文件已存在并且 Overwrite（覆写）为假。</value>
-  </data>
-  <data name="TargetFileAlreadyExistsSTL" xml:space="preserve">
-    <value>目标文件已存在。如果您想输出一系列 STL 文件，考虑使用“文件序列”(Filepath Series)组件来生成路径。</value>
-  </data>
-  <data name="TheExporterPluginFor0DoesnTExist" xml:space="preserve">
-    <value>{0} 导出插件不存在。请确认您的 Rhino 安装是完整的。</value>
-  </data>
-  <data name="TheImporterPluginFor0DoesnTExist" xml:space="preserve">
-    <value>{0} 导入插件不存在。请确认您的 Rhino 安装是完整的。</value>
-  </data>
-  <data name="TheListCannotBeEmpty" xml:space="preserve">
-    <value>列表不能为空。</value>
-  </data>
-  <data name="TheMeshIsNotClosed" xml:space="preserve">
-    <value>网格未封闭。</value>
-  </data>
-  <data name="TheObjectCannotBeSerialized" xml:space="preserve">
-    <value>无法序列化该对象。</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>默认</value>
@@ -2047,14 +2047,14 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="AdjustAllFontSizesOfAnnotativeObjects" xml:space="preserve">
     <value>批量调整注释性对象（比如 Panel（文本输入））的字体大小。这对从不同 DPI 设置电脑上复制来的脚本文件尤其有用。</value>
   </data>
+  <data name="MaintainVisualAppearance" xml:space="preserve">
+    <value>Maintain Visual Appearance: 保持视觉效果</value>
+  </data>
+  <data name="MaintainTheSameVisualAppearanceOfYourDefinition" xml:space="preserve">
+    <value>在不同 DPI 设置的计算机上维持相同的视觉效果（字体大小）。将该组件放置在脚本里该组件就可以工作。</value>
+  </data>
   <data name="CurrentLayer" xml:space="preserve">
     <value>Current Layer: 当前图层</value>
-  </data>
-  <data name="NameOfTheCurrentLayer" xml:space="preserve">
-    <value>当前图层的名称</value>
-  </data>
-  <data name="FullpathOfTheCurrentLayer" xml:space="preserve">
-    <value>当前图层的完整路径</value>
   </data>
   <data name="RetrieveTheNameAndFullpathOfTheCurrentLayer" xml:space="preserve">
     <value>取得当前图层的名称与完整路径。当当前图层改变时本组件将唤起脚本重新计算。</value>
@@ -2062,23 +2062,23 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="CurrentLayerDoesnTExist" xml:space="preserve">
     <value>当前图层不存在。这可能是由于当前 Rhino 文件有错误。</value>
   </data>
-  <data name="MaintainVisualAppearance" xml:space="preserve">
-    <value>Maintain Visual Appearance: 保持视觉效果</value>
+  <data name="NameOfTheCurrentLayer" xml:space="preserve">
+    <value>当前图层的名称</value>
   </data>
-  <data name="MaintainTheSameVisualAppearanceOfYourDefinition" xml:space="preserve">
-    <value>在不同 DPI 设置的计算机上维持相同的视觉效果（字体大小）。将该组件放置在脚本里该组件就可以工作。</value>
+  <data name="FullpathOfTheCurrentLayer" xml:space="preserve">
+    <value>当前图层的完整路径</value>
   </data>
   <data name="PancakeIsSafeModeWillNotTriggerRecomputation" xml:space="preserve">
     <value>Pancake 处在安全模式。此模式下本组件不会自动刷新。</value>
   </data>
-  <data name="MultiLanguage" xml:space="preserve">
-    <value>多语言</value>
+  <data name="HighlightingChanges" xml:space="preserve">
+    <value>高亮更改</value>
   </data>
   <data name="AutoUpdate" xml:space="preserve">
     <value>杂项</value>
   </data>
-  <data name="HighlightingChanges" xml:space="preserve">
-    <value>高亮更改</value>
+  <data name="MultiLanguage" xml:space="preserve">
+    <value>多语言</value>
   </data>
   <data name="MoreSettings" xml:space="preserve">
     <value>更多设置...</value>
@@ -2098,17 +2098,14 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="NameOfXMLRootTag" xml:space="preserve">
     <value>XML 根节点名</value>
   </data>
-  <data name="Headless" xml:space="preserve">
-    <value>省略文件头</value>
-  </data>
   <data name="AssocToXML" xml:space="preserve">
     <value>Assoc to XML: 关联到 XML</value>
   </data>
   <data name="ExportAnAssocToXMLSeeExampleForMoreInformation" xml:space="preserve">
     <value>把关联导出到 XML。有关格式的更多信息请参阅范例。</value>
   </data>
-  <data name="_0IsABadName" xml:space="preserve">
-    <value>{0} 是无效的名称。</value>
+  <data name="Headless" xml:space="preserve">
+    <value>省略文件头</value>
   </data>
   <data name="ControlIfTheXMLHeaderIsOmitted" xml:space="preserve">
     <value>控制是否省略 XML 文件头。</value>
@@ -2116,8 +2113,8 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="InputMustBeAnAssociativeArray" xml:space="preserve">
     <value>输入必须是关联。</value>
   </data>
-  <data name="ShowAssocInBrowser" xml:space="preserve">
-    <value>在浏览器中显示关联</value>
+  <data name="_0IsABadName" xml:space="preserve">
+    <value>{0} 是无效的名称。</value>
   </data>
   <data name="XMLToAssoc" xml:space="preserve">
     <value>XML to Assoc: 从 XML 创建关联</value>
@@ -2125,8 +2122,11 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="ReadXMLFileIntoAssocYouMayNeedAssocToKeyValuesToConvert" xml:space="preserve">
     <value>读取 XML 并创建关联。您可能需要通过“关联到键值列表（Assoc to Key-values）”来把数据转换为更容易处理的格式。请参考范例以获得更多信息。</value>
   </data>
-  <data name="AppendMode" xml:space="preserve">
-    <value>追加模式</value>
+  <data name="FailToParseXML" xml:space="preserve">
+    <value>XML 格式错误。</value>
+  </data>
+  <data name="HowDeepTheDataIsUnwrappedByDefault0ZeroMeansAssocIs" xml:space="preserve">
+    <value>控制提取数据的深度。默认为 0。0 意味着关联会被分解到不能分解为止，1 意味着关联的第一层会被提取出来。请参考范例以获得更新信息。</value>
   </data>
   <data name="Append" xml:space="preserve">
     <value>追加</value>
@@ -2134,11 +2134,11 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="Modify" xml:space="preserve">
     <value>修改</value>
   </data>
-  <data name="NoDataIsAvailable" xml:space="preserve">
-    <value>没有可用数据。</value>
+  <data name="AppendMode" xml:space="preserve">
+    <value>追加模式</value>
   </data>
-  <data name="FailToParseXML" xml:space="preserve">
-    <value>XML 格式错误。</value>
+  <data name="WhenThereReDuplicatedEntriesAppendToTheAssocRatherThanModifySeeExampleForMoreInformation" xml:space="preserve">
+    <value>当名称重复时，追加到关联而不是修改关联。请参考范例以获得更新信息。</value>
   </data>
   <data name="CannotWriteFile" xml:space="preserve">
     <value>无法写入文件。</value>
@@ -2146,17 +2146,14 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="CannotConvertIntoJSON" xml:space="preserve">
     <value>无法转换到 JSON。</value>
   </data>
-  <data name="WhenThereReDuplicatedEntriesAppendToTheAssocRatherThanModifySeeExampleForMoreInformation" xml:space="preserve">
-    <value>当名称重复时，追加到关联而不是修改关联。请参考范例以获得更新信息。</value>
+  <data name="NoDataIsAvailable" xml:space="preserve">
+    <value>没有可用数据。</value>
   </data>
   <data name="ShowAssoc" xml:space="preserve">
     <value>Show Assoc: 显示关联</value>
   </data>
-  <data name="HowDeepTheDataIsUnwrappedByDefault0ZeroMeansAssocIs" xml:space="preserve">
-    <value>控制提取数据的深度。默认为 0。0 意味着关联会被分解到不能分解为止，1 意味着关联的第一层会被提取出来。请参考范例以获得更新信息。</value>
-  </data>
-  <data name="AssocToCSV" xml:space="preserve">
-    <value>Assoc To CSV: 关联到 CSV</value>
+  <data name="ShowAssocInBrowser" xml:space="preserve">
+    <value>在浏览器中显示关联</value>
   </data>
   <data name="FillOutputsAutomaticallyGlobal" xml:space="preserve">
     <value>自动填充输出（全局）</value>
@@ -2164,17 +2161,50 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="FillOutputsAutomaticallyCurrent" xml:space="preserve">
     <value>自动填充输出（此组件）</value>
   </data>
+  <data name="ItSNotRecommendedToUseParseString" xml:space="preserve">
+    <value>不建议使用本组件来读取 XML；建议使用”XML to Assoc（XML 到关联）“。</value>
+  </data>
   <data name="CopyAttributes" xml:space="preserve">
     <value>复制属性</value>
+  </data>
+  <data name="CopyObjectAttributesFromImportedGeometry" xml:space="preserve">
+    <value>从导入的几何对象复制属性。请注意本功能复制的属性并不是可以被 Human、Elefront 等直接使用的属性。</value>
+  </data>
+  <data name="AssocToCSV" xml:space="preserve">
+    <value>Assoc To CSV: 关联到 CSV</value>
+  </data>
+  <data name="ConvertANumberOfAssocsIntoCSVContentYouMayUseExportTXTComponentToWriteTheCSVContentIntoFile" xml:space="preserve">
+    <value>把一些关联导出为 CSV 文本。您可以使用“Export TXT（导出 TXT）”来把 CSV 文本写入文件。</value>
+  </data>
+  <data name="DelimiterCannotBeEmpty" xml:space="preserve">
+    <value>分隔符不能为空。</value>
+  </data>
+  <data name="CompactAttributes" xml:space="preserve">
+    <value>压缩属性</value>
+  </data>
+  <data name="FormattingMayBeLostRNIfEnabledXMLNodesWithTextContent" xml:space="preserve">
+    <value>如果您还要以此关联为基础导出新的 XML 的话请不要启用本选项，否则 XML 格式有可能会丢失。启用本选项后，没有属性并且有内容的 XML 子节点将会被合并入上一级节点。请参考样例以获取更多信息。</value>
   </data>
   <data name="Compact" xml:space="preserve">
     <value>压缩</value>
   </data>
-  <data name="KeysMustHaveTheSameLength" xml:space="preserve">
-    <value>键列表的长度必须一致。</value>
+  <data name="CannotFindTheEncoding0" xml:space="preserve">
+    <value>找不到编码 {0}。</value>
+  </data>
+  <data name="ReadTextFileWithASpecificEncoding" xml:space="preserve">
+    <value>导入文本文件，也可以用特定的编码来处理文本。</value>
   </data>
   <data name="MultiSort" xml:space="preserve">
     <value>Multi Sort: 多排序</value>
+  </data>
+  <data name="SortDataByNonNumericOrMultipleKeys" xml:space="preserve">
+    <value>根据多个键或者非数字的键排序数据。如果第一组键相同，则比较第二组，以此类推。本组件使用稳定排序算法。</value>
+  </data>
+  <data name="KeysToBeUsedAsSortingCriteriaOneByOne" xml:space="preserve">
+    <value>用来作为排序依据的键（排序会一个一个的进行）</value>
+  </data>
+  <data name="DataToBeSortedAccordingToKeys" xml:space="preserve">
+    <value>依据键值排序的数据</value>
   </data>
   <data name="SortedKeys" xml:space="preserve">
     <value>排序过的键</value>
@@ -2182,50 +2212,20 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="DataInAccordanceToTheSortedKeys" xml:space="preserve">
     <value>排序过的数据</value>
   </data>
-  <data name="DataToBeSortedAccordingToKeys" xml:space="preserve">
-    <value>依据键值排序的数据</value>
-  </data>
-  <data name="CompactAttributes" xml:space="preserve">
-    <value>压缩属性</value>
-  </data>
-  <data name="CannotFindTheEncoding0" xml:space="preserve">
-    <value>找不到编码 {0}。</value>
-  </data>
-  <data name="DelimiterCannotBeEmpty" xml:space="preserve">
-    <value>分隔符不能为空。</value>
-  </data>
-  <data name="ReadTextFileWithASpecificEncoding" xml:space="preserve">
-    <value>导入文本文件，也可以用特定的编码来处理文本。</value>
-  </data>
-  <data name="KeysToBeUsedAsSortingCriteriaOneByOne" xml:space="preserve">
-    <value>用来作为排序依据的键（排序会一个一个的进行）</value>
-  </data>
-  <data name="ItSNotRecommendedToUseParseString" xml:space="preserve">
-    <value>不建议使用本组件来读取 XML；建议使用”XML to Assoc（XML 到关联）“。</value>
-  </data>
-  <data name="CopyObjectAttributesFromImportedGeometry" xml:space="preserve">
-    <value>从导入的几何对象复制属性。请注意本功能复制的属性并不是可以被 Human、Elefront 等直接使用的属性。</value>
-  </data>
-  <data name="SortDataByNonNumericOrMultipleKeys" xml:space="preserve">
-    <value>根据多个键或者非数字的键排序数据。如果第一组键相同，则比较第二组，以此类推。本组件使用稳定排序算法。</value>
-  </data>
-  <data name="ConvertANumberOfAssocsIntoCSVContentYouMayUseExportTXTComponentToWriteTheCSVContentIntoFile" xml:space="preserve">
-    <value>把一些关联导出为 CSV 文本。您可以使用“Export TXT（导出 TXT）”来把 CSV 文本写入文件。</value>
+  <data name="KeysMustHaveTheSameLength" xml:space="preserve">
+    <value>键列表的长度必须一致。</value>
   </data>
   <data name="_0HasDifferentAmountOfDataFromKeysThereforeItSSkipped" xml:space="preserve">
     <value>{0} 的长度与键长不同，因此已被跳过。</value>
-  </data>
-  <data name="FormattingMayBeLostRNIfEnabledXMLNodesWithTextContent" xml:space="preserve">
-    <value>如果您还要以此关联为基础导出新的 XML 的话请不要启用本选项，否则 XML 格式有可能会丢失。启用本选项后，没有属性并且有内容的 XML 子节点将会被合并入上一级节点。请参考样例以获取更多信息。</value>
-  </data>
-  <data name="ImportedText" xml:space="preserve">
-    <value>导入的文本</value>
   </data>
   <data name="OnlyTheseDesignatedNamesAreImportedByDefaultAllNamesAreImported" xml:space="preserve">
     <value>如果指定，则只有具名的列会被处理。默认所有列都会被处理。</value>
   </data>
   <data name="EncodingThatTheFileShouldBeTreatedAs" xml:space="preserve">
     <value>期待的文件编码。默认为 UTF-8。您也可以使用“default”（不含引号）来使用当前计算机上默认的 ASCII 代码页。</value>
+  </data>
+  <data name="ImportedText" xml:space="preserve">
+    <value>导入的文本</value>
   </data>
   <data name="KeyPathsToBeImportedByDefaultAllPathsAreImported" xml:space="preserve">
     <value>要导入的键路径。默认会导入所有路径。</value>
@@ -2239,11 +2239,11 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="ExpandAttributesToSubNodesSeeExampleForMoreInformation" xml:space="preserve">
     <value>在子结点而不是属性中存储数据。请查看样例以获取更多信息。</value>
   </data>
-  <data name="PathCannotBeEmpty" xml:space="preserve">
-    <value>路径不能为空。</value>
-  </data>
   <data name="BasicAttributesOfTheImportedGeometry" xml:space="preserve">
     <value>导入几何体的基准属性</value>
+  </data>
+  <data name="PathCannotBeEmpty" xml:space="preserve">
+    <value>路径不能为空。</value>
   </data>
   <data name="TheDestinationDirectoryDoesnTExist" xml:space="preserve">
     <value>目标文件夹不存在。</value>
@@ -2267,32 +2267,17 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="CannotDeserializeTheElefrontObject" xml:space="preserve">
     <value>无法反序列化该 Elefront 对象，有可能由于尚未安装 Elefront。</value>
   </data>
-  <data name="ExtraLocations" xml:space="preserve">
-    <value>额外路径</value>
+  <data name="ChooseAFolderToInclude" xml:space="preserve">
+    <value>选择要含有用户对象的文件夹</value>
   </data>
   <data name="Examples" xml:space="preserve">
     <value>范例...</value>
   </data>
-  <data name="ChooseAFolderToInclude" xml:space="preserve">
-    <value>选择要含有用户对象的文件夹</value>
-  </data>
   <data name="CannotFindTheExampleFolder" xml:space="preserve">
     <value>找不到范例文件夹，请确认 Pancake 安装是否完整。</value>
   </data>
-  <data name="Selected" xml:space="preserve">
-    <value>选中的...</value>
-  </data>
-  <data name="EntireDocument" xml:space="preserve">
-    <value>整个文档...</value>
-  </data>
-  <data name="AnalyzePerformance" xml:space="preserve">
-    <value>分析性能</value>
-  </data>
-  <data name="RemoveReference" xml:space="preserve">
-    <value>Remove Reference: 移除引用</value>
-  </data>
-  <data name="CannotCopyFilesPleaseEnsureTheFolderIsWritable" xml:space="preserve">
-    <value>无法复制文件，请确认文件夹是可写的。</value>
+  <data name="ExtraLocations" xml:space="preserve">
+    <value>额外路径</value>
   </data>
   <data name="SelectASubitemForMoreInformation" xml:space="preserve">
     <value>选中子项目来查看更多信息。</value>
@@ -2300,20 +2285,35 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
   <data name="DetailedInformationUnavailable" xml:space="preserve">
     <value>详细信息不可用</value>
   </data>
-  <data name="GeometryWithoutReferences" xml:space="preserve">
-    <value>无引用的几何对象</value>
-  </data>
-  <data name="GeometryToBeUnReferenced" xml:space="preserve">
-    <value>要接触引用的几何对象</value>
-  </data>
   <data name="TheObjectIsNotInTheActiveDocumentItMayBeInACluster" xml:space="preserve">
     <value>该对象不在当前文档中，它有可能在封包内。</value>
   </data>
   <data name="SelectAFolderToCopyReferencedFiles" xml:space="preserve">
     <value>选择一个目录保存引用的文件...</value>
   </data>
+  <data name="CannotCopyFilesPleaseEnsureTheFolderIsWritable" xml:space="preserve">
+    <value>无法复制文件，请确认文件夹是可写的。</value>
+  </data>
+  <data name="RemoveReference" xml:space="preserve">
+    <value>Remove Reference: 移除引用</value>
+  </data>
   <data name="ConvertReferencedGeometryToStandaloneGeomtryAndLeaveEverythingElseUnchanged" xml:space="preserve">
     <value>将引用的几何对象解除引用，其他数据不变。</value>
+  </data>
+  <data name="GeometryToBeUnReferenced" xml:space="preserve">
+    <value>要接触引用的几何对象</value>
+  </data>
+  <data name="GeometryWithoutReferences" xml:space="preserve">
+    <value>无引用的几何对象</value>
+  </data>
+  <data name="AnalyzePerformance" xml:space="preserve">
+    <value>分析性能</value>
+  </data>
+  <data name="EntireDocument" xml:space="preserve">
+    <value>整个文档...</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>选中的...</value>
   </data>
   <data name="NoIssuesAreDetected" xml:space="preserve">
     <value>没有检测到问题。</value>
@@ -2401,14 +2401,14 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
 如果您想导出几何对象的引用，请转换为 GUID；
 如果你想导出几何对象本身，请使用 移除引用（Remove Reference） 组件。</value>
   </data>
-  <data name="Resources" xml:space="preserve">
-    <value>文档</value>
+  <data name="DisconnectAllInputs" xml:space="preserve">
+    <value>清除所有输入</value>
   </data>
   <data name="DisconnectAllOutputs" xml:space="preserve">
     <value>清除所有输出</value>
   </data>
-  <data name="DisconnectAllInputs" xml:space="preserve">
-    <value>清除所有输入</value>
+  <data name="Resources" xml:space="preserve">
+    <value>文档</value>
   </data>
   <data name="CurrentDocument" xml:space="preserve">
     <value>当前 Rhino 文档</value>
@@ -2417,16 +2417,16 @@ Pancake 将会复制它的属性而无视组件输入。这不包括 GH 引用�
     <value>获得当前 Rhino 文档的信息。当打开的文件变化时，该组件会触发新的计算。</value>
   </data>
   <data name="Abort" xml:space="preserve">
-    <value>终止</value>
+    <value>Abort: 终止</value>
   </data>
   <data name="AbortTheComputationIfTheFirstInputIsFalse" xml:space="preserve">
     <value>当第一个输入为真时立即终止当前计算。</value>
   </data>
-  <data name="DataToPassThroughOptional" xml:space="preserve">
-    <value>数据。可选。</value>
-  </data>
   <data name="SetToTrueToAbortTheCurrentDefinition" xml:space="preserve">
     <value>设为真来终止运行</value>
+  </data>
+  <data name="DataToPassThroughOptional" xml:space="preserve">
+    <value>数据。可选。</value>
   </data>
   <data name="NameOfTheCurrentRhinoFileMayBeEmpty" xml:space="preserve">
     <value>当前 Rhino 文件的名称。可能为空。</value>

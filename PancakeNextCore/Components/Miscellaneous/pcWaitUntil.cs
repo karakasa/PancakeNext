@@ -7,7 +7,8 @@ using System;
 
 namespace PancakeNextCore.Components.Miscellaneous;
 
-[ComponentCategory("logic", 0)]
+[ComponentCategory("misc", 1)]
+
 [IoId("2d223e87-a1ff-4a8e-85df-c0f5db0bee0a")]
 public sealed class pcWaitUntil : PancakeComponent<pcWaitUntil>, IPancakeLocalizable<pcWaitUntil>
 {

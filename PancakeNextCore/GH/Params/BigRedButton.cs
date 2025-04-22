@@ -10,6 +10,9 @@ using Grasshopper2.UI.Flex;
 using Grasshopper2.UI.Primitives;
 using Grasshopper2.UI.Skinning;
 using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.Components;
+using PancakeNextCore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +22,14 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.GH.Params;
 
 [IoId("3423D60E-E961-4727-95B1-A46C549CE0B5")]
-public sealed class BigRedButton : Parameter<bool>, ISolutionPriority
+[ComponentCategory("misc")]
+public sealed class BigRedButton : PancakeParameter<bool, BigRedButton>, IPancakeLocalizable<BigRedButton>, ISolutionPriority
 {
-    public BigRedButton() : base(new Nomen("True-only Button", "A button emits a True value per click.", "Pancake", "Misc"), Access.Tree)
-    {
-    }
+    public static string StaticLocalizedName => Strings.SetupTooltip_TrueOnlyButton;
+    public static string StaticLocalizedDescription => Strings.TrueOnlyBtn_WhenClickedTheButtonObjectOnlyRaisesRecomputationOneTime;
+    public BigRedButton() { }
 
-    public BigRedButton(IReader reader) : base(reader)
-    {
-    }
+    public BigRedButton(IReader reader) : base(reader) { }
     private sealed class BigRedButtonAttributes(BigRedButton button) : ParameterAttributes<BigRedButton>(button), IResponsiveAttributes
     {
         public override bool HasInlet => false;
@@ -54,9 +56,9 @@ public sealed class BigRedButton : Parameter<bool>, ISolutionPriority
             var g = context.Graphics;
             var c = new CircleF(center, Radius);
 
-            using var brush = new LinearGradientBrush(capsule.Slab.Apex, Color.FromArgb(0x00F23D3D), Color.FromArgb(0x00FFFFFF), 45);
+            using var brush = new LinearGradientBrush(capsule.Slab.Apex, Color.FromArgb(0x00F23D3D), Colors.White, 45);
 
-            // g.FillCircle(Color.FromRgb(unchecked((int)0x20FFFFFF)), new(center.X + 4, center.Y + 4, Radius));
+            g.FillCircle(Color.FromRgb(unchecked((int)0x20FFFFFF)), new(center.X + 4, center.Y + 4, Radius));
             g.FillCircle(brush, c);
             g.DrawCircle(Color.FromRgb(0x00F29C94), 5, c);
             capsule.DrawGrips(context.Graphics, skin);

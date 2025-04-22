@@ -14,7 +14,7 @@ using Path = Grasshopper2.Data.Path;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("data", 1)]
+[ComponentCategory("data", 2)]
 [IoId("fbe31cf6-81e9-41d4-86e5-f8a9d311dc60")]
 public sealed class pcAssocToDatatable : PancakeComponent<pcAssocToDatatable>, IPancakeLocalizable<pcAssocToDatatable>
 {

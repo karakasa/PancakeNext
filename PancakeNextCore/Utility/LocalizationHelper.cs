@@ -18,46 +18,55 @@ public static class LocalizationHelper
         set => Config.Write(ConfigCheckLanguage, value.ToString());
     }
 
-    public static string GetDisplayName(IPancakeLocalizable obj)
+    public static void LocalizeNameAndDescrpition(ref string name, ref string desc)
+    {
+        var originalName = name;
+        var originalDesc = desc;
+
+        name = GetDisplayName(originalName);
+        desc = GetDisplayDescription(originalName, originalDesc);
+    }
+
+    public static string GetDisplayName(string name)
     {
         if (GlobalizationResolver.IsNeutralLanguage)
         {
-            return obj.LocalizedName;
+            return name;
         }
         else
         {
-            var index = obj.LocalizedName.IndexOf(":");
-            if (index == -1) return obj.LocalizedName;
+            var index = name.IndexOf(":");
+            if (index == -1) return name;
 
-            var neutralName = obj.LocalizedName.Substring(0, index).Trim();
-            var localName = obj.LocalizedName.Substring(index + 1).Trim();
+            var neutralName = name.Substring(0, index).Trim();
+            var localName = name.Substring(index + 1).Trim();
 
             return GlobalizationResolver.PreferNeutralName ? neutralName : localName;
         }
     }
 
-    public static string GetDisplayDescription(IPancakeLocalizable obj)
+    public static string GetDisplayDescription(string name, string desc)
     {
         if (GlobalizationResolver.IsNeutralLanguage)
         {
-            return obj.LocalizedDescription;
+            return desc;
         }
         else
         {
-            const string NamePair = "{0} {1}";
+            const string NamePair = "{0}\r\n{1}";
 
-            var index = obj.LocalizedName.IndexOf(":");
-            if (index == -1) return obj.LocalizedDescription;
+            var index = name.IndexOf(":");
+            if (index == -1) return desc;
 
             if (GlobalizationResolver.PreferNeutralName)
             {
-                var localName = obj.LocalizedName.Substring(index + 1).Trim();
-                return string.Format(NamePair, localName, obj.LocalizedDescription);
+                var localName = name.Substring(index + 1).Trim();
+                return string.Format(NamePair, localName, desc);
             }
             else
             {
-                var neutralName = obj.LocalizedName.Substring(0, index).Trim();
-                return string.Format(NamePair, neutralName, obj.LocalizedDescription);
+                var neutralName = name.Substring(0, index).Trim();
+                return string.Format(NamePair, neutralName, desc);
             }
         }
     }
@@ -92,8 +101,7 @@ public static class LocalizationHelper
     {
         get
         {
-            if (_availLangs == null)
-                _availLangs = GetAvailableLanguageOptions().ToList();
+            _availLangs ??= GetAvailableLanguageOptions().ToList();
             return _availLangs.AsReadOnly();
         }
     }

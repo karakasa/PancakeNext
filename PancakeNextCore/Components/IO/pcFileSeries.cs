@@ -137,6 +137,6 @@ public sealed class pcFileSeries : PancakeComponent<pcFileSeries>, IPancakeLocal
     }
 
     protected override InputOption[][] SimpleOptions => [[
-            new ButtonOption("Reset counter", Strings.ResetInternalCounter, () => counterSet = false, "Reset")
+            new ButtonOption("Reset counter", Strings.ResetInternalCounter, () => counterSet = false)
             ]];
 }

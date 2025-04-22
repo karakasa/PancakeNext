@@ -9,7 +9,7 @@ using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("data", 1)]
+[ComponentCategory("data", 2)]
 [IoId("f611c939-fe6f-449b-999d-e863608753a0")]
 public sealed class pcExtractFromAssoc : PancakeComponent<pcExtractFromAssoc>, IPancakeLocalizable<pcExtractFromAssoc>
 {

@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("data", 1)]
+[ComponentCategory("data", 0)]
 [IoId("6f34ada2-4487-4fd7-bca9-00dd8c500fcd")]
 public sealed class pcMergeAssoc : PancakeComponent<pcMergeAssoc>, IPancakeLocalizable<pcMergeAssoc>
 {

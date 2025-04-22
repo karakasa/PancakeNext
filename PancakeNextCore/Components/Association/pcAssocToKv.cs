@@ -13,7 +13,7 @@ using PancakeNextCore.Utility;
 namespace PancakeNextCore.Components.Association;
 
 [IoId("{68D5751E-EFD3-41B5-96D0-C90466B2F58F}")]
-[ComponentCategory("data", 1)]
+[ComponentCategory("data", 2)]
 public class pcAssocToKv : PancakeComponent<pcAssocToKv>, IPancakeLocalizable<pcAssocToKv>
 {
     public pcAssocToKv() { }

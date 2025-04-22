@@ -159,18 +159,19 @@ public abstract partial class PancakeComponent
         }
     }
 
-    protected sealed class ButtonOption(string name, string desc, Action action, string text) : InputOption
+    protected sealed class ButtonOption(string name, string desc, Action action) : InputOption
     {
         public IIcon? Icon { get; set; }
         public string Name { get; set; } = name;
         public string Description { get; set; } = desc;
         public Action Action { get; set; } = action;
-        public Color? OnColor { get; set; }
-        public string Text { get; set; } = text;
+        public Color? OnColor { get; set; } = Colors.White;
         public string? ChapterName { get; set; }
         public override BarItem Create(PancakeComponent comp)
         {
             var toggle = new PushButton(Icon, new Grasshopper2.UI.Nomen(Name, Description, ChapterName), Action);
+            toggle.OnColour = toggle.OffColour = OnColor;
+
             return toggle;
         }
     }

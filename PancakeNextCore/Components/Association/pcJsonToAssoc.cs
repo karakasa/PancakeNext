@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.Components.Association;
 
 [IoId("{C92DF7F3-F383-483B-BFE7-3342788DF589}")]
-[ComponentCategory("assoc")]
+[ComponentCategory("assoc", 1)]
 public sealed class pcJsonToAssoc : PancakeComponent<pcJsonToAssoc>, IPancakeLocalizable<pcJsonToAssoc>
 {
     public pcJsonToAssoc() { }

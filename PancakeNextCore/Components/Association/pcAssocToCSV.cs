@@ -13,7 +13,7 @@ using Rhino.Commands;
 
 namespace PancakeNextCore.Components.Association;
 
-[ComponentCategory("data", 1)]
+[ComponentCategory("data", 2)]
 [IoId("fbe31cf6-81e9-41d4-86e5-f8a9d311dc61")]
 public sealed class pcAssocToCsv : PancakeComponent<pcAssocToCsv>, IPancakeLocalizable<pcAssocToCsv>
 {
