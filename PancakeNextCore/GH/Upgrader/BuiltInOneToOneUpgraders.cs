@@ -1,6 +1,7 @@
 ﻿using PancakeNextCore.Components.Algorithm;
 using PancakeNextCore.Components.Association;
 using PancakeNextCore.Components.IO;
+using PancakeNextCore.Components.Miscellaneous;
 using PancakeNextCore.Components.Quantity;
 using PancakeNextCore.GH.Params;
 
@@ -16,7 +17,7 @@ public sealed class Upgrader_pcExportSTL : OneToOneComponentUpgrader<pcExportSTL
 public sealed class Upgrader_pcExportTXT : OneToOneComponentUpgrader<pcExportTXT> { }
 public sealed class Upgrader_pcImportTXT : OneToOneComponentUpgrader<pcImportTXT> { }
 public sealed class Upgrader_pcImportTXTOld : OneToOneComponentUpgrader<pcImportTXT> {
-    public override Guid Grasshopper1Id => new("{49602452-908A-4FDA-992E-CB8C4E2D62F2");
+    public override Guid Grasshopper1Id => new("{49602452-908A-4FDA-992E-CB8C4E2D62F2}");
 }
 public sealed class Upgrader_pcParseString : OneToOneComponentUpgrader<pcParseString> { }
 public sealed class Upgrader_pcAssocToCsv : OneToOneComponentUpgrader<pcAssocToCsv> { }
@@ -39,3 +40,8 @@ public sealed class Upgrader_pcCountUnique : OneToOneComponentUpgrader<pcCountUn
 public sealed class Upgrader_pcMultiSort : OneToOneComponentUpgrader<pcMultiSort> { }
 public sealed class Upgrader_AssociationParameter : OneToOneParameterUpgrader<AssociationParameter> { }
 public sealed class Upgrader_QuantityParameter : OneToOneParameterUpgrader<QuantityParameter> { }
+public sealed class Upgrader_pcAbort : OneToOneComponentUpgrader<pcAbort> { }
+public sealed class Upgrader_pcGhFilePath : OneToOneComponentUpgrader<pcGhFilePath> { }
+public sealed class Upgrader_pcNull : OneToOneComponentUpgrader<pcNull> { }
+public sealed class Upgrader_pcWaitUntil : OneToOneComponentUpgrader<pcWaitUntil> { }
+public sealed class Upgrader_pcFileSeries : OneToOneComponentUpgrader<pcFileSeries> { }

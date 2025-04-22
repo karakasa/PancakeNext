@@ -177,15 +177,15 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
     {
         base.PreProcess(solution);
 
-        if (Parameters.OutputCount == 0 && AllowAutoFillOutputs && GlobalAutoFillOutputs)
+        if (Parameters.OutputCount == 0 && AllowAutoFillOutputs && GlobalAutoFillOutputs && Parameters.Input(0).Inputs.Count > 0)
         {
-            FillOutputFromInput();
+            FillOutputFromInput(true);
         }
     }
 
-    private void FillOutputFromInput()
+    private void FillOutputFromInput(bool quiet)
     {
-        FillOutput(TryGetAssociations(Parameters.Input(0)));
+        FillOutput(TryGetAssociations(Parameters.Input(0)), quiet: quiet);
     }
 
     private static IEnumerable<INodeQueryReadCapable> TryGetAssociations(IParameter param)
@@ -215,7 +215,7 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
 
     private void MnuClickFill()
     {
-        FillOutputFromInput();
+        FillOutputFromInput(false);
     }
 
     private bool TestOutputForFill(bool quite = false)
@@ -235,19 +235,21 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
         return true;
     }
 
-    private void FillOutput(IEnumerable<INodeQueryReadCapable> assoc, bool expire = true, bool quite = false)
+    private void FillOutput(IEnumerable<INodeQueryReadCapable> assoc, bool expire = true, bool quiet = false)
     {
-        if (!TestOutputForFill(quite)) return;
+        if (assoc is null) return;
 
         var names = assoc.SelectMany(x => x.GetAttributeNames().Concat(x.GetNodeNames()))
             .Distinct().ToArray();
 
         if (names.Length == 0)
         {
-            if (!quite)
+            if (!quiet)
                 UiHelper.MinorError("ItemFromAssoc.FillOutput", Strings.NoValidNamesAreFound);
             return;
         }
+
+        if (!TestOutputForFill(quiet)) return;
 
         var cnt = Parameters.OutputCount;
         for (var i = cnt - 1; i >= 0; i++)

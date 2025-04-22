@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace PancakeNextCore.Components.Algorithm;
 
-[ComponentCategory("misc", 0)]
+[ComponentCategory("data", 0)]
 [IoId("{14AF2C8E-E79F-4E95-B26E-FD6386170508}")]
 public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocalizable<pcMultiSort>
 {

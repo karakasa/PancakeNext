@@ -32,7 +32,6 @@ internal static partial class UiHelper
             return false;
         }
     }
-    private static double? _dpiSystemScale;
 
     internal static bool OpenFileSelected(string path)
     {
@@ -61,18 +60,44 @@ internal static partial class UiHelper
     private static readonly string Title = Strings.UiHelper_PancakeTitle;
     private static readonly string TitleErr = Strings.UiHelper_PancakeTitleError;
 
-    internal static void MinorError(string errCode, string desc)
+    internal static void InvokeUi(Action action, bool blocking = false)
+    {
+        if (blocking)
+        {
+            InvokeUi(() => { action(); return 0; });
+        }
+        else
+        {
+            Application.Instance?.AsyncInvoke(action);
+        }
+    }
+    internal static T InvokeUi<T>(Func<T> action)
+    {
+        var inst = Application.Instance;
+        if (inst is null) return default!;
+
+        try
+        {
+            inst.EnsureUIThread();
+            return action();
+        }
+        catch
+        {
+            return inst.InvokeAsync(action).Result;
+        }
+    }
+    internal static void MinorError(string errCode, string desc, bool blocking = false)
     {
         // LogUtility.Warning(errCode + " " + desc ?? string.Empty);
-        MessageBox.Show(desc, Title, MessageBoxButtons.OK);
+        InvokeUi(() => MessageBox.Show(desc, Title, MessageBoxButtons.OK), blocking);
     }
 
-    internal static void ErrorReport(string errCode, string desc = "")
+    internal static void ErrorReport(string errCode, string desc = "", bool blocking = false)
     {
         if (string.IsNullOrEmpty(desc))
             desc = Strings.UiHelper_ErrorReport_Default;
         // LogUtility.Error(errCode + " " + desc);
-        MessageBox.Show(string.Format(Strings.UiHelper_ErrorReport_Template, desc, errCode), TitleErr);
+        InvokeUi(() => MessageBox.Show(string.Format(Strings.UiHelper_ErrorReport_Template, desc, errCode), TitleErr), blocking);
     }
 
     internal static bool UndoWarning(string optional = "")
@@ -84,13 +109,12 @@ internal static partial class UiHelper
     {
         var notifytext = Strings.UiHelper_ContinueWarning_Template;
         notifytext = string.Format(notifytext, optional);
-        return MessageBox.Show(notifytext,
-                Title, MessageBoxButtons.OKCancel) == DialogResult.Ok;
+        return InvokeUi(() => MessageBox.Show(notifytext, Title, MessageBoxButtons.OKCancel)) == DialogResult.Ok;
     }
 
-    public static void Information(string info = "")
+    public static void Information(string info = "", bool blocking = false)
     {
-        MessageBox.Show(info, Title, MessageBoxButtons.OK);
+        InvokeUi(() => MessageBox.Show(info, Title, MessageBoxButtons.OK), blocking);
     }
 
     public static void UnavailableInReleaseVersion()
@@ -109,7 +133,7 @@ internal static partial class UiHelper
 
     public static bool AskYesNo(string info)
     {
-        return MessageBox.Show(info, Title, MessageBoxButtons.YesNo) == DialogResult.Yes;
+        return InvokeUi(() => MessageBox.Show(info, Title, MessageBoxButtons.YesNo)) == DialogResult.Yes;
     }
 
     //public static string SaveFileDialog(string title, string filter)

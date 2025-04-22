@@ -89,7 +89,7 @@ internal static partial class ComponentLibrary
             "io" => "00 | IO",
             "assoc" or "data" => "01 | Association",
             "qty" => "02 | Quantity",
-            "misc" => "03 | Misc",
+            "misc" or "logic" => "03 | Misc",
             _ => throw new ArgumentOutOfRangeException(nameof(categoryShortName), $"{categoryShortName} is not a valid category shortname."),
         };
     }
