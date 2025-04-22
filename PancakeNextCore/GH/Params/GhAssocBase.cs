@@ -164,15 +164,15 @@ public abstract class GhAssocBase : IStorable, ICloneable, INodeQueryReadCapable
     internal abstract GhAssocBase GenericClone();
     object ICloneable.Clone() => GenericClone();
     public abstract IEnumerable<string> GetNamesForExport();
-    public virtual bool DeepEquals(GhAssocBase? another) => throw new UnreachableException();
-    internal virtual List<string?>? GetRawNames() => throw new UnreachableException();
-    public abstract bool TryGetNode(string name, out INodeQueryReadCapable? node);
-    public abstract bool TryGetContent(string attributeName, out IPear? content);
+    public abstract bool DeepEquals(GhAssocBase? another);
+    internal abstract List<string?>? GetRawNames();
+    public abstract bool TryGetNode(string name, [NotNullWhen(true)] out INodeQueryReadCapable? node);
+    public abstract bool TryGetContent(string attributeName, [NotNullWhen(true)] out IPear? content);
     public abstract IEnumerable<KeyValuePair<string, INodeQueryReadCapable?>> GetNodes();
     public abstract IEnumerable<KeyValuePair<string, IPear?>> GetAttributes();
     public abstract IEnumerable<string> GetNodeNames();
     public abstract IEnumerable<string> GetAttributeNames();
-    public abstract bool TryGetNode(string name, out INodeQueryWriteCapable? node, bool createIfNotExist);
+    public abstract bool TryGetNode(string name, [NotNullWhen(true)] out INodeQueryWriteCapable? node, bool createIfNotExist);
     public abstract bool SetContent(string attributeName, IPear? content);
     public abstract bool AddContent(string attributeName, IPear? content);
 }
