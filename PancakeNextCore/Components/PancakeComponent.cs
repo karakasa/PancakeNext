@@ -273,7 +273,8 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
 }
 
 public abstract class PancakeComponent<T> : PancakeComponent
-    where T : IPancakeLocalizable<T> // Use CRTP to circumvent Nomen creation issues from localized names
+    where T : IPancakeLocalizable<T> 
+    // Use CRTP to circumvent Nomen creation issues from localized names
 {
 
     protected PancakeComponent() : base(CreateNomen())
@@ -282,33 +283,19 @@ public abstract class PancakeComponent<T> : PancakeComponent
     protected PancakeComponent(IReader reader) : base(reader)
     {
     }
-    private static Nomen CreateNomen()
-    {
-        string name, desc;
 
 #if NET
-        name = T.StaticLocalizedName;
-        desc = T.StaticLocalizedDescription;
-#else
-        name = (CachedLocalizedName ??= (string)ReflectionHelper.GetStaticProperty<T>("StaticLocalizedName")!);
-        desc = (CachedLocalizedDescription ??= (string)ReflectionHelper.GetStaticProperty<T>("StaticLocalizedDescription")!);
-#endif
-
-        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(desc))
-        {
-            throw new InvalidOperationException($"Fail to retrieve name or description for {typeof(T).Name}");
-        }
-
-        var category = typeof(T).GetCustomAttribute<ComponentCategoryAttribute>() ??
-            throw new InvalidOperationException($"Fail to retrieve category for {typeof(T).Name}");
-
-        var categoryName = ComponentLibrary.GetCategoryFriendlyName(category.SectionName);
-        return new Nomen(name, desc, ComponentLibrary.PanelName, categoryName, category.SubPanelIndex, category.Rank);
+    private static Nomen CreateNomen()
+    {
+        return StaticDocObjectHelper.CreateNomen<T>();
     }
-
-#if !NET
+#else
     private static string? CachedLocalizedName;
     private static string? CachedLocalizedDescription;
+    private static Nomen CreateNomen()
+    {
+        return StaticDocObjectHelper.CreateNomen<T>(ref CachedLocalizedName, ref CachedLocalizedDescription);
+    }
 #endif
 
     protected override void HandleLocalizationForRestored()
