@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PancakeNextCore.GH.Params;
-using PancakeNextCore.GH.Params.AssocConverters;
 
 
 
@@ -13,7 +12,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 #endif
 
-namespace PancakeNextCore.DataType.AssocConverters;
+namespace PancakeNextCore.GH.Params.AssocConverters;
 #if NET
 internal sealed class STJsonParser : IJsonParser
 {
