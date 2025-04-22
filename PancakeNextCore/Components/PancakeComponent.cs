@@ -224,6 +224,10 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
         => CustomValues.Get(settingName, defaultValue);
     protected void SetValue(string settingName, bool boolValue)
         => CustomValues.Set(settingName, boolValue);
+    protected int GetValue(string settingName, int defaultValue)
+        => CustomValues.Get(settingName, defaultValue);
+    protected void SetValue(string settingName, int boolValue)
+        => CustomValues.Set(settingName, boolValue);
     public Version? LastSaveVersion { get; private set; }
     private const string CfgSaveVersion = "LastSaveVersion";
     protected bool IsNewlyCreated { get; private set; } = true;
@@ -260,10 +264,17 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
         throw new InvalidOperationException();
     }
 
-    protected void ExpireSolution()
+    protected void ExpireSolution(bool delayed = false)
     {
-        Expire();
-        base.Document?.Solution.Start();
+        if (delayed)
+        {
+            Document?.Solution.DelayedExpire(this);
+        }
+        else
+        {
+            Expire();
+            Document?.Solution.Start();
+        }
     }
 
     protected virtual void ReadConfig()

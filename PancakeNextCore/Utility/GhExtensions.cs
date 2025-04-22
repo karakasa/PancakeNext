@@ -1,5 +1,6 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Data.Meta;
+using Grasshopper2.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,11 @@ internal static class GhExtensions
 
         guid = Guid.Empty;
         return false;
+    }
+
+    public static IParameter With(this IParameter p, Requirement req)
+    {
+        p.Requirement = req;
+        return p;
     }
 }

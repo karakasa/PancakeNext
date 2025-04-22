@@ -40,6 +40,14 @@ public abstract class PancakeParameter<TContent, TParameter> : Parameter<TConten
         ReadConfig();
     }
 
+    public PancakeParameter(Nomen nomen, Access access) : base(nomen, access)
+    {
+        ProcessRuntimeModifier();
+        HandleLocalizationForNewlyCreated();
+
+        ReadConfig();
+    }
+
 #if NET
     private static Nomen CreateNomen()
     {

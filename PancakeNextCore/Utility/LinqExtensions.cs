@@ -25,4 +25,9 @@ internal static class LinqExtensions
 
     public static IEnumerable<T> ExcludeNulls<T>(this IEnumerable<T?> src) => src.Where(x => x is not null)!;
     public static T? FirstNonNullOrDefault<T>(this IEnumerable<T> src) => src.FirstOrDefault(x => x is not null);
+    public static void ForEach<T>(this IEnumerable<T> src, Action<T> procedure)
+    {
+        foreach (var it in src)
+            procedure(it);
+    }
 }

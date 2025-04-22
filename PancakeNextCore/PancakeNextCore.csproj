@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Components\Algorithm\pcMultiSort.cs" />
-    <Compile Remove="Components\Association\pcConAssoc.cs" />
-    <Compile Remove="Components\Association\pcDeconAssoc.cs" />
-    <Compile Remove="Components\Association\pcMergeAssoc.cs" />
     <Compile Remove="Components\SleepComponent.cs" />
     <Compile Remove="GH\AssociationStringifier.cs" />
     <Compile Remove="Helper\DependencyWalker.cs" />
@@ -57,7 +53,6 @@
     <Compile Remove="UI\IFormPerformanceAnalyzer.cs" />
     <Compile Remove="UI\IFormPortabilityReport.cs" />
     <Compile Remove="UI\PerformanceAnalyzerPresenter.cs" />
-    <Compile Remove="UI\UIHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -99,10 +94,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Components\Algorithm\pcMultiSort.cs" />
-    <None Include="Components\Association\pcConAssoc.cs" />
-    <None Include="Components\Association\pcDeconAssoc.cs" />
-    <None Include="Components\Association\pcMergeAssoc.cs" />
     <None Include="Components\SleepComponent.cs" />
     <None Include="Helper\DependencyWalker.cs" />
     <None Include="Helper\Performance.cs" />
@@ -141,7 +132,6 @@
     <None Include="UI\IFormPerformanceAnalyzer.cs" />
     <None Include="UI\IFormPortabilityReport.cs" />
     <None Include="UI\PerformanceAnalyzerPresenter.cs" />
-    <None Include="UI\UIHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>

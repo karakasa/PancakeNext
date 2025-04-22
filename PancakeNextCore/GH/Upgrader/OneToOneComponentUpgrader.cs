@@ -19,7 +19,7 @@ namespace PancakeNextCore.GH.Upgrader;
 /// <typeparam name="T">Type of the new component</typeparam>
 public abstract class OneToOneComponentUpgrader<T> : IUpgradeGh1Component where T : Component, new()
 {
-    public Guid Grasshopper1Id { get; } = (typeof(T).GetCustomAttribute<IoIdAttribute>() ?? throw new ArgumentException("Component must have an IoIdAttribute")).Id;
+    public virtual Guid Grasshopper1Id { get; } = (typeof(T).GetCustomAttribute<IoIdAttribute>() ?? throw new ArgumentException("Component must have an IoIdAttribute")).Id;
     public IDocumentObject Upgrade(IGH_Component component)
     {
         var comp = new T();

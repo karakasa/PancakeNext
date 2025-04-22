@@ -86,18 +86,38 @@ public sealed class pcAssocToString : PancakeComponent<pcAssocToString>, IPancak
             "Association" => StringConversionType.Association,
             _ => StringConversionType.Json
         };
+
+        UpdateMessage();
+    }
+
+    private void UpdateMessage()
+    {
+        Label = ConversionType switch
+        {
+            StringConversionType.Json => "Json",
+            StringConversionType.AllStringJson => "Json*",
+            StringConversionType.Querystring => "Url",
+            StringConversionType.Association => "Association",
+            StringConversionType.Python => "Python",
+            _ => "?"
+        };
     }
 
     public StringConversionType ConversionType
     {
         get => _conversionType;
-        set => SetValue(StyleOptionName, (_conversionType = value) switch
+        set
         {
-            StringConversionType.Querystring => "Querystring",
-            StringConversionType.Python => "Python",
-            StringConversionType.Association => "Association",
-            _ => "Json"
-        });
+            SetValue(StyleOptionName, (_conversionType = value) switch
+            {
+                StringConversionType.Querystring => "Querystring",
+                StringConversionType.Python => "Python",
+                StringConversionType.Association => "Association",
+                _ => "Json"
+            });
+
+            UpdateMessage();
+        }
     }
 
     private const string StyleOptionName = "Style";

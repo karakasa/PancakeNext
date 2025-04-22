@@ -1,141 +1,105 @@
-﻿using System;
-
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.GH.Params;
+﻿using Grasshopper2.Components;
+using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
+using System;
+using System.Globalization;
 
 namespace PancakeNextCore.Components.Association;
 
 [ComponentCategory("data", 1)]
-public class pcConAssoc : PancakeComponent, IGH_VariableParameterComponent
+[IoId("6f34ada2-4487-4fd7-bca9-00dd8c5eefcd")]
+public sealed class pcConAssoc : PancakeComponent<pcConAssoc>, IPancakeLocalizable<pcConAssoc>
 {
-    public override string LocalizedName => Strings.ConstructAssociativeArray;
-    public override string LocalizedDescription => Strings.CreateAnAssociativeArrayFromAListOfItemsAnAssociativeArrayWillBeTreatedAsOneSingleElementDuringGrasshopperTreeManipulationThereforeStructureManipulationWouldBeEasier;
+    public static string StaticLocalizedName => Strings.ConstructAssociativeArray;
+    public static string StaticLocalizedDescription => Strings.CreateAnAssociativeArrayFromAListOfItemsAnAssociativeArrayWillBeTreatedAsOneSingleElementDuringGrasshopperTreeManipulationThereforeStructureManipulationWouldBeEasier;
 
-    /// <summary>
-    /// Initializes a new instance of the pcTupleFromItem class.
-    /// </summary>
-    public pcConAssoc()
+    public pcConAssoc() { }
+    public pcConAssoc(IReader reader) : base(reader) { }
+
+    protected override void ReadConfig()
     {
-        // Params.ParameterNickNameChanged += NicknameChangeEvent;
-        Params.ParameterChanged += ParamObjectChanged;
+        if (Parameters is not null)
+            Parameters.ParameterRenamed += InputParameterNameChanged;
     }
 
-    private void ParamObjectChanged(object sender, GH_ParamServerEventArgs e)
+    private void InputParameterNameChanged(object? sender, ParameterEventArgs e)
     {
-        if (e.OriginalArguments.Type == GH_ObjectEventType.NickNameAccepted)
+        if (e.Side == Side.Input)
+        {
             ExpireSolution(true);
-    }
-
-    private void NicknameChangeEvent(object sender, GH_ParamServerEventArgs e)
-    {
-        ExpireSolution(true);
-    }
-
-    public override void RemovedFromDocument(GH_Document document)
-    {
-        Params.ParameterNickNameChanged -= NicknameChangeEvent;
+        }
     }
 
     protected override void RegisterInputs()
     {
-        AddParam("0");
-        LastAddedParameter.Optional = true;
+        AddParam("0", requirement: Requirement.MayBeNull);
     }
 
     protected override void RegisterOutputs()
     {
-        AddParam("assoc");
+        AddParam<AssociationParameter>("assoc");
     }
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    public override bool CanCreateParameter(Side side, int index)
     {
-        var paramCount = Params.Input.Count;
+        return side == Side.Input;
+    }
+
+    public override bool CanRemoveParameter(Side side, int index)
+    {
+        return side == Side.Input;
+    }
+
+    public override void DoCreateParameter(Side side, int index)
+    {
+        if (side == Side.Input)
+        {
+            Parameters.AddInput(new GenericParameter("", "", "", Access.Item), index);
+        }
+    }
+
+    protected override void Process(IDataAccess access)
+    {
+        var paramCount = Parameters.InputCount;
         var tuple = new GhAssoc(paramCount);
 
         for (var i = 0; i < paramCount; i++)
         {
-            object data = null;
-            DA.GetData(i, ref data);
-            if (Params.Input[i].NickName != Params.Input[i].Name)
-            {
-                tuple.Add(Params.Input[i].NickName, data);
-            }
-            else
+            var inp = Parameters.Input(i);
+            access.GetIPear(i, out var data);
+            if (string.IsNullOrEmpty(inp.UserName))
             {
                 tuple.Add(data);
             }
+            else
+            {
+                tuple.Add(inp.UserName, data);
+            }
         }
 
-        DA.SetData(0, tuple);
+        access.SetItem(0, tuple);
     }
 
-    public bool CanInsertParameter(GH_ParameterSide side, int index)
-    {
-        if (side == GH_ParameterSide.Output)
-            return false;
-        return true;
-    }
-
-    public bool CanRemoveParameter(GH_ParameterSide side, int index)
-    {
-        if (side == GH_ParameterSide.Output)
-            return false;
-        return true;
-    }
-
-    public IGH_Param CreateParameter(GH_ParameterSide side, int index)
-    {
-        var param = new Param_GenericObject();
-        param.Optional = true;
-        param.Name = param.NickName = index.ToString();
-
-        return param;
-    }
-
-    public bool DestroyParameter(GH_ParameterSide side, int index)
-    {
-        return true;
-    }
-
-    public void VariableParameterMaintenance()
+    public override void VariableParameterMaintenance()
     {
         var index = 0;
 
-        foreach (var t in Params.Input)
+        foreach (var t in Parameters.Inputs)
         {
-            if (t.Name == t.NickName)
-            {
-                t.Name = t.NickName = index.ToString();
-                t.Description = $"{index}";
-            }
-            else
-            {
-                t.Name = index.ToString();
-                t.Description = $"{index} : {t.NickName}";
-            }
+            t.Requirement = Requirement.MayBeNull;
 
-            t.Optional = true;
+            if (t.Nomen.Name == "") // newly created
+            {
+                var indexStr = index.ToString(CultureInfo.InvariantCulture);
+                t.ModifyNameAndInfo(indexStr, $"Item {indexStr}");
+                t.FallbackName = indexStr;
+            }
 
             ++index;
         }
-    }
-
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon => ComponentIcon.Item2Assoc;
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("6f34ada2-4487-4fd7-bca9-00dd8c5eefcd"); }
     }
 }

@@ -18,6 +18,7 @@ public sealed class AssociationParameter : PancakeParameter<GhAssocBase, Associa
 {
     public AssociationParameter(IReader reader) : base(reader) { }
     public AssociationParameter() { }
+    public AssociationParameter(Nomen nomen, Access access) : base(nomen, access) { }
     public static string StaticLocalizedName => "Association";
     public static string StaticLocalizedDescription => "Represents a collection of data. Similar to Tuple with fewer limitations.";
     public override ITypeAssistant<GhAssocBase> TypeAssistant => AssociationTypeAssistant.Instance;

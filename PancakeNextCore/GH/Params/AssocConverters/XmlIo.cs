@@ -49,7 +49,7 @@ internal sealed class XmlIo
     public bool Headless = false;
 
     private readonly StringBuilder builder = new();
-    public string CreateXml(string rootTag, GhAssocBase node)
+    public string CreateXml(string rootTag, INodeQueryReadCapable node)
     {
         builder.Clear();
 
@@ -86,7 +86,7 @@ internal sealed class XmlIo
             str.EscapeForXml(builder);
         }
     }
-    private void CreateXmlFromNode(string tagName, INodeQueryReadCapable node)
+    private void CreateXmlFromNode(string tagName, INodeQueryReadCapable? node)
     {
         var realName = tagName;
 
@@ -106,6 +106,10 @@ internal sealed class XmlIo
         else if (node is GhAssoc na)
         {
             CreateXmlFromNode(realName, na);
+        }
+        else
+        {
+            // TODO. Generic Node Queryable
         }
     }
     private void CreateXmlFromNode(string realName, GhAtomList list)

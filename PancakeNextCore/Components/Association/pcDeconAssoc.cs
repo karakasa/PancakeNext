@@ -1,222 +1,243 @@
-﻿using System;
+﻿using Eto.Drawing;
+using Grasshopper2.Components;
+using Grasshopper2.Data;
+using Grasshopper2.Doc;
+using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.Dataset;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
+using PancakeNextCore.UI;
+using PancakeNextCore.Utility;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Forms;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Attributes;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.Dataset;
-using Pancake.GH.Params;
-using Pancake.Interfaces;
-using Pancake.UI;
 
 namespace PancakeNextCore.Components.Association;
 
 [ComponentCategory("data", 1)]
-public class pcDeconAssoc : PancakeComponent, IGH_VariableParameterComponent
+[IoId("43dc642d-3bb6-48a2-90aa-94960105dc6f")]
+public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocalizable<pcDeconAssoc>
 {
+    public pcDeconAssoc() { }
+    public pcDeconAssoc(IReader reader) : base(reader) { }
     private const string CfgAutoFill = "DeconAssoc_AutoFillOutputs";
     private const string CfgAllowAutoFill = "AllowAutoFill";
-    public static bool AutoFillOutputs
+    public static bool GlobalAutoFillOutputs
     {
         get => Config.Read(CfgAutoFill, true, true);
         set => Config.Write(CfgAutoFill, value.ToString());
     }
 
+    private bool _allowAutoFilleOutputs;
     public bool AllowAutoFillOutputs
     {
-        get => GetValue(CfgAllowAutoFill, true);
-        set => SetValue(CfgAllowAutoFill, value);
+        get => _allowAutoFilleOutputs;
+        set => SetValue(CfgAllowAutoFill, _allowAutoFilleOutputs = value);
     }
-    public override string LocalizedDescription => Strings.DecomposeAnAssociativeArrayIntoItems;
-    public override string LocalizedName => Strings.DeconstructAssociativeArray;
-
-    /// <summary>
-    /// Initializes a new instance of the pcItemFromTuple class.
-    /// </summary>
-    public pcDeconAssoc()
+    public static string StaticLocalizedDescription => Strings.DecomposeAnAssociativeArrayIntoItems;
+    public static string StaticLocalizedName => Strings.DeconstructAssociativeArray;
+    protected override void ReadConfig()
     {
+        if (Parameters is not null)
+            Parameters.ParameterRenamed += InputParameterNameChanged;
+
+        _allowAutoFilleOutputs = GetValue(CfgAllowAutoFill, true);
     }
-
-    public override void AddedToDocument(GH_Document document)
+    private void InputParameterNameChanged(object? sender, ParameterEventArgs e)
     {
-        base.AddedToDocument(document);
-
-        Params.ParameterNickNameChanged += NicknameChangeEvent;
-    }
-    public override void RemovedFromDocument(GH_Document document)
-    {
-        Params.ParameterNickNameChanged -= NicknameChangeEvent;
-
-        base.RemovedFromDocument(document);
-    }
-
-    private void NicknameChangeEvent(object sender, GH_ParamServerEventArgs e)
-    {
-        ExpireSolution(true);
-    }
-
-    protected override void BeforeSolveInstance()
-    {
-        base.BeforeSolveInstance();
-
-        if (Params.Output.Count == 0 && AllowAutoFillOutputs && AutoFillOutputs)
+        if (e.Side == Side.Input)
         {
-            FillOutput(Params.Input[0].VolatileData.AllData(true).OfType<INodeQueryReadCapable>(), false, true);
+            ExpireSolution(true);
         }
     }
+
     protected override void RegisterInputs()
     {
-        AddParam("assoc");
+        AddParam<AssociationParameter>("assoc");
     }
 
     protected override void RegisterOutputs()
     {
     }
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    private void ReadAssociation(IDataAccess access, GhAssoc tuple)
     {
-        INodeQueryReadCapable node = null;
-        if (!DA.GetData(0, ref node) || node == null)
-            return;
-
-        if (node is GhAssoc tuple)
+        for (var i = 0; i < Parameters.OutputCount; i++)
         {
-            for (var i = 0; i < Params.Output.Count; i++)
-            {
-                var nickName = Params.Output[i].NickName;
-                object output = null;
+            var pOut = Parameters.Output(i);
 
-                if (nickName != Params.Output[i].Name)
-                {
-                    if (tuple.TryGet(nickName, out output))
-                        DA.SetData(i, output);
-                    else
-                    {
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(Strings.Key0DoesnTExist, nickName));
-                        DA.SetData(i, null);
-                    }
-                }
+            var nickName = pOut.UserName;
+            IPear? output = null;
+
+            if (!string.IsNullOrEmpty(nickName))
+            {
+                if (tuple.TryGet(nickName, out output))
+                    access.SetPear(i, output);
                 else
                 {
-                    if (tuple.TryGet(i, out output))
-                        DA.SetData(i, output);
-                    else
-                    {
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(Strings.Index0DoesnTExist, i));
-                        DA.SetData(i, null);
-                    }
+                    access.AddWarning("Wrong key", string.Format(Strings.Key0DoesnTExist, nickName));
+                    access.SetPear(i, null);
                 }
-            }
-        }
-        else
-        {
-            for (var i = 0; i < Params.Output.Count; i++)
-            {
-                var nickName = Params.Output[i].NickName;
-
-                if (node.TryGetContent(nickName, out var content))
-                {
-                    DA.SetData(i, content);
-                }
-                else
-                {
-                    DA.SetData(i, null);
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(Strings.Key0DoesnTExist, nickName));
-                }
-            }
-        }
-    }
-
-    public bool CanInsertParameter(GH_ParameterSide side, int index)
-    {
-        return side == GH_ParameterSide.Output;
-    }
-
-    public bool CanRemoveParameter(GH_ParameterSide side, int index)
-    {
-        if (side != GH_ParameterSide.Output)
-            return false;
-
-        return Params.Output.Count > 1;
-    }
-
-    public IGH_Param CreateParameter(GH_ParameterSide side, int index)
-    {
-        AllowAutoFillOutputs = false;
-        var param = new Param_GenericObject();
-        param.Name = param.NickName = index.ToString();
-
-        return param;
-    }
-
-    public bool DestroyParameter(GH_ParameterSide side, int index)
-    {
-        AllowAutoFillOutputs = false;
-        return true;
-    }
-
-    public void VariableParameterMaintenance()
-    {
-        var index = 0;
-
-        foreach (var t in Params.Output)
-        {
-            if (t.Name == t.NickName)
-            {
-                t.Name = t.NickName = index.ToString();
-                t.Description = $"{index}";
             }
             else
             {
-                t.Name = index.ToString();
-                t.Description = $"{index} : {t.NickName}";
+                if (tuple.TryGet(i, out output))
+                    access.SetPear(i, output);
+                else
+                {
+                    access.AddWarning("Wrong index", string.Format(Strings.Index0DoesnTExist, i));
+                    access.SetPear(i, null);
+                }
+            }
+        }
+    }
+
+    private void ReadGeneralObject(IDataAccess access, INodeQueryReadCapable node)
+    {
+        for (var i = 0; i < Parameters.OutputCount; i++)
+        {
+            var nickName = Parameters.Output(i).UserName;
+
+            if (node.TryGetContent(nickName, out var content))
+            {
+                access.SetPear(i, content);
+            }
+            else
+            {
+                access.SetPear(i, null);
+                access.AddWarning("Wrong key", string.Format(Strings.Key0DoesnTExist, nickName));
+            }
+        }
+    }
+
+    protected override void Process(IDataAccess access)
+    {
+        access.GetItem(0, out object obj);
+        if (obj is not INodeQueryReadCapable node)
+        {
+            access.AddError("Wrong input", "Input type is not supported.");
+            return;
+        }
+
+        if (node is GhAssoc tuple)
+        {
+            ReadAssociation(access, tuple);
+        }
+        else
+        {
+            ReadGeneralObject(access, node);
+        }
+    }
+
+    public override bool CanCreateParameter(Side side, int index)
+    {
+        return side == Side.Output;
+    }
+    public override bool CanRemoveParameter(Side side, int index)
+    {
+        return side == Side.Output && Parameters.OutputCount > 1;
+    }
+    public override void DoCreateParameter(Side side, int index)
+    {
+        AllowAutoFillOutputs = false;
+
+        var param = new GenericParameter("", "", "", Access.Item).With(Requirement.MayBeNull);
+        Parameters.AddInput(param);
+    }
+    public override void DoRemoveParameter(Side side, int index)
+    {
+        AllowAutoFillOutputs = false;
+        base.DoRemoveParameter(side, index);
+    }
+    public override void VariableParameterMaintenance()
+    {
+        var index = 0;
+
+        foreach (var t in Parameters.Outputs)
+        {
+            var indStr = index.ToString(CultureInfo.InvariantCulture);
+            if (t.Nomen.Name == "")
+            {
+                t.ModifyNameAndInfo(indStr, $"Item {indStr}");
+            }
+            else if (!string.IsNullOrEmpty(t.UserName))
+            {
+                t.ModifyNameAndInfo(t.Nomen.Name, $"Item {indStr} : {t.UserName}");
             }
 
             ++index;
         }
     }
 
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon => ComponentIcon.Assoc2Item;
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
+    protected override void PreProcess(Solution solution)
     {
-        get { return new Guid("43dc642d-3bb6-48a2-90aa-94960105dc6f"); }
+        base.PreProcess(solution);
+
+        if (Parameters.OutputCount == 0 && AllowAutoFillOutputs && GlobalAutoFillOutputs)
+        {
+            FillOutputFromInput();
+        }
     }
 
-    public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+    private void FillOutputFromInput()
     {
-        Menu_AppendSeparator(menu);
-        Menu_AppendItem(menu, Strings.MatchOutputWithNamedValues, MnuFillOutput);
-        Menu_AppendItem(menu, Strings.FillOutputsAutomaticallyGlobal, (sender, e) => AutoFillOutputs = !AutoFillOutputs, true, AutoFillOutputs);
-        Menu_AppendItem(menu, Strings.FillOutputsAutomaticallyCurrent, (sender, e) => AllowAutoFillOutputs = !AllowAutoFillOutputs, true, AllowAutoFillOutputs);
+        FillOutput(TryGetAssociations(Parameters.Input(0)));
+    }
+
+    private static IEnumerable<INodeQueryReadCapable> TryGetAssociations(IParameter param)
+    {
+        var tree = param.State?.Data?.Tree();
+        if (tree is null) yield break;
+        foreach (var it in tree.AllPears)
+        {
+            if (it.Type.IsValueType) continue;
+            if (it.Item is INodeQueryReadCapable g) yield return g;
+        }
+    }
+
+    protected override InputOption[][] SimpleOptions =>
+        [[
+            new ToggleOption("Allow auto fill for this component", Strings.FillOutputsAutomaticallyCurrent,
+                AllowAutoFillOutputs, x => AllowAutoFillOutputs = x, "Fill this", "Skip", "Auto fill")
+                { OnColor = OpenColor.Blue7 },
+
+            new ToggleOption("Allow auto fill for this globally", Strings.FillOutputsAutomaticallyGlobal,
+                GlobalAutoFillOutputs, x => GlobalAutoFillOutputs = x, "Fill all", "Skip", "Auto fill")
+                { OnColor = OpenColor.Blue7 },
+        ],
+        [
+            new ButtonOption("Fill outputs now", "Fill outputs immediately, from input association to this component.", MnuClickFill, Strings.MatchOutputWithNamedValues)
+        ]];
+
+    private void MnuClickFill()
+    {
+        FillOutputFromInput();
+    }
+
+    private bool TestOutputForFill(bool quite = false)
+    {
+        if (Parameters.Outputs.Any(o => o.Outputs.Count != 0))
+        {
+            if (quite || UiHelper.ContinueWarning(Strings.ThisOperationWouldDisconnectAllExistingRecipients))
+            {
+                Parameters.Outputs.ForEach(o => Connections.DisconnectAllOutputs(o));
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void FillOutput(IEnumerable<INodeQueryReadCapable> assoc, bool expire = true, bool quite = false)
     {
-        if (Params.Output.Any(o => o.Recipients.Count != 0))
-        {
-            if (quite || UiHelper.ContinueWarning(Strings.ThisOperationWouldDisconnectAllExistingRecipients))
-            {
-                Params.Output.ForEach(o => o.IsolateObject());
-            }
-            else
-            {
-                return;
-            }
-        }
+        if (!TestOutputForFill(quite)) return;
 
         var names = assoc.SelectMany(x => x.GetAttributeNames().Concat(x.GetNodeNames()))
             .Distinct().ToArray();
@@ -228,32 +249,21 @@ public class pcDeconAssoc : PancakeComponent, IGH_VariableParameterComponent
             return;
         }
 
-        Params.Output.Clear();
-        Params.Output.AddRange(names.Select((n, i) =>
+        var cnt = Parameters.OutputCount;
+        for (var i = cnt - 1; i >= 0; i++)
         {
-            var param = new Param_GenericObject()
-            {
-                Name = i.ToString(),
-                NickName = n,
-                Description = $"{i} : {n}",
-                Access = GH_ParamAccess.item
-            };
-            param.Attributes = new GH_LinkedParamAttributes(param, Attributes);
-            return param;
+            Parameters.RemoveOutput(i);
         }
-        ));
 
-        Params.OnParametersChanged();
+        foreach (var name in names)
+        {
+            var param = new GenericParameter("", "", "", Access.Item);
+            Parameters.AddOutput(param);
+        }
 
         if (expire)
         {
             ExpireSolution(true);
         }
-    }
-
-    private void MnuFillOutput(object sender, EventArgs e)
-    {
-        FillOutput(Params.Input[0].VolatileData.AllData(true)
-            .OfType<GhAssoc>());
     }
 }

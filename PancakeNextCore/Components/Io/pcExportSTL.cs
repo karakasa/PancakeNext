@@ -70,29 +70,29 @@ public sealed class pcExportSTL : PancakeComponent<pcExportSTL>, IPancakeLocaliz
 
         if (Directory.Exists(savepath) || savepath.EndsWith(Path.DirectorySeparatorChar.ToString()))
         {
-            access.AddError("Wrong destination", "The path parameter shouldn't be a folder. It needs to be a file.");
+            access.AddError("Wrong destination", Strings.ThePathParameterShouldnTBeAFolder);
             return;
         }
 
         if (File.Exists(savepath))
         {
-            access.AddWarning("File already exists", "The file already exists. It will be overwritten.");
+            access.AddWarning("File already exists", Strings.TargetFileAlreadyExistsSTL);
         }
 
         if (string.IsNullOrEmpty(Path.GetExtension(savepath)))
         {
-            access.AddWarning("No extension", "The file extension is missing.");
+            access.AddWarning("No extension", Strings.NoExtensionIsIncludedInThePath);
         }
 
         if (!mesh.IsClosed)
         {
-            access.AddWarning("Bad mesh", "The mesh is open. It may result in bad STL files.");
+            access.AddWarning("Bad mesh", Strings.TheMeshIsNotClosed);
         }
 
         var mesh2 = mesh.DuplicateMesh();
         if (!mesh2.Faces.ConvertQuadsToTriangles() && mesh2.Faces.QuadCount != 0)
         {
-            access.AddError("Bad mesh", "Failed to triangluate the mesh.");
+            access.AddError("Bad mesh", Strings.FailToTriangulateTheMesh);
             return;
         }
 
@@ -102,7 +102,7 @@ public sealed class pcExportSTL : PancakeComponent<pcExportSTL>, IPancakeLocaliz
             bbox.MakeValid();
             Point3d minPoint = bbox.Min;
             if (!mesh2.Transform(Transform.Translation(-minPoint.X, -minPoint.Y, -minPoint.Z)))
-                access.AddWarning("Bad mesh", "Failed to relocate the mesh.");
+                access.AddWarning("Bad mesh", Strings.FailToRelocateTheMesh);
         }
 
         //mesh2.UnifyNormals();

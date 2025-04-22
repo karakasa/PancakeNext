@@ -37,7 +37,7 @@ public class pcDeconFeetInch : PancakeComponent<pcDeconFeetInch>, IPancakeLocali
         access.GetItem(0, out GhLengthFeetInch q);
         if (q == null)
         {
-            access.AddError("Wrong type", "The fed data is not a quantity.");
+            access.AddError("Wrong type", Strings.WrongType);
             return;
         }
 

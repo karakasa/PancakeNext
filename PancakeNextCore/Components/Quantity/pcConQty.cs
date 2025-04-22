@@ -47,7 +47,7 @@ public sealed class pcConQty : PancakeComponent<pcConQty>, IPancakeLocalizable<p
         {
             if (!GhDecimalLengthInfo.TryDetermineUnit(unit, out var internalUnit))
             {
-                access.AddError("Unsupported unit", $"{unit} is not supported.");
+                access.AddError("Unsupported unit", string.Format(Strings.Unit0IsNotSupported, unit));
                 return;
             }
 
@@ -58,7 +58,7 @@ public sealed class pcConQty : PancakeComponent<pcConQty>, IPancakeLocalizable<p
             var doc = RhinoDocServer.ActiveDoc;
             if (doc == null)
             {
-                access.AddError("Cannot infer unit", "Current model unit is unavailable.");
+                access.AddError("Cannot infer unit", Strings.NoActiveRhinoDocument);
                 return;
             }
             var docUnit = doc.ModelUnitSystem;
