@@ -1,6 +1,7 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Data.Meta;
 using GrasshopperIO;
+using PancakeNextCore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PancakeNextCore.GH.Params;
-public abstract class GhAssocBase : IStorable, ICloneable
+public abstract class GhAssocBase : IStorable, ICloneable, INodeQueryReadCapable, INodeQueryWriteCapable
 {
     public GhAssocBase()
     {
@@ -165,4 +166,13 @@ public abstract class GhAssocBase : IStorable, ICloneable
     public abstract IEnumerable<string> GetNamesForExport();
     public virtual bool DeepEquals(GhAssocBase? another) => throw new UnreachableException();
     internal virtual List<string?>? GetRawNames() => throw new UnreachableException();
+    public abstract bool TryGetNode(string name, out INodeQueryReadCapable? node);
+    public abstract bool TryGetContent(string attributeName, out IPear? content);
+    public abstract IEnumerable<KeyValuePair<string, INodeQueryReadCapable?>> GetNodes();
+    public abstract IEnumerable<KeyValuePair<string, IPear?>> GetAttributes();
+    public abstract IEnumerable<string> GetNodeNames();
+    public abstract IEnumerable<string> GetAttributeNames();
+    public abstract bool TryGetNode(string name, out INodeQueryWriteCapable? node, bool createIfNotExist);
+    public abstract bool SetContent(string attributeName, IPear? content);
+    public abstract bool AddContent(string attributeName, IPear? content);
 }

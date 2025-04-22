@@ -1,4 +1,5 @@
 ﻿using PancakeNextCore.Dataset;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,12 @@ namespace PancakeNextCore.PancakeMgr;
 /// </summary>
 public class ExtensionManager
 {
-    public static ExtensionManager DefaultManager;
+    public static ExtensionManager DefaultManager { get; } = new();
 
     private List<Assembly> _extensionAssemblies;
     private List<Type> _extensionTypes;
 
-    private bool IsPancakeExtensionType(Type t) => t.Name == "PancakeExtension"
+    private bool IsPancakeExtensionType(Type t) => t.Name == "PancakeNextExtension"
         && t.IsAbstract && t.IsSealed && t.IsClass;
 
     private bool IsPancakeExtension(Assembly assembly) => assembly.ExportedTypes
@@ -31,14 +32,22 @@ public class ExtensionManager
             if (name == null || !name.StartsWith("Pancake"))
                 return false;
 
-            return IsPancakeExtension(assembly);
+            return IsPancakeExtension(assembly!);
         });
 
     public ExtensionManager()
     {
-        _extensionAssemblies = EnumerateExtensions().ToList();
-        _extensionTypes = _extensionAssemblies
-            .Select(a => a.ExportedTypes.FirstOrDefault(IsPancakeExtensionType)).ToList();
+        if (Config.SafeMode)
+        {
+            _extensionAssemblies = [];
+            _extensionTypes = [];
+        }
+        else
+        {
+            _extensionAssemblies = EnumerateExtensions().ToList();
+            _extensionTypes = _extensionAssemblies
+                .Select(a => a.ExportedTypes.FirstOrDefault(IsPancakeExtensionType)).ExcludeNulls().ToList();
+        }
     }
 
     public void TriggerEvent(string eventName, params object[] parameters)
@@ -57,20 +66,11 @@ public class ExtensionManager
         }
     }
 
-    public static void EnsureDefaultManager()
-    {
-        if (Config.SafeMode)
-            return;
-
-        DefaultManager ??= new ExtensionManager();
-    }
-
     public static void TriggerDefaultEvent(string eventName, params object[] parameters)
     {
         if (Config.SafeMode)
             return;
 
-        EnsureDefaultManager();
         DefaultManager?.TriggerEvent(eventName, parameters);
     }
 }

@@ -7,6 +7,7 @@ using PancakeNextCore.Utility.Polyfill;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -19,7 +20,7 @@ using System.Xml.Linq;
 namespace PancakeNextCore.GH.Params;
 
 [IoId("22B79783-C674-4BC4-AFBA-014C94D727BD")]
-public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWriteCapable
+public sealed class GhAssoc : GhAssocBase
 {
     public GhAssoc()
     {
@@ -148,7 +149,7 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         return false;
     }
 
-    public bool TryGetContent(string name, out IPear? output)
+    public override bool TryGetContent(string name, out IPear? output)
     {
         if (!HasValues)
         {
@@ -159,7 +160,7 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         if (TryGet(name, out output))
             return true;
 
-        if (name.StartsWith("@") && !name.TryParseSubstrAsInt(1, out var indice))
+        if (name.StartsWith("@") && name.TryParseSubstrAsInt(1, out var indice))
         {
             if (!IsOutOfRange(indice))
             {
@@ -345,14 +346,14 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         return !(assoc1 == assoc2);
     }
 
-    public bool TryGetNode(string name, [NotNullWhen(true)] out INodeQueryReadCapable? node)
+    public override bool TryGetNode(string name, [NotNullWhen(true)] out INodeQueryReadCapable? node)
     {
         TryGetNode(name, out var node2, false);
         node = node2 as INodeQueryReadCapable;
         return node != null;
     }
 
-    public bool TryGetNode(string name, [NotNullWhen(true)] out INodeQueryWriteCapable? node, bool createIfNotExist)
+    public override bool TryGetNode(string name, [NotNullWhen(true)] out INodeQueryWriteCapable? node, bool createIfNotExist)
     {
         if (!TryGetContent(name, out var obj))
         {
@@ -378,7 +379,7 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         return false;
     }
 
-    public bool SetContent(string attributeName, IPear? content)
+    public override bool SetContent(string attributeName, IPear? content)
     {
         if (!HasValues || !HasNames)
         {
@@ -397,7 +398,7 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         return true;
     }
 
-    public IEnumerable<KeyValuePair<string, INodeQueryReadCapable?>> GetNodes()
+    public override IEnumerable<KeyValuePair<string, INodeQueryReadCapable?>> GetNodes()
     {
         if (!HasValues || !HasNames) yield break;
 
@@ -408,7 +409,7 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         }
     }
 
-    public IEnumerable<KeyValuePair<string, IPear?>> GetAttributes()
+    public override IEnumerable<KeyValuePair<string, IPear?>> GetAttributes()
     {
         if (!HasValues || !HasNames) yield break;
 
@@ -419,7 +420,7 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         }
     }
 
-    public IEnumerable<string> GetNodeNames()
+    public override IEnumerable<string> GetNodeNames()
     {
         if (!HasValues || !HasNames) yield break;
 
@@ -430,7 +431,7 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         }
     }
 
-    public IEnumerable<string> GetAttributeNames()
+    public override IEnumerable<string> GetAttributeNames()
     {
         if (!HasValues || !HasNames) yield break;
 
@@ -501,7 +502,8 @@ public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWrit
         }
     }
 
-    bool INodeQueryWriteCapable.AddContent(string attributeName, IPear? content)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override bool AddContent(string attributeName, IPear? content)
     {
         Add(attributeName, content);
         return true;

@@ -1,4 +1,5 @@
 ﻿using Grasshopper2.Data;
+using PancakeNextCore.GH;
 using PancakeNextCore.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -89,7 +90,7 @@ public static class NodeQuery
         {
             foreach (var it in root.GetNodes())
             {
-                yield return new KeyValuePair<string, IPear?>(MergePath(currentPath, delimiter, it.Key), it.Value);
+                yield return new KeyValuePair<string, IPear?>(MergePath(currentPath, delimiter, it.Key), it.Value.AsPear());
             }
         }
         else

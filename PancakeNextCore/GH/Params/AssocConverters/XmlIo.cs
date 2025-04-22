@@ -1,4 +1,5 @@
 ﻿using Grasshopper2.Data;
+using PancakeNextCore.Interfaces;
 using PancakeNextCore.Utility;
 using PancakeNextCore.Utility.Polyfill;
 using System.Collections.Generic;
@@ -85,7 +86,7 @@ internal sealed class XmlIo
             str.EscapeForXml(builder);
         }
     }
-    private void CreateXmlFromNode(string tagName, GhAssocBase node)
+    private void CreateXmlFromNode(string tagName, INodeQueryReadCapable node)
     {
         var realName = tagName;
 
