@@ -15,11 +15,8 @@
 
   <ItemGroup>
     <Compile Remove="Components\Algorithm\pcMultiSort.cs" />
-    <Compile Remove="Components\Association\pcAssocToKv.cs" />
     <Compile Remove="Components\Association\pcConAssoc.cs" />
     <Compile Remove="Components\Association\pcDeconAssoc.cs" />
-    <Compile Remove="Components\Association\pcExtractFromAssoc.cs" />
-    <Compile Remove="Components\Association\pcKVtoAssoc.cs" />
     <Compile Remove="Components\Association\pcMergeAssoc.cs" />
     <Compile Remove="Components\SleepComponent.cs" />
     <Compile Remove="GH\AssociationStringifier.cs" />
@@ -103,11 +100,8 @@
 
   <ItemGroup>
     <None Include="Components\Algorithm\pcMultiSort.cs" />
-    <None Include="Components\Association\pcAssocToKv.cs" />
     <None Include="Components\Association\pcConAssoc.cs" />
     <None Include="Components\Association\pcDeconAssoc.cs" />
-    <None Include="Components\Association\pcExtractFromAssoc.cs" />
-    <None Include="Components\Association\pcKVtoAssoc.cs" />
     <None Include="Components\Association\pcMergeAssoc.cs" />
     <None Include="Components\SleepComponent.cs" />
     <None Include="Helper\DependencyWalker.cs" />

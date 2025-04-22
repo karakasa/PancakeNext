@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Grasshopper2.Components;
+using Grasshopper2.Data;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Association;
 
@@ -31,20 +33,16 @@ public class pcAssocToKv : PancakeComponent<pcAssocToKv>, IPancakeLocalizable<pc
 
     protected override void Process(IDataAccess access)
     {
-        throw new NotImplementedException();
-
-        /*object o = null;
-        var depth = 0;
-        DA.GetData(0, ref o);
-        DA.GetData(1, ref depth);
-        if (!(o is INodeQueryReadCapable inode))
+        access.GetItem(0, out object o);
+        access.GetItem(1, out int depth);
+        if (o is not INodeQueryReadCapable inode)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.InputTypeNotSupported);
+            access.AddError("Unsupported type", Strings.InputTypeNotSupported);
             return;
         }
 
         var names = new List<string>();
-        var values = new List<object>();
+        var values = new List<IPear?>();
 
         foreach (var it in NodeQuery.EnumerateNode(inode, depthLimit: depth))
         {
@@ -52,7 +50,7 @@ public class pcAssocToKv : PancakeComponent<pcAssocToKv>, IPancakeLocalizable<pc
             values.Add(it.Value);
         }
 
-        DA.SetDataList(0, names);
-        DA.SetDataList(1, values);*/
+        access.SetTwig(0, Garden.TwigFromList(names));
+        access.SetTwig(1, Garden.ITwigFromPears(values));
     }
 }

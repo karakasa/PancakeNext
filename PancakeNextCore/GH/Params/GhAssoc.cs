@@ -1,6 +1,7 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Data.Meta;
 using GrasshopperIO;
+using PancakeNextCore.Interfaces;
 using PancakeNextCore.Utility;
 using PancakeNextCore.Utility.Polyfill;
 using System;
@@ -18,7 +19,7 @@ using System.Xml.Linq;
 namespace PancakeNextCore.GH.Params;
 
 [IoId("22B79783-C674-4BC4-AFBA-014C94D727BD")]
-public sealed class GhAssoc : GhAssocBase
+public sealed class GhAssoc : GhAssocBase, INodeQueryReadCapable, INodeQueryWriteCapable
 {
     public GhAssoc()
     {
@@ -147,7 +148,7 @@ public sealed class GhAssoc : GhAssocBase
         return false;
     }
 
-    internal bool TryGetContent(string name, out IPear? output)
+    public bool TryGetContent(string name, out IPear? output)
     {
         if (!HasValues)
         {
@@ -344,20 +345,20 @@ public sealed class GhAssoc : GhAssocBase
         return !(assoc1 == assoc2);
     }
 
-    /*public bool TryGetNode(string name, out INodeQueryReadCapable node)
+    public bool TryGetNode(string name, [NotNullWhen(true)] out INodeQueryReadCapable? node)
     {
         TryGetNode(name, out var node2, false);
         node = node2 as INodeQueryReadCapable;
         return node != null;
     }
 
-    public bool TryGetNode(string name, out INodeQueryWriteCapable node, bool createIfNotExist)
+    public bool TryGetNode(string name, [NotNullWhen(true)] out INodeQueryWriteCapable? node, bool createIfNotExist)
     {
-        if (!TryGetExtended(name, out var obj))
+        if (!TryGetContent(name, out var obj))
         {
             if (createIfNotExist)
             {
-                var assoc2 = new Association();
+                var assoc2 = new GhAssoc();
                 Add(name, assoc2);
                 node = assoc2;
                 return true;
@@ -377,14 +378,15 @@ public sealed class GhAssoc : GhAssocBase
         return false;
     }
 
-    public bool TryGetContent(string attributeName, out object content)
+    public bool SetContent(string attributeName, IPear? content)
     {
-        return TryGetExtended(attributeName, out content);
-    }
+        if (!HasValues || !HasNames)
+        {
+            Add(attributeName, content);
+            return true;
+        }
 
-    public bool SetContent(string attributeName, object content)
-    {
-        var index = _names.IndexOf(attributeName);
+        var index = Names.IndexOf(attributeName);
         if (index == -1)
         {
             Add(attributeName, content);
@@ -395,32 +397,60 @@ public sealed class GhAssoc : GhAssocBase
         return true;
     }
 
-    public IEnumerable<KeyValuePair<string, INodeQueryReadCapable>> GetNodes()
+    public IEnumerable<KeyValuePair<string, INodeQueryReadCapable?>> GetNodes()
     {
-        for (var i = 0; i < _names.Count; i++)
+        if (!HasValues || !HasNames) yield break;
+
+        for (var i = 0; i < Names.Count; i++)
         {
             if (Values[i] is INodeQueryReadCapable inode)
-                yield return new KeyValuePair<string, INodeQueryReadCapable>(_names[i], inode);
+                yield return new KeyValuePair<string, INodeQueryReadCapable?>(Names[i], inode);
         }
     }
 
-    public IEnumerable<KeyValuePair<string, object>> GetAttributes()
+    public IEnumerable<KeyValuePair<string, IPear?>> GetAttributes()
     {
-        for (var i = 0; i < _names.Count; i++)
+        if (!HasValues || !HasNames) yield break;
+
+        for (var i = 0; i < Names.Count; i++)
         {
-            if (!(Values[i] is INodeQueryReadCapable) && _names[i] != null)
-                yield return new KeyValuePair<string, object>(_names[i], Values[i]);
+            if (Values[i] is not INodeQueryReadCapable && Names[i] != null)
+                yield return new KeyValuePair<string, IPear?>(Names[i], Values[i]);
         }
     }
 
-    public IEnumerable<KeyValuePair<string, object>> GetNamedValues()
+    public IEnumerable<string> GetNodeNames()
     {
-        for (var i = 0; i < _names.Count; i++)
+        if (!HasValues || !HasNames) yield break;
+
+        for (var i = 0; i < Names.Count; i++)
         {
-            if (_names[i] != null)
-                yield return new KeyValuePair<string, object>(_names[i], Values[i]);
+            if (Values[i] is INodeQueryReadCapable inode)
+                yield return Names[i];
         }
-    }*/
+    }
+
+    public IEnumerable<string> GetAttributeNames()
+    {
+        if (!HasValues || !HasNames) yield break;
+
+        for (var i = 0; i < Names.Count; i++)
+        {
+            if (Values[i] is not INodeQueryReadCapable && Names[i] != null)
+                yield return Names[i];
+        }
+    }
+
+    public IEnumerable<KeyValuePair<string, IPear?>> GetNamedValues()
+    {
+        if (!HasValues || !HasNames) yield break;
+
+        for (var i = 0; i < Names.Count; i++)
+        {
+            if (Names[i] != null)
+                yield return new KeyValuePair<string, IPear?>(Names[i], Values[i]);
+        }
+    }
 
     [MemberNotNullWhen(true, nameof(Names))]
     public bool HasNames => Names is not null;
@@ -471,63 +501,9 @@ public sealed class GhAssoc : GhAssocBase
         }
     }
 
-    internal IEnumerable<KeyValuePair<string, GhAssocBase>> GetNodes()
+    bool INodeQueryWriteCapable.AddContent(string attributeName, IPear? content)
     {
-        if (!HasNames || !HasValues) yield break;
-
-        for (var i = 0; i < Names.Count; i++)
-        {
-            var name = Names[i];
-            if (Values[i]?.Item is GhAssocBase inode && name is not null)
-                yield return new KeyValuePair<string, GhAssocBase>(name, inode);
-        }
-    }
-
-    internal IEnumerable<KeyValuePair<string, object?>> GetAttributes()
-    {
-        if (!HasNames || !HasValues) yield break;
-
-        for (var i = 0; i < Names.Count; i++)
-        {
-            var name = Names[i];
-            if (Values[i]?.Item is not GhAssocBase && name != null)
-                yield return new KeyValuePair<string, object?>(name, Values[i]?.Item);
-        }
-    }
-
-    internal IEnumerable<KeyValuePair<string, object?>> GetNamedValues()
-    {
-        if (!HasNames || !HasValues) yield break;
-
-        for (var i = 0; i < Names.Count; i++)
-        {
-            var name = Names[i];
-            if (name is not null)
-                yield return new KeyValuePair<string, object?>(name, Values[i]?.Item);
-        }
-    }
-
-    internal IEnumerable<string> GetNodeNames()
-    {
-        if (!HasNames || !HasValues) yield break;
-
-        for (var i = 0; i < Length; i++)
-        {
-            var name = Names[i];
-            if (name is not null && Values[i]?.Item is GhAssocBase)
-                yield return name;
-        }
-    }
-
-    internal IEnumerable<string> GetAttributeNames()
-    {
-        if (!HasNames || !HasValues) yield break;
-
-        for (var i = 0; i < Length; i++)
-        {
-            var name = Names[i];
-            if (name is not null && Values[i]?.Item is not GhAssocBase)
-                yield return name;
-        }
+        Add(attributeName, content);
+        return true;
     }
 }

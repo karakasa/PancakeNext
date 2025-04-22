@@ -1,63 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Pancake.Attributes;
-using Pancake.GH.Params;
-using Pancake.Interfaces;
-using Pancake.Utility;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Association;
 
 [ComponentCategory("data", 1)]
-public class pcKvToAssoc : PancakeComponent
+[IoId("1cec82d3-6efb-4abd-b3de-f6023eb8aeff")]
+public sealed class pcKvToAssoc : PancakeComponent<pcKvToAssoc>, IPancakeLocalizable<pcKvToAssoc>
 {
-    public override string LocalizedName => Strings.ConstructAssociativeArrayByKeys;
-    public override string LocalizedDescription => Strings.ConstructOrAdjustAnAssociativeArrayByKeyAndValues;
+    public static string StaticLocalizedName => Strings.ConstructAssociativeArrayByKeys;
+    public static string StaticLocalizedDescription => Strings.ConstructOrAdjustAnAssociativeArrayByKeyAndValues;
     protected override void RegisterInputs()
     {
-        AddParam("assoc4");
-        AddParam<Param_String>("paths", GH_ParamAccess.list);
-        AddParam("values", GH_ParamAccess.list);
+        AddParam<AssociationParameter>("assoc4", requirement: Requirement.MayBeMissing);
+        AddParam<TextParameter>("paths", Access.Twig);
+        AddParam("values", Access.Twig);
         AddParam("delimiter2", "/");
-
-        Params.Input[0].Optional = true;
     }
 
     protected override void RegisterOutputs()
     {
-        AddParam("assoc");
+        AddParam<AssociationParameter>("assoc");
     }
 
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void Process(IDataAccess access)
     {
-        object assoc = null;
-        string delimiter = null;
-        var paths = new List<string>();
-        var values = new List<object>();
+        access.GetItem(0, out object? assoc);
+        access.GetItem(3, out string delimiter);
+        access.GetTwig<string>(1, out var paths);
+        access.GetITwig(2, out var values);
 
-        DA.GetData(0, ref assoc);
-        DA.GetData(3, ref delimiter);
-        DA.GetDataList(1, paths);
-        DA.GetDataList(2, values);
+        var singlePath = paths.ItemCount == 1;
+        var singleValue = values.ItemCount == 1;
 
-        var singlePath = paths.Count == 1;
-        var singleValue = values.Count == 1;
-
-        if (paths.Count != values.Count && !singlePath && !singleValue)
+        if (paths.ItemCount != values.ItemCount && !singlePath && !singleValue)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.LengthOfNamesMustBeEqualToThatOfValues);
+            access.AddError("Length mismatch", Strings.LengthOfNamesMustBeEqualToThatOfValues);
             return;
         }
 
-        if (paths.Count == 0)
+        if (paths.ItemCount == 0)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, Strings.TheListCannotBeEmpty);
+            access.AddWarning("Empty input", Strings.TheListCannotBeEmpty);
             return;
         }
 
@@ -66,13 +57,13 @@ public class pcKvToAssoc : PancakeComponent
             switch (assoc)
             {
                 case GhAssoc assoc2:
-                    assoc = assoc2.Duplicate();
+                    assoc = assoc2.Clone();
                     break;
                 case GhAtomList list2:
-                    assoc = list2.Duplicate();
+                    assoc = list2.GenericClone();
                     break;
                 default:
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, Strings.InputTypeNotSupported);
+                    access.AddWarning("Wrong input", Strings.InputTypeNotSupported);
                     return;
             }
         }
@@ -85,81 +76,44 @@ public class pcKvToAssoc : PancakeComponent
         var delimiterArray = new[] { delimiter };
 
         var addMode = AddMode;
-        var count = Math.Max(paths.Count, values.Count);
+        var count = Math.Max(paths.ItemCount, values.ItemCount);
 
         for (var i = 0; i < count; i++)
         {
             var activePath = singlePath ? paths[0] : paths[i];
             var activeValue = singleValue ? values[0] : values[i];
 
-            var path = activePath.Split(delimiterArray, StringSplitOptions.None);
+            var path = activePath.Item.Split(delimiterArray, StringSplitOptions.None);
             if (path.Length == 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(Strings.InvalidPathAt0, i));
+                access.AddWarning("Wrong path", string.Format(Strings.InvalidPathAt0, i));
                 continue;
             }
 
             if (!NodeQuery.TrySetNodeValue(inode, path, activeValue, addMode))
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(Strings.FailToSet0, activePath));
+                access.AddWarning("Set failure", string.Format(Strings.FailToSet0, activePath));
             }
         }
 
-        DA.SetData(0, inode);
+        access.SetItem(0, inode);
     }
 
+    private bool _addMode = false;
     private const string ConfigAddMode = "AddMode";
+
+    protected override void ReadConfig()
+    {
+        _addMode = GetValue(ConfigAddMode, false);
+    }
     public bool AddMode
     {
-        get => GetValue(ConfigAddMode, false);
-        set => SetValue(ConfigAddMode, value);
+        get => _addMode;
+        set => SetValue(ConfigAddMode, _addMode = value);
     }
 
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon
-    {
-        get
-        {
-            //You can add image files to your project resources and access them like this:
-            // return Resources.IconForThisComponent;
-            return ComponentIcon.ConAssocKV;
-        }
-    }
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("1cec82d3-6efb-4abd-b3de-f6023eb8aeff"); }
-    }
-
-    private void UpdateMessage()
-    {
-        Message = AddMode ? Strings.Append : Strings.Modify;
-    }
-
-    public override void AddedToDocument(GH_Document document)
-    {
-        base.AddedToDocument(document);
-        UpdateMessage();
-    }
-
-    public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
-    {
-        Menu_AppendSeparator(menu);
-        Menu_AppendItem(menu, Strings.AppendMode, MnuAppendMode, true, AddMode).ToolTipText =
-            Strings.WhenThereReDuplicatedEntriesAppendToTheAssocRatherThanModifySeeExampleForMoreInformation;
-
-        base.AppendAdditionalMenuItems(menu);
-    }
-
-    private void MnuAppendMode(object sender, EventArgs e)
-    {
-        AddMode = !AddMode;
-        UpdateMessage();
-        ExpireSolution(true);
-    }
+    protected override InputOption[][] SimpleOptions => [[
+            new ToggleOption(Strings.AppendMode, Strings.WhenThereReDuplicatedEntriesAppendToTheAssocRatherThanModifySeeExampleForMoreInformation,
+                AddMode, x => AddMode = x, "Append", "Overwrite", "If keys already exists")
+            ]];
 }

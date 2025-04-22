@@ -1,23 +1,24 @@
 ﻿using System;
-
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Grasshopper.Kernel.Types;
-using Pancake.Attributes;
-using Pancake.Interfaces;
-using Pancake.Utility;
+using Grasshopper2.Components;
+using Grasshopper2.Parameters.Standard;
+using GrasshopperIO;
+using PancakeNextCore.Attributes;
+using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Association;
 
 [ComponentCategory("data", 1)]
-public class pcExtractFromAssoc : PancakeComponent
+[IoId("f611c939-fe6f-449b-999d-e863608753a0")]
+public sealed class pcExtractFromAssoc : PancakeComponent<pcExtractFromAssoc>, IPancakeLocalizable<pcExtractFromAssoc>
 {
-    public override string LocalizedName => Strings.DeconstructAssociativeArrayByKeys;
-    public override string LocalizedDescription => Strings.RetrieveDataFromAnAssociativeArrayByKeyPaths;
+    public static string StaticLocalizedName => Strings.DeconstructAssociativeArrayByKeys;
+    public static string StaticLocalizedDescription => Strings.RetrieveDataFromAnAssociativeArrayByKeyPaths;
     protected override void RegisterInputs()
     {
-        AddParam("assoc");
-        AddParam<Param_String>("path");
+        AddParam<AssociationParameter>("assoc");
+        AddParam<TextParameter>("path");
         AddParam("delimiter2", "/");
     }
     protected override void RegisterOutputs()
@@ -25,65 +26,41 @@ public class pcExtractFromAssoc : PancakeComponent
         AddParam("value");
     }
 
-
-    /// <summary>
-    /// This is the method that actually does the work.
-    /// </summary>
-    /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    static readonly string[] DefaultDelimiter = ["/"];
+    static string[] GetCachedDelimiterIfPossible(string delimiter)
     {
-        object assoc = null;
-        DA.GetData(0, ref assoc);
+        if (delimiter == "/") return DefaultDelimiter;
+        return [delimiter];
+    }
 
-        if (assoc is GH_ObjectWrapper wrapper)
-            assoc = wrapper.Value;
+    protected override void Process(IDataAccess access)
+    {
+        access.GetItem(0, out object assoc);
 
-        if (!(assoc is INodeQueryReadCapable inode))
+        if (assoc is not INodeQueryReadCapable inode)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, Strings.InputTypeNotSupported);
+            access.AddError("Wrong input", Strings.InputTypeNotSupported);
             return;
         }
 
-        string txt = null;
-        string delimiter = null;
-        DA.GetData(1, ref txt);
-        DA.GetData(2, ref delimiter);
+        access.GetItem(1, out string txt);
+        access.GetItem(2, out string delimiter);
 
         if (string.IsNullOrEmpty(txt))
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, Strings.IncorrectPathFormat);
+            access.AddError("Wrong input", Strings.IncorrectPathFormat);
             return;
         }
 
-        var path = txt.Split(new[] { delimiter }, StringSplitOptions.None);
+        var path = txt.Split(GetCachedDelimiterIfPossible(delimiter), StringSplitOptions.None);
 
         if (!NodeQuery.TryGetNodeValue(inode, path, out var obj))
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(Strings.Path0NotFound, txt));
+            access.AddError("Path not found", string.Format(Strings.Path0NotFound, txt));
             return;
         }
 
-        DA.SetData(0, obj);
+        access.SetPear(0, obj);
     }
 
-    /// <summary>
-    /// Provides an Icon for the component.
-    /// </summary>
-    protected override System.Drawing.Bitmap LightModeIcon
-    {
-        get
-        {
-            //You can add image files to your project resources and access them like this:
-            // return Resources.IconForThisComponent;
-            return ComponentIcon.DeAssocKV;
-        }
-    }
-
-    /// <summary>
-    /// Gets the unique ID for this component. Do not change this ID after release.
-    /// </summary>
-    public override Guid ComponentGuid
-    {
-        get { return new Guid("f611c939-fe6f-449b-999d-e863608753a0"); }
-    }
 }
