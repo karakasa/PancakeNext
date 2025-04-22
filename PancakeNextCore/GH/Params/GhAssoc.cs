@@ -508,4 +508,9 @@ public sealed class GhAssoc : GhAssocBase
         Add(attributeName, content);
         return true;
     }
+
+    public override bool DeepEquals(GhAssocBase? another)
+    {
+        throw new NotImplementedException();
+    }
 }

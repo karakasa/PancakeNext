@@ -223,4 +223,11 @@ public sealed class GhAtomList : GhAssocBase
     public override IEnumerable<string> GetNodeNames() => Enumerable.Empty<string>();
 
     public override IEnumerable<string> GetAttributeNames() => Enumerable.Empty<string>();
+
+    public override bool DeepEquals(GhAssocBase? another)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal override List<string?>? GetRawNames() => null;
 }
