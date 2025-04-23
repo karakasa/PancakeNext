@@ -4,11 +4,14 @@ using Grasshopper2.UI;
 using Grasshopper2.UI.Canvas;
 using Grasshopper2.UI.Flex;
 using PancakeNextCore.UI;
+using PancakeNextCore.Utility;
 using Rhino;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,8 +26,6 @@ internal static class CanvasDebug
     private static double TimeThreshold = 5 * 1000;
     internal static void BenchmarkFps()
     {
-        // TODO
-
         DrawCount = 0;
         BaseWatch.Reset();
         DrawTime.Clear();
@@ -38,14 +39,16 @@ internal static class CanvasDebug
 
         const double TickMsConversion = 1 / 10000.0;
 
-        for(; ; )
+        Progress(); // create dispatcher and reflection, if necessary
+
+        for (; ; )
         {
             if (DrawCount == 0)
             {
                 ++DrawCount;
                 canvas.Invalidate(true);
                 BaseWatch.Restart();
-                Application.Instance.RunIteration();
+                Progress();
                 continue;
             }
 
@@ -64,7 +67,7 @@ internal static class CanvasDebug
             sw.Restart();
             canvas.Projection = canvas.Projection.PerformPan(GetVector(DrawCount, step));
             canvas.Invalidate(true);
-            Application.Instance.RunIteration();
+            Progress();
             sw.Stop();
 
             IterationTime.Add(sw.ElapsedTicks * TickMsConversion);
@@ -73,12 +76,11 @@ internal static class CanvasDebug
         canvas.Projection = originalProjection;
     }
 
-    private static SizeF GetCircularVector(double percentage)
+    private static readonly bool IsWPF = Application.Instance.ControlObject?.GetType()?.FullName == "System.Windows.Application";
+    private static void Progress()
     {
-        var angle = percentage * Math.PI * 2;
-        return new SizeF((float)Math.Cos(angle), (float)Math.Sin(angle));
+        Application.Instance.RunIteration();
     }
-
     private static SizeF GetVector(int cnt, double step)
     {
         var size = 100.0f;
@@ -92,10 +94,6 @@ internal static class CanvasDebug
             _ => new(0, -1),
         };
 
-        // var b = GetCircularVector(cnt * step + step);
-        // var a = GetCircularVector(cnt * step);
-
-        // var v = new SizeF((b.Width - a.Width) * size, (b.Height - a.Height) * size);
         v *= size;
         return v;
     }

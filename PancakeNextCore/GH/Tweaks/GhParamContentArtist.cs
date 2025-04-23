@@ -1,4 +1,5 @@
 ﻿using Eto.Drawing;
+using Grasshopper2;
 using Grasshopper2.Doc;
 using Grasshopper2.Extensions;
 using Grasshopper2.Framework;
@@ -15,6 +16,9 @@ namespace PancakeNextCore.GH.Tweaks;
 
 public sealed class GhParamContentArtist : ICanvasArtist
 {
+    private static bool DrawAbove { get; set; } = false;
+    private static bool DrawObjectLabels { get; set; }
+
     private static Font _font;
     private static Brush _brushNormal;
     private static Brush _brushGreyedOut;
@@ -124,12 +128,24 @@ public sealed class GhParamContentArtist : ICanvasArtist
         {
             if (str.Length >= 22)
                 str = str.Substring(0, 22);
-            str += Environment.NewLine + $"...+ {dataCnt - 1}";
+            str = $"{str}{Environment.NewLine}...+ {dataCnt - 1}";
         }
         else if (str.Length > 33)
             str = str.Substring(0, 33);
 
-        var rect = new RectangleF(bbox.X, bbox.Y + bbox.Height - 6.0f, bbox.Width, bbox.Height);
+        var height = bbox.Height;
+        var y = bbox.Y;
+
+        if (DrawAbove || !DrawObjectLabels)
+        {
+            y += height - 6.0f; // Draw below component
+        }
+        else
+        {
+            y += 6.0f - height; // Draw above component
+        }
+
+        var rect = new RectangleF(bbox.X, y, bbox.Width, height);
 
         var graphics = ev.Graphics.Content;
         graphics.DrawTextInFrame(_font, ActiveBrush, str, rect, Eto.Forms.TextAlignment.Center);
@@ -137,14 +153,31 @@ public sealed class GhParamContentArtist : ICanvasArtist
 
     public void Register(Canvas canvas)
     {
+        DrawAboveSettingChanged();
+        DrawLabelsSettingChanged();
         Unregister(canvas);
+
         InitializeStyles();
+        Settings.CanvasLabelAbove.Changed += DrawAboveSettingChanged;
+        Settings.CanvasDrawLabels.Changed += DrawLabelsSettingChanged;
         canvas.AfterPaintObjects += Paint;
+    }
+
+    private void DrawLabelsSettingChanged(object? sender = null, EventArgs? e = null)
+    {
+        DrawObjectLabels = Settings.CanvasDrawLabels;
+    }
+
+    private static void DrawAboveSettingChanged(object? sender = null, EventArgs? e = null)
+    {
+        DrawAbove = Settings.CanvasLabelAbove;
     }
 
     public void Unregister(Canvas canvas)
     {
         canvas.AfterPaintObjects -= Paint;
+        Settings.CanvasLabelAbove.Changed -= DrawAboveSettingChanged;
+        Settings.CanvasDrawLabels.Changed -= DrawLabelsSettingChanged;
         DisposeStyles();
     }
 

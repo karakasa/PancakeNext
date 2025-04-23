@@ -107,7 +107,7 @@ internal static class ReflectionHelper
         return baseObject?.GetProperty(propertyName, bf);
     }
 
-    public static object? GetProperty(object baseObject, string propertyName, bool onlyPublic = false, bool staticDef = false)
+    public static object? GetProperty(this object baseObject, string propertyName, bool onlyPublic = false, bool staticDef = false)
     {
         return GetPropertyInternal(baseObject.GetType(), propertyName, onlyPublic)?.GetValue(
             staticDef ? null : baseObject,
