@@ -132,66 +132,6 @@ public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPa
             access.SetTree(1, resultTypes);
         }
     }
-
-    private static Parser? GuessType(Tree<string> tree)
-    {
-        EducatedGuess lastGuess = EducatedGuess.Unknown;
-
-        foreach (var it in tree.AllPears)
-        {
-            if (it?.Item is not { } str) return null;
-
-            var guess = GuessString(str);
-
-            if (guess is EducatedGuess.Unknown)
-                return null;
-
-            if (guess == lastGuess)
-                continue;
-
-            if (lastGuess is EducatedGuess.Unknown)
-            {
-                lastGuess = guess;
-                continue;
-            }
-
-            switch (guess)
-            {
-                case EducatedGuess.Bool:
-                    return null;
-
-                case EducatedGuess.Integer:
-                    if (lastGuess is not EducatedGuess.Number)
-                        return null;
-                    break;
-
-                case EducatedGuess.Number:
-                    if (lastGuess is EducatedGuess.Integer)
-                    {
-                        lastGuess = EducatedGuess.Number;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-
-                    break;
-
-                default:
-                    return null;
-            }
-        }
-
-        return lastGuess switch
-        {
-            EducatedGuess.Bool => BoolParser,
-            EducatedGuess.Integer => IntParser,
-            EducatedGuess.Number => DoubleParser,
-            EducatedGuess.TupleOf3Numbers => Point3dParser,
-            _ => null,
-        };
-    }
-
     private bool TryParseStringTreeToOneType(Tree<string> from, string desiredType, [NotNullWhen(true)] out ITree? to)
     {
         var typeName = "";

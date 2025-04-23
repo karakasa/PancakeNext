@@ -417,6 +417,7 @@ public sealed partial class pcParseString
     private enum EducatedGuess
     {
         Unknown,
+        Empty,
         Bool,
         Integer,
         Number,
@@ -427,7 +428,7 @@ public sealed partial class pcParseString
         if (str.Length >= 4 && (string.Equals(str, "true", StringComparison.OrdinalIgnoreCase) || string.Equals(str, "false", StringComparison.OrdinalIgnoreCase)))
             return EducatedGuess.Bool;
 
-        var cur = EducatedGuess.Unknown;
+        var cur = EducatedGuess.Empty;
         foreach (var c in str)
         {
             if (c is ' ') continue;
@@ -474,10 +475,71 @@ public sealed partial class pcParseString
 
         return EducatedGuess.Unknown;
     }
-
     private static void Upgrade(ref EducatedGuess guess, EducatedGuess newVal)
     {
         if (newVal > guess)
             guess = newVal;
     }
+    private static Parser? GuessType(Tree<string> tree)
+    {
+        EducatedGuess lastGuess = EducatedGuess.Unknown;
+
+        foreach (var it in tree.AllPears)
+        {
+            if (it?.Item is not { } str)
+                continue;
+
+            var guess = GuessString(str);
+
+            if (guess is EducatedGuess.Empty)
+                continue;
+
+            if (guess is EducatedGuess.Unknown)
+                return null;
+
+            if (guess == lastGuess)
+                continue;
+
+            if (lastGuess is EducatedGuess.Unknown)
+            {
+                lastGuess = guess;
+                continue;
+            }
+
+            switch (guess)
+            {
+                case EducatedGuess.Bool:
+                    return null;
+
+                case EducatedGuess.Integer:
+                    if (lastGuess is EducatedGuess.Number)
+                        break;
+                    return null;
+
+                case EducatedGuess.Number:
+                    if (lastGuess is EducatedGuess.Integer)
+                    {
+                        lastGuess = EducatedGuess.Number;
+                        break;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                default:
+                    return null;
+            }
+        }
+
+        return lastGuess switch
+        {
+            EducatedGuess.Bool => BoolParser,
+            EducatedGuess.Integer => IntParser,
+            EducatedGuess.Number => DoubleParser,
+            EducatedGuess.TupleOf3Numbers => Point3dParser,
+            _ => null,
+        };
+    }
+
 }
