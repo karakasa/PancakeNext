@@ -130,11 +130,11 @@ public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocaliz
         if (keys.Count == 0)
             throw new InvalidOperationException();
 
-        var baseCnt = keys[0].ItemCount;
+        var baseCnt = keys[0].LeafCount;
 
         if (keys.Count > 1)
             for (var i = 1; i < keys.Count; i++)
-                if (keys[i].ItemCount != baseCnt)
+                if (keys[i].LeafCount != baseCnt)
                 {
                     access.AddError("List mismatch", Strings.KeysMustHaveTheSameLength);
                     return;
@@ -159,7 +159,7 @@ public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocaliz
         {
             if (!access.GetITwig(i, out var listObjs)) continue;
 
-            if (listObjs.ItemCount != baseCnt)
+            if (listObjs.LeafCount != baseCnt)
             {
                 access.AddWarning("List mismatch", string.Format(Strings._0HasDifferentAmountOfDataFromKeysThereforeItSSkipped,
                     Parameters.Input(i).DisplayName));

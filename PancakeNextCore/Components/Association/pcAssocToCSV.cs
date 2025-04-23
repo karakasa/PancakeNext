@@ -48,7 +48,7 @@ public sealed class pcAssocToCsv : PancakeComponent<pcAssocToCsv>, IPancakeLocal
             .SelectMany(a => a.GetRawNames().Where(n => n != null))
             .Distinct();
 
-        var nameList = (interestedNames.ItemCount == 0 ? lazyList : lazyList.Intersect(interestedNames.Items)).ToArray();
+        var nameList = (interestedNames.LeafCount == 0 ? lazyList : lazyList.Intersect(interestedNames.Items)).ToArray();
 
         if (nameList.Length == 0)
         {

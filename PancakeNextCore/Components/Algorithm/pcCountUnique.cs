@@ -35,7 +35,7 @@ public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLoc
     {
         access.GetITwig(0, out var keyList);
         
-        if (keyList.ItemCount == 0)
+        if (keyList.LeafCount == 0)
         {
             access.AddWarning("Empty input", Strings.TheListCannotBeEmpty);
             return;

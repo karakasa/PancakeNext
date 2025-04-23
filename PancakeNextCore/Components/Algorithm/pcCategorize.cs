@@ -44,13 +44,13 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
         access.GetITwig(0, out var keyList);
         access.GetITwig(1, out var valList);
 
-        if (keyList.ItemCount != valList.ItemCount)
+        if (keyList.LeafCount != valList.LeafCount)
         {
             access.AddError("Mismatched lists", Strings.KeyAndValueListMustHaveTheSameLength);
             return;
         }
 
-        if (keyList.ItemCount == 0)
+        if (keyList.LeafCount == 0)
         {
             access.AddWarning("Empty input", Strings.TheListCannotBeEmpty);
             return;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.Utility;
 internal readonly struct OptimizedConditionTester<T> where T : notnull, IEquatable<T>
 {
-    private readonly int Count;
+    public readonly int Count;
     private readonly T? _singleValue;
     private readonly T[]? _values;
 

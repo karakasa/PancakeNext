@@ -127,10 +127,10 @@ public abstract partial class PancakeComponent : Component, IPancakeLocalizable
 
     protected abstract void RegisterInputs();
     protected abstract void RegisterOutputs();
-    private static T CreateLocalizedParameter<T>(
+    protected static T CreateLocalizedParameter<T>(
         string identifier,
-        Access access,
-        Requirement requirement
+        Access access = Access.Item,
+        Requirement requirement = Requirement.MustExist
         )
         where T : AbstractParameter, new()
     {

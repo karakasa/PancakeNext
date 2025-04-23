@@ -2,11 +2,13 @@
 using Grasshopper2.Data.Meta;
 using Grasshopper2.Doc;
 using Grasshopper2.Parameters;
+using Grasshopper2.Types.Conversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Rhino.Runtime.ViewCaptureWriter;
 
 namespace PancakeNextCore.Utility;
 internal static class GhExtensions
@@ -31,5 +33,16 @@ internal static class GhExtensions
     public static double? GetDuration(this ActiveObject obj)
     {
         return obj.State?.Data?.Duration.TotalMilliseconds;
+    }
+
+    public static Tree<T> MimicTreeWithOneValue<T>(ITree source, T value, bool copyMeta = false)
+    {
+        var newTwigs = source.AllTwigs.Select(x =>
+        {
+            var meta = (copyMeta && x.MetaCount != 0) ? x.ToMetaArray(ToArrayMethod.Always) : null;
+            return Garden.TwigFromList(Enumerable.Repeat(value, x.LeafCount), meta);
+        });
+
+        return Garden.TreeFromTwigs(source.Paths, newTwigs);
     }
 }

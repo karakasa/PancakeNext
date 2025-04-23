@@ -39,16 +39,16 @@ public sealed class pcKvToAssoc : PancakeComponent<pcKvToAssoc>, IPancakeLocaliz
         access.GetTwig<string>(1, out var paths);
         access.GetITwig(2, out var values);
 
-        var singlePath = paths.ItemCount == 1;
-        var singleValue = values.ItemCount == 1;
+        var singlePath = paths.LeafCount == 1;
+        var singleValue = values.LeafCount == 1;
 
-        if (paths.ItemCount != values.ItemCount && !singlePath && !singleValue)
+        if (paths.LeafCount != values.LeafCount && !singlePath && !singleValue)
         {
             access.AddError("Length mismatch", Strings.LengthOfNamesMustBeEqualToThatOfValues);
             return;
         }
 
-        if (paths.ItemCount == 0)
+        if (paths.LeafCount == 0)
         {
             access.AddWarning("Empty input", Strings.TheListCannotBeEmpty);
             return;
@@ -78,7 +78,7 @@ public sealed class pcKvToAssoc : PancakeComponent<pcKvToAssoc>, IPancakeLocaliz
         var delimiterArray = new[] { delimiter };
 
         var addMode = AddMode;
-        var count = Math.Max(paths.ItemCount, values.ItemCount);
+        var count = Math.Max(paths.LeafCount, values.LeafCount);
 
         for (var i = 0; i < count; i++)
         {

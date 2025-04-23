@@ -56,7 +56,7 @@ public sealed class GhParamContentArtist : ICanvasArtist
 
     private static bool TryGetFirstData<T>(Parameter<T> param, [NotNullWhen(true)] out T? item)
     {
-        if (param.State?.Data?.Tree() is not Grasshopper2.Data.Tree<T> tree || tree.ItemCount == 0)
+        if (param.State?.Data?.Tree() is not Grasshopper2.Data.Tree<T> tree || tree.LeafCount == 0)
         {
             item = default;
             return false;
@@ -118,7 +118,7 @@ public sealed class GhParamContentArtist : ICanvasArtist
         var tree = it.State?.Data?.Tree();
         if (tree is null) return;
 
-        var dataCnt = tree.ItemCount;
+        var dataCnt = tree.LeafCount;
         var str = DescribeFirstData(it);
         if (str is null) return;
 

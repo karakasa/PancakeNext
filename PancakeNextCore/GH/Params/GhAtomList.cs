@@ -30,7 +30,7 @@ public sealed class GhAtomList : GhAssocBase
 
     public GhAtomList(ITwig twig)
     {
-        EnsureData(twig.ItemCount);
+        EnsureData(twig.LeafCount);
         Values.AddRange(twig.Pears);
     }
 

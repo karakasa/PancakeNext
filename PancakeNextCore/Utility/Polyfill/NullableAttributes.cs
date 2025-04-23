@@ -14,6 +14,12 @@ public sealed class MemberNotNullAttribute : Attribute
     public MemberNotNullAttribute(string member) { }
     public MemberNotNullAttribute(params string[] members) { }
 }
+[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false, AllowMultiple = true)]
+public sealed class NotNullIfNotNullAttribute : Attribute
+{
+    public NotNullIfNotNullAttribute(string member) { }
+    public NotNullIfNotNullAttribute(params string[] members) { }
+}
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
 public sealed class MemberNotNullWhenAttribute : Attribute
