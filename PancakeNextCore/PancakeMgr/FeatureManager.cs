@@ -1,4 +1,5 @@
-﻿using PancakeNextCore.Dataset;
+﻿using Grasshopper2.Diagnostics;
+using PancakeNextCore.Dataset;
 using PancakeNextCore.Utility;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,10 @@ public sealed class FeatureManager
         {
             if (!Config.Read(GetConfigEntry(feature.GetName()), feature.IsDefaultEnabled(), false)) continue;
             if (feature.GetExpectedLoadStage() == stage)
+            {
+                Logger.Add(Level.Info, $"[Pancake] {feature.GetName()} is enabled at startup stage {stage}.");
                 feature.OnLoad();
+            }
         }
     }
 
@@ -77,10 +81,12 @@ public sealed class FeatureManager
         if (newStatus && !feature.IsEffective())
         {
             feature.OnLoad();
+            Logger.Add(Level.Info, $"[Pancake] {featureName} is switched on.");
         }
         else if (!newStatus && feature.IsEffective())
         {
             feature.OnUnload();
+            Logger.Add(Level.Info, $"[Pancake] {featureName} is switched off.");
         }
 
         if (persistent)

@@ -85,7 +85,7 @@ public class pcAssocToXml : PancakeComponent<pcAssocToXml>, IPancakeLocalizable<
 
     protected override InputOption[][] SimpleOptions => [
         [
-            new ToggleOption("Omit header", Strings.ControlIfTheXMLHeaderIsOmitted, Headless, x => Headless = x, "Omit", "Emit", ChapterName),
-            new ToggleOption("Expand attributes", Strings.ExpandAttributesToSubNodesSeeExampleForMoreInformation, Expand, x => Expand = x, "Expand", "Keep", ChapterName),
+            new ToggleOption("Omit header", Strings.ControlIfTheXMLHeaderIsOmitted, Headless, x => Headless = x, "Omit XML header", "Emit XML header")],[
+            new ToggleOption("Expand attributes", Strings.ExpandAttributesToSubNodesSeeExampleForMoreInformation, Expand, x => Expand = x, "Expand attributes to subnodes", "Keep attributes"),
             ]];
 }

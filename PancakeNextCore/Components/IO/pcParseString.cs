@@ -6,6 +6,7 @@ using Grasshopper2.Components;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
 using Grasshopper2.Types.Colour;
+using Grasshopper2.Types.Conversion;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
@@ -87,7 +88,7 @@ public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPa
     }
     protected override void Process(IDataAccess access)
     {
-        access.GetItem(0, out string result);
+        access.GetTree<string>(0, out var tree);
 
         if (!access.GetItem(1, out string desiredType) || string.IsNullOrEmpty(desiredType))
         {
@@ -97,6 +98,9 @@ public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPa
         {
             desiredType.SplitLikelyOne(DesiredTypeSeparators, ref _desiredTypeTester);
         }
+
+        var cts = new CancellationTokenSource();
+        tree.Convert<object>(ParseString, cts.Token);
 
         _result = result.Trim();
         _access = access;
@@ -138,5 +142,10 @@ public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPa
 
         access.AddWarning("Unknown data type", Strings.CannotDetermineTheDataType);
         access.SetItem(1, "?");
+    }
+
+    private Merit ParseString(string from, out object to, out string message)
+    {
+        throw new NotImplementedException();
     }
 }
