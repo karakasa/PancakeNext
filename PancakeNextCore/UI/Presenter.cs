@@ -1,4 +1,5 @@
 ﻿using Eto.Forms;
+using PancakeNextCore.Modules.TransferSetting;
 using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,11 @@ internal class Presenter
         var shownForm = new T();
         shownForm.Owner = EtoExtensions.GetGrasshopperWindowAsEto();
         shownForm.Show();
+    }
+
+    internal static TransferWindowResult ShowTransferWindow(IReadOnlyList<Base> instances, out List<Base> selected)
+    {
+        throw new NotImplementedException();
     }
 
     /*public static void ShowPluginManagerWindow(IList<string> names, IList<string> searchKey,
@@ -59,4 +65,11 @@ internal class Presenter
 
         // PersistentForm<FormPortabilityReport>.Show();
     }*/
+    
+    public enum TransferWindowResult
+    {
+        Cancelled,
+        SaveToFile,
+        LoadFromFile
+    }
 }

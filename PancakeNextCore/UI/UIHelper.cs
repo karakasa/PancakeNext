@@ -186,4 +186,14 @@ internal static partial class UiHelper
         {
         }
     }
+
+    internal static string? OpenFileDialog(string openPackedSettings, string extensionHint)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static string? SaveFileDialog(string savePackedSettings, string extensionHint)
+    {
+        throw new NotImplementedException();
+    }
 }

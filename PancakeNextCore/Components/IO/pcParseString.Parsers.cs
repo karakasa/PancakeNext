@@ -1,4 +1,5 @@
 ﻿using Eto.Drawing;
+using Eto.Forms;
 using Grasshopper2.Data;
 using Grasshopper2.Types.Colour;
 using PancakeNextCore.GH;
@@ -16,187 +17,383 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Rhino.Runtime.ViewCaptureWriter;
+using Color = Eto.Drawing.Color;
 using Path = System.IO.Path;
 
 namespace PancakeNextCore.Components.IO;
 public sealed partial class pcParseString
 {
-    private delegate bool TryParseDelegate<T>(string strData, [NotNullWhen(true)] out T result);
-    private bool TryConvertGeneric<T>(string typeName, TryParseDelegate<T> parseFunc, string result,
-        [NotNullWhen(true)] ref object? outObj, [NotNullWhen(true)] ref string? outTypeName)
+    private abstract class Parser(string name, bool excludedInAll = false)
     {
-        if (!CheckDesire(typeName))
+        public string Name { get; } = name;
+        public bool ExcludeInAllMode { get; } = excludedInAll;
+        public abstract bool TryConvertGeneric(string from, [NotNullWhen(true)] ref object? outObj, [NotNullWhen(true)] ref string? outTypeName);
+        public abstract bool TryParseStringTreeAs(Tree<string> strings, [NotNullWhen(true)] ref ITree? outputs, [NotNullWhen(true)] ref string? outTypeName, bool failOnInvalid = false);
+    }
+    private abstract class Parser<T>(string name, bool excludedInAll = false) : Parser(name.ToLowerInvariant(), excludedInAll)
+    {
+        public override sealed bool TryParseStringTreeAs(Tree<string> strings, [NotNullWhen(true)] ref ITree? outputs, [NotNullWhen(true)] ref string? outTypeName, bool failOnInvalid = false)
         {
-            return false;
-        }
+            var array = new Twig<T>[strings.PathCount];
+            for (int i = 0; i < array.Length; i++)
+            {
+                var twig = strings.Twigs[i];
+                if (twig is null)
+                {
+                    array[i] = Garden.TwigEmpty<T>();
+                }
+                else
+                {
+                    var t = ParseStringsAs(twig, failOnInvalid);
+                    if (t is null)
+                    {
+                        if (failOnInvalid)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            t = Garden.TwigEmpty<T>();
+                        }
+                    }
 
-        if (parseFunc(result, out var obj))
-        {
-            outObj = obj;
-            outTypeName = typeName;
+                    array[i] = t;
+                }
+            }
+
+            outputs = Garden.TreeFromTwigs(strings.Paths, array);
+            outTypeName = Name;
+
             return true;
         }
 
-        return false;
-    }
-
-    private bool TryParseStringsAs<T>(string typeName, TryParseDelegate<T> parseFunc,
-       Twig<string> strings, [NotNullWhen(true)] ref ITwig? outputs, [NotNullWhen(true)] ref string? outTypeName
-       )
-    {
-        if (!CheckDesire(typeName))
+        private Twig<T>? ParseStringsAs(Twig<string> strings, bool failOnInvalid)
         {
+            var factory = new TwigFactory<T>(strings.LeafCount);
+
+            foreach (var it in strings.Pears)
+            {
+                if (it is null)
+                {
+                    factory.AddNull();
+                    continue;
+                }
+
+                var meta = it.Meta;
+                if (TryParse(it.Item, out var v))
+                {
+                    factory.Add(v, meta, false);
+                }
+                else
+                {
+                    if (failOnInvalid)
+                    {
+                        return null;
+                    }
+
+                    factory.Add(default!, meta, true);
+                }
+            }
+
+            return factory.Create();
+        }
+
+        public override sealed bool TryConvertGeneric(string from, [NotNullWhen(true)] ref object? outObj, [NotNullWhen(true)] ref string? outTypeName)
+        {
+            if (TryParse(from, out var obj))
+            {
+                outObj = obj;
+                outTypeName = Name;
+                return true;
+            }
+
             return false;
         }
 
-        var factory = new TwigFactory<T>(strings.LeafCount);
-
-        foreach (var it in strings.Pears)
-        {
-            if (it is null)
-            {
-                factory.AddNull();
-                continue;
-            }
-
-            var meta = it.Meta;
-            if (parseFunc(it.Item, out var v))
-            {
-                factory.Add(v, meta, false);
-            }
-            else
-            {
-                factory.Add(default!, meta, true);
-            }
-        }
-
-        outputs = factory.Create();
-        outTypeName = typeName;
-        return true;
+        protected abstract bool TryParse(string strData, [NotNullWhen(true)] out T result);
     }
 
-    private static Twig<T> ParseStringsAs<T>(TryParseDelegate<T> parseFunc, Twig<string> strings)
+    static readonly Parser_Json JsonParser;
+    static readonly Parser_XML XmlParser;
+    static readonly Parser_Point3d Point3dParser;
+    static readonly Parser_Integer IntParser;
+    static readonly Parser_Number DoubleParser;
+    static readonly Parser_Bool BoolParser;
+
+    static readonly Parser[] Parsers = [
+        JsonParser = new Parser_Json(),
+        XmlParser = new Parser_XML(),
+        new Parser_DecimalLength(),
+        new Parser_FtInchLength(),
+        Point3dParser = new(),
+        new Parser_Interval(),
+        new Parser_Color(),
+        IntParser = new Parser_Integer(),
+        BoolParser = new Parser_Bool(),
+        DoubleParser = new Parser_Number(),
+        new Parser_DateTime(),
+        new Parser_Guid(),
+        new Parser_CommaString(),
+        new Parser_Null(),
+        new Parser_Quantity()
+        ];
+    private sealed class Parser_XML() : Parser<GhAssocBase>("xml")
     {
-        var factory = new TwigFactory<T>(strings.LeafCount);
-
-        foreach (var it in strings.Pears)
+        protected override bool TryParse(string str, [NotNullWhen(true)] out GhAssocBase result)
         {
-            if (it is null)
+            try
             {
-                factory.AddNull();
-                continue;
+                var assoc = XmlIo.ReadXml(str, out _);
+                result = assoc;
+                return true;
             }
-
-            var meta = it.Meta;
-            if (parseFunc(it.Item, out var v))
+            catch
             {
-                factory.Add(v, meta, false);
-            }
-            else
-            {
-                factory.Add(default!, meta, true);
+                result = null;
+                return false;
             }
         }
-
-        return factory.Create();
     }
-
-    private bool TryParseStringTreeAs<T>(string typeName, TryParseDelegate<T> parseFunc,
-       Tree<string> strings, [NotNullWhen(true)] ref ITree? outputs, [NotNullWhen(true)] ref string? outTypeName
-       )
+    private sealed class Parser_Null() : Parser<object?>("null")
     {
-        if (!CheckDesire(typeName))
+        protected override bool TryParse(string str, [NotNullWhen(true)] out object? result)
         {
+            result = null;
+            return str == "null";
+        }
+    }
+    private sealed class Parser_CommaString() : Parser<string>("CommaString")
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out string result)
+        {
+            if (strData.StartsWith("\"") && strData.EndsWith("\""))
+            {
+                result = strData.Substring(1, strData.Length - 2);
+                return true;
+            }
+            result = default;
             return false;
         }
-
-        var array = new Twig<T>[strings.PathCount];
-        for (int i = 0; i < array.Length; i++)
-        {
-            var twig = strings.Twigs[i];
-            if (twig is null)
-            {
-                array[i] = Garden.TwigEmpty<T>();
-            }
-            else
-            {
-                array[i] = ParseStringsAs(parseFunc, twig);
-            }
-        }
-
-        outputs = Garden.TreeFromTwigs(strings.Paths, array);
-        outTypeName = typeName;
-        return true;
     }
-
-    private void ParseStringTreeGeneric(Tree<string> strings, out ITree outputs, bool populateTypeNames,
-        out Tree<string>? outTypeName)
+    private sealed class Parser_Point3d() : Parser<Point3d>("Point")
     {
-        var pathCount = strings.PathCount;
-        var twigs = new ITwig[pathCount];
-
-        var outputTypeNames = populateTypeNames ? new Twig<string>[pathCount] : null;
-
-        for (var i = 0; i < pathCount; i++)
+        private struct ParsePointExecutor : IStringPartExecutor
         {
-            var strs = strings.Twigs[i];
-            var j = 0;
-
-            var cnt = strs.LeafCount;
-
-            var twig = new IPear?[cnt];
-
-            string[]? names = null;
-
-            if (populateTypeNames)
+            private double x;
+            private double y;
+            private double z;
+            private bool threeDimensional;
+            public readonly Point3d CollectResult() => new(x, y, z);
+            public bool HandlePart(string str, int partId, int startIndex, int length)
             {
-                names = new string[cnt];
-            }
-
-            foreach (var leaf in strs.Pears)
-            {
-                if (leaf is null || !ParseString(leaf.Item, out var to, out var typeName))
+                switch (partId)
                 {
-                    to = null;
-                    typeName = "?";
+                    case 0 when length == 1:
+                        return str[startIndex] == '{';
+                    case 1:
+                        return str.TryParseTrimmedAsDouble(startIndex, length, out x);
+                    case 2 when length == 1:
+                        return str[startIndex] == ',';
+                    case 3:
+                        return str.TryParseTrimmedAsDouble(startIndex, length, out y);
+                    case 4 when length == 1:
+                        switch (str[startIndex])
+                        {
+                            case '}':
+                                threeDimensional = false;
+                                return true;
+                            case ',':
+                                threeDimensional = true;
+                                return true;
+                            default:
+                                return false;
+                        }
+                    case 5 when threeDimensional:
+                        return str.TryParseTrimmedAsDouble(startIndex, length, out z);
+                    case 6 when length == 1 && threeDimensional:
+                        return str[startIndex] == '}';
+                    default:
+                        return false;
                 }
-
-                if (populateTypeNames)
-                {
-                    names[j] = typeName;
-                }
-
-                var pear = to.AsPear();
-                if (leaf?.Meta is not null)
-                {
-                    pear = pear.WithMeta(leaf.Meta);
-                }
-                twig[j] = pear;
-
-                ++j;
-            }
-
-            twigs[i] = Garden.ITwigFromPears(twig);
-            if (populateTypeNames)
-            {
-                outputTypeNames[i] = Garden.TwigFromList(names);
             }
         }
-
-        outputs = Garden.ITreeFromITwigs(twigs);
-
-        if (populateTypeNames)
+        internal bool IsValid(string strData) => TryParse(strData, out _);
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out Point3d point)
         {
-            outTypeName = Garden.TreeFromTwigs(outputTypeNames);
-        }
-        else
-        {
-            outTypeName = null;
+            try
+            {
+                var executor = new ParsePointExecutor();
+
+                if (!strData.TrySplitWhile(default(StringUtility.IsNumericAndNegativePredicate), ref executor))
+                {
+                    point = default;
+                    return false;
+                }
+
+                point = executor.CollectResult();
+                return true;
+            }
+            catch
+            {
+            }
+
+            point = default;
+            return false;
         }
     }
+    private sealed class Parser_Interval() : Parser<Interval>("Domain")
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out Interval domain)
+        {
+            try
+            {
+                var blocks = strData.SplitWhile(StringUtility.IsNumericAndNegative).Select(s => s.Trim()).ToArray();
+                if (blocks.Length == 3)
+                    if (blocks[1] == "To" || blocks[1] == "~" || blocks[1] == "->")
+                    {
+                        domain = new Interval(Convert.ToDouble(blocks[0]), Convert.ToDouble(blocks[2]));
+                        return true;
+                    }
+            }
+            catch
+            {
+            }
 
-    private bool TryHandleFile(string path, [NotNullWhen(true)] ref object? outObj, [NotNullWhen(true)] ref string? outTypeName)
+            domain = default;
+            return false;
+        }
+    }
+    private sealed class Parser_Color() : Parser<Colour>("Colour")
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out Colour color)
+        {
+            try
+            {
+                if ((strData.Length == 7 || strData.Length == 9) &&
+                    strData.StartsWith("#", StringComparison.Ordinal))
+                {
+                    if (!strData.TryParseSubstrAsInt(1, 2, out var part1, NumberStyles.HexNumber) ||
+                        !strData.TryParseSubstrAsInt(2, 2, out var part2, NumberStyles.HexNumber) ||
+                        !strData.TryParseSubstrAsInt(3, 2, out var part3, NumberStyles.HexNumber))
+                    {
+                        color = null;
+                        return false;
+                    }
+
+                    int part4;
+
+                    if (strData.Length == 9)
+                    {
+                        if (!strData.TryParseSubstrAsInt(7, 2, out part4, NumberStyles.HexNumber))
+                        {
+                            color = null;
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        part4 = 0;
+                    }
+
+                    if (strData.Length == 9)
+                    {
+                        if (part1 <= 100)
+                        {
+                            // ARGB
+                            color = Colour.FromEto(Color.FromArgb(part1, part2, part3, part4));
+                        }
+                        else if (part4 <= 100)
+                        {
+                            // RGBA
+                            color = Colour.FromEto(Color.FromArgb(part4, part1, part2, part3));
+                        }
+                        else
+                        {
+                            color = default;
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        color = Colour.FromEto(Color.FromArgb(part1, part2, part3));
+                    }
+
+                    return true;
+                }
+            }
+            catch
+            {
+
+            }
+
+            color = default;
+            return false;
+        }
+    }
+    private sealed class Parser_Json() : Parser<GhAssocBase>("Json")
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out GhAssocBase result)
+            => BuiltinJsonParser.TryParseJsonLight(strData, out result);
+    }
+    private sealed class Parser_Quantity() : Parser<GhQuantity>("Quantity", true)
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out GhQuantity result)
+        {
+            if (GhLengthDecimal.TryParse(strData, out var len))
+            {
+                result = len;
+                return true;
+            }
+
+            if (GhLengthFeetInch.TryParse(strData, out var ft))
+            {
+                result = ft;
+                return true;
+            }
+
+            result = null;
+            return false;
+        }
+    }
+    private sealed class Parser_DecimalLength() : Parser<GhLengthDecimal>("DecimalLength")
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out GhLengthDecimal result)
+            => GhLengthDecimal.TryParse(strData, out result);
+    }
+    private sealed class Parser_FtInchLength() : Parser<GhLengthFeetInch>("FeetInchLength")
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out GhLengthFeetInch result)
+            => GhLengthFeetInch.TryParse(strData, out result);
+    }
+    private sealed class Parser_Bool() : Parser<bool>("Boolean")
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out bool result)
+        {
+            if (string.Equals(strData, "true", StringComparison.OrdinalIgnoreCase))
+            {
+                result = true;
+                return true;
+            }
+            else if (string.Equals(strData, "false", StringComparison.OrdinalIgnoreCase))
+            {
+                result = false;
+                return true;
+            }
+
+            return result = false;
+        }
+    }
+    private sealed class Parser_Integer() : Parser<int>("Integer") { protected override bool TryParse(string strData, [NotNullWhen(true)] out int result) => int.TryParse(strData, out result); }
+    private sealed class Parser_Number() : Parser<double>("Number") { protected override bool TryParse(string strData, [NotNullWhen(true)] out double result) => double.TryParse(strData, out result); }
+    private sealed class Parser_DateTime() : Parser<DateTime>("DateTime") { protected override bool TryParse(string strData, [NotNullWhen(true)] out DateTime result) => DateTime.TryParse(strData, out result); }
+    private sealed class Parser_Guid() : Parser<Guid>("Guid") { protected override bool TryParse(string strData, [NotNullWhen(true)] out Guid result) => Guid.TryParse(strData, out result); }
+#if NET
+    private abstract class GenericParser<T>(string name) : Parser<T>(name) where T : IParsable<T>
+    {
+        protected override bool TryParse(string strData, [NotNullWhen(true)] out T result) => T.TryParse(strData, null, out result);
+    }
+#endif
+    private static bool TryHandleFile(string path, [NotNullWhen(true)] ref object? outObj, [NotNullWhen(true)] ref string? outTypeName)
     {
         var extension = Path.GetExtension(path).ToLowerInvariant();
         string result;
@@ -204,12 +401,12 @@ public sealed partial class pcParseString
         {
             case ".json":
                 result = FileIo.ReadAllText(path);
-                if (TryConvertGeneric<GhAssocBase>("Json", BuiltinJsonParser.TryParseJsonLight, result, ref outObj, ref outTypeName))
+                if (JsonParser.TryConvertGeneric(result, ref outObj, ref outTypeName))
                     return true;
                 break;
             case ".xml":
                 result = FileIo.ReadAllText(path);
-                if (TryConvertGeneric<GhAssocBase>("Xml", TryParseXml, result, ref outObj, ref outTypeName))
+                if (XmlParser.TryConvertGeneric(result, ref outObj, ref outTypeName))
                     return true;
                 break;
         }
@@ -217,276 +414,70 @@ public sealed partial class pcParseString
         outObj = null;
         return false;
     }
-    private bool TryParseStrings(Twig<string> from, [NotNullWhen(true)] out ITwig? to, [NotNullWhen(true)] out string? typeName)
+    private enum EducatedGuess
     {
-        typeName = null;
-        to = null;
-
-        if (
-            TryParseStringsAs<GhAssocBase>("Json", BuiltinJsonParser.TryParseJsonLight, from, ref to, ref typeName) ||
-            TryParseStringsAs<GhAssocBase>("Xml", TryParseXml, from, ref to, ref typeName) ||
-            TryParseStringsAs<GhLengthDecimal>("DecimalLength", GhLengthDecimal.TryParse, from, ref to, ref typeName) ||
-            TryParseStringsAs<GhLengthFeetInch>("FeetInchLength", GhLengthFeetInch.TryParse, from, ref to, ref typeName) ||
-            TryParseStringsAs<Point3d>("Point", TryParsePoint, from, ref to, ref typeName) ||
-            TryParseStringsAs<Interval>("Domain", TryParseInterval, from, ref to, ref typeName) ||
-            TryParseStringsAs<Colour>("Colour", TryParseColor, from, ref to, ref typeName) ||
-            TryParseStringsAs<GhAssocBase>("Xml", TryParseXml, from, ref to, ref typeName) ||
-            TryParseStringsAs<object>("Null", TryParseNull, from, ref to, ref typeName) ||
-            TryParseStringsAs<string>("CommaString", TryParseCommaString, from, ref to, ref typeName) ||
-            TryParseStringsAs<int>("Integer", int.TryParse, from, ref to, ref typeName) ||
-            TryParseStringsAs<double>("Number", double.TryParse, from, ref to, ref typeName) ||
-            TryParseStringsAs<bool>("Boolean", bool.TryParse, from, ref to, ref typeName) ||
-            TryParseStringsAs<DateTime>("DateTime", DateTime.TryParse, from, ref to, ref typeName) ||
-            TryParseStringsAs<Guid>("Guid", Guid.TryParse, from, ref to, ref typeName)
-            )
-        {
-            return true;
-        }
-
-        return false;
+        Unknown,
+        Bool,
+        Integer,
+        Number,
+        TupleOf3Numbers
     }
-    private bool TryParseStringTree(Tree<string> from, [NotNullWhen(true)] out ITree? to, [NotNullWhen(true)] out string? typeName)
+    private static EducatedGuess GuessString(string str)
     {
-        typeName = null;
-        to = null;
+        if (str.Length >= 4 && (string.Equals(str, "true", StringComparison.OrdinalIgnoreCase) || string.Equals(str, "false", StringComparison.OrdinalIgnoreCase)))
+            return EducatedGuess.Bool;
 
-        if (
-            TryParseStringTreeAs<GhAssocBase>("Json", BuiltinJsonParser.TryParseJsonLight, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<GhAssocBase>("Xml", TryParseXml, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<GhLengthDecimal>("DecimalLength", GhLengthDecimal.TryParse, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<GhLengthFeetInch>("FeetInchLength", GhLengthFeetInch.TryParse, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<Point3d>("Point", TryParsePoint, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<Interval>("Domain", TryParseInterval, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<Colour>("Colour", TryParseColor, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<GhAssocBase>("Xml", TryParseXml, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<object>("Null", TryParseNull, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<string>("CommaString", TryParseCommaString, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<int>("Integer", int.TryParse, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<double>("Number", double.TryParse, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<bool>("Boolean", bool.TryParse, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<DateTime>("DateTime", DateTime.TryParse, from, ref to, ref typeName) ||
-            TryParseStringTreeAs<Guid>("Guid", Guid.TryParse, from, ref to, ref typeName)
-            )
+        var cur = EducatedGuess.Unknown;
+        foreach (var c in str)
         {
-            return true;
-        }
-
-        return false;
-    }
-    private bool ParseString(string from, [NotNullWhen(true)] out object? to, [NotNullWhen(true)] out string? typeName)
-    {
-        typeName = null;
-        to = null;
-
-        if (
-            (FileIo.IsValidPath(from) && TryHandleFile(from, ref to, ref typeName)) ||
-            TryConvertGeneric<GhAssocBase>("Json", BuiltinJsonParser.TryParseJsonLight, from, ref to, ref typeName) ||
-            TryConvertGeneric<GhAssocBase>("Xml", TryParseXml, from, ref to, ref typeName) ||
-            TryConvertGeneric<GhLengthDecimal>("DecimalLength", GhLengthDecimal.TryParse, from, ref to, ref typeName) ||
-            TryConvertGeneric<GhLengthFeetInch>("FeetInchLength", GhLengthFeetInch.TryParse, from, ref to, ref typeName) ||
-            TryConvertGeneric<Point3d>("Point", TryParsePoint, from, ref to, ref typeName) ||
-            TryConvertGeneric<Interval>("Domain", TryParseInterval, from, ref to, ref typeName) ||
-            TryConvertGeneric<Colour>("Colour", TryParseColor, from, ref to, ref typeName) ||
-            TryConvertGeneric<GhAssocBase>("Xml", TryParseXml, from, ref to, ref typeName) ||
-            TryConvertGeneric<object>("Null", TryParseNull, from, ref to, ref typeName) ||
-            TryConvertGeneric<string>("CommaString", TryParseCommaString, from, ref to, ref typeName) ||
-            TryConvertGeneric<int>("Integer", int.TryParse, from, ref to, ref typeName) ||
-            TryConvertGeneric<double>("Number", double.TryParse, from, ref to, ref typeName) ||
-            TryConvertGeneric<bool>("Boolean", bool.TryParse, from, ref to, ref typeName) ||
-            TryConvertGeneric<DateTime>("DateTime", DateTime.TryParse, from, ref to, ref typeName) ||
-            TryConvertGeneric<Guid>("Guid", Guid.TryParse, from, ref to, ref typeName)
-            )
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool TryParseXml(string strData, [NotNullWhen(true)] out GhAssocBase? result)
-    {
-        try
-        {
-            var assoc = XmlIo.ReadXml(strData, out _);
-            if (assoc != null)
+            if (c is ' ') continue;
+            if ((c >= '0' && c <= '9') || c is '-')
             {
-                // _access?.AddWarning("Use XML to Assoc instead", Strings.ItSNotRecommendedToUseParseString);
+                Upgrade(ref cur, EducatedGuess.Integer);
             }
-            result = assoc;
-            return true;
-        }
-        catch
-        {
-            result = null;
-            return false;
-        }
-    }
-
-    private bool TryParseNull(string strData, out object? result)
-    {
-        result = null;
-        return strData == "null";
-    }
-
-    private bool TryParseCommaString(string strData, [NotNullWhen(true)] out string? str)
-    {
-        if (strData.StartsWith("\"") && strData.EndsWith("\""))
-        {
-            str = strData.Substring(1, strData.Length - 2);
-            return true;
-        }
-        str = default;
-        return false;
-    }
-
-    private struct ParsePointExecutor : IStringPartExecutor
-    {
-        private double x;
-        private double y;
-        private double z;
-        private bool threeDimensional;
-        public readonly Point3d CollectResult() => new(x, y, z);
-        public bool HandlePart(string str, int partId, int startIndex, int length)
-        {
-            switch (partId)
+            else if (c is '.' or '-' or 'e' or 'E' or '+')
             {
-                case 0 when length == 1:
-                    return str[startIndex] == '{';
-                case 1:
-                    return str.TryParseTrimmedAsDouble(startIndex, length, out x);
-                case 2 when length == 1:
-                    return str[startIndex] == ',';
-                case 3:
-                    return str.TryParseTrimmedAsDouble(startIndex, length, out y);
-                case 4 when length == 1:
-                    switch (str[startIndex])
-                    {
-                        case '}':
-                            threeDimensional = false;
-                            return true;
-                        case ',':
-                            threeDimensional = true;
-                            return true;
-                        default:
-                            return false;
-                    }
-                case 5 when threeDimensional:
-                    return str.TryParseTrimmedAsDouble(startIndex, length, out z);
-                case 6 when length == 1 && threeDimensional:
-                    return str[startIndex] == '}';
-                default:
-                    return false;
+                Upgrade(ref cur, EducatedGuess.Number);
+            }
+            else if (c is '{' or ',' or '}')
+            {
+                Upgrade(ref cur, EducatedGuess.TupleOf3Numbers);
+            }
+            else
+            {
+                return EducatedGuess.Unknown;
             }
         }
+
+        return FinalCheck(cur, str);
     }
 
-    internal static bool TryParsePoint(string strData, out Point3d point)
+    private static EducatedGuess FinalCheck(EducatedGuess currentGuess, string str)
     {
-        try
+        switch (currentGuess)
         {
-            var executor = new ParsePointExecutor();
-
-            if (!strData.TrySplitWhile(default(StringUtility.IsNumericAndNegativePredicate), ref executor))
-            {
-                point = default;
-                return false;
-            }
-
-            point = executor.CollectResult();
-            return true;
+            case EducatedGuess.Integer:
+                if (int.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out _))
+                    return EducatedGuess.Integer;
+                break;
+            case EducatedGuess.Number:
+                if (double.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out _))
+                    return EducatedGuess.Number;
+                break;
+            case EducatedGuess.TupleOf3Numbers:
+                if (Point3dParser.IsValid(str))
+                    return EducatedGuess.TupleOf3Numbers;
+                break;
+            default:
+                return currentGuess;
         }
-        catch
-        {
 
-        }
-
-        point = default;
-        return false;
+        return EducatedGuess.Unknown;
     }
 
-    internal static bool TryParseInterval(string strData, out Interval domain)
+    private static void Upgrade(ref EducatedGuess guess, EducatedGuess newVal)
     {
-        try
-        {
-            var blocks = strData.SplitWhile(StringUtility.IsNumericAndNegative).Select(s => s.Trim()).ToArray();
-            if (blocks.Length == 3)
-                if (blocks[1] == "To" || blocks[1] == "~" || blocks[1] == "->")
-                {
-                    domain = new Interval(Convert.ToDouble(blocks[0]), Convert.ToDouble(blocks[2]));
-                    return true;
-                }
-        }
-        catch
-        {
-
-        }
-
-        domain = default;
-        return false;
-    }
-
-    internal static bool TryParseColor(string strData, [NotNullWhen(true)] out Colour? color)
-    {
-        try
-        {
-            if ((strData.Length == 7 || strData.Length == 9) &&
-                strData.StartsWith("#", StringComparison.Ordinal))
-            {
-                if (!strData.TryParseSubstrAsInt(1, 2, out var part1, NumberStyles.HexNumber) ||
-                    !strData.TryParseSubstrAsInt(2, 2, out var part2, NumberStyles.HexNumber) ||
-                    !strData.TryParseSubstrAsInt(3, 2, out var part3, NumberStyles.HexNumber))
-                {
-                    color = null;
-                    return false;
-                }
-
-                int part4;
-
-                if (strData.Length == 9)
-                {
-                    if (!strData.TryParseSubstrAsInt(7, 2, out part4, NumberStyles.HexNumber))
-                    {
-                        color = null;
-                        return false;
-                    }
-                }
-                else
-                {
-                    part4 = 0;
-                }
-
-                if (strData.Length == 9)
-                {
-                    if (part1 <= 100)
-                    {
-                        // ARGB
-                        color = Colour.FromEto(Color.FromArgb(part1, part2, part3, part4));
-                    }
-                    else if (part4 <= 100)
-                    {
-                        // RGBA
-                        color = Colour.FromEto(Color.FromArgb(part4, part1, part2, part3));
-                    }
-                    else
-                    {
-                        color = default;
-                        return false;
-                    }
-                }
-                else
-                {
-                    color = Colour.FromEto(Color.FromArgb(part1, part2, part3));
-                }
-
-                return true;
-            }
-        }
-        catch
-        {
-
-        }
-
-        color = default;
-        return false;
+        if (newVal > guess)
+            guess = newVal;
     }
 }

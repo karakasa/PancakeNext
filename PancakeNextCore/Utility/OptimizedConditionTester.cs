@@ -23,6 +23,7 @@ internal readonly struct OptimizedConditionTester<T> where T : notnull, IEquatab
         _singleValue = val;
     }
 
+    public T SingleValue => _singleValue!;
     public OptimizedConditionTester(T[] vals)
     {
         switch (vals.Length)

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Pancake.Interfaces;
-using Pancake.Utility;
 
 namespace PancakeNextCore.Modules;
 

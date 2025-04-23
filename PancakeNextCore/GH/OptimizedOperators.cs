@@ -133,6 +133,12 @@ internal static class OptimizedOperators
 
     public static IEnumerable<IPear?> AsPears(this IEnumerable<object?> objs)
         => objs.Select(AsPear);
+
+    public static object? Peel(this object? obj)
+    {
+        if (obj is IPear pear) return pear.Item;
+        return obj;
+    }
     public static IPear? AsPear(this object? obj)
     {
         return obj switch

@@ -20,9 +20,6 @@
     <Compile Remove="Helper\DependencyWalker.cs" />
     <Compile Remove="Helper\PickStream.cs" />
     <Compile Remove="Helper\PortabilityReport.cs" />
-    <Compile Remove="Helper\TransferSetting.cs" />
-    <Compile Remove="Modules\ModuleManager.cs" />
-    <Compile Remove="Modules\ModuleUtility.cs" />
     <Compile Remove="Modules\PortabilityCheckerActions\CopyFilesAction.cs" />
     <Compile Remove="Modules\PortabilityCheckerActions\IPortabilityCheckerAction.cs" />
     <Compile Remove="Modules\PortabilityCheckerActions\LocateAction.cs" />
@@ -35,7 +32,6 @@
     <Compile Remove="Modules\PortabilityChecker\HiddenObjectScanner.cs" />
     <Compile Remove="Modules\PortabilityChecker\StaticConfiguration.cs" />
     <Compile Remove="Modules\PortabilityChecker\ThirdPartyLibrary.cs" />
-    <Compile Remove="Modules\TransferSetting\Base.cs" />
     <Compile Remove="Modules\TransferSetting\GrasshopperLibProvider.cs" />
     <Compile Remove="Modules\TransferSetting\GrasshopperProvider.cs" />
     <Compile Remove="Modules\TransferSetting\PancakeProvider.cs" />
@@ -94,9 +90,6 @@
     <None Include="Helper\DependencyWalker.cs" />
     <None Include="Helper\PickStream.cs" />
     <None Include="Helper\PortabilityReport.cs" />
-    <None Include="Helper\TransferSetting.cs" />
-    <None Include="Modules\ModuleManager.cs" />
-    <None Include="Modules\ModuleUtility.cs" />
     <None Include="Modules\PortabilityCheckerActions\CopyFilesAction.cs" />
     <None Include="Modules\PortabilityCheckerActions\IPortabilityCheckerAction.cs" />
     <None Include="Modules\PortabilityCheckerActions\LocateAction.cs" />
@@ -109,7 +102,6 @@
     <None Include="Modules\PortabilityChecker\HiddenObjectScanner.cs" />
     <None Include="Modules\PortabilityChecker\StaticConfiguration.cs" />
     <None Include="Modules\PortabilityChecker\ThirdPartyLibrary.cs" />
-    <None Include="Modules\TransferSetting\Base.cs" />
     <None Include="Modules\TransferSetting\GrasshopperLibProvider.cs" />
     <None Include="Modules\TransferSetting\GrasshopperProvider.cs" />
     <None Include="Modules\TransferSetting\PancakeProvider.cs" />

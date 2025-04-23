@@ -84,9 +84,13 @@ internal static partial class StringUtility
     {
         public bool Predicate(char c) => IsNumericAndNegative(c);
     }
+    public readonly struct IsNumericPredicate : IStructPredicate<char>
+    {
+        public bool Predicate(char c) => IsNumeric(c);
+    }
     public static bool IsNumericAndNegative(char c) => (c >= '0' && c <= '9') || c == '.' || c == '-';
 
-    public static bool IsNumeric(string s) => s.All(IsNumeric);
+    public static bool IsNumeric(string s) => s.All<IsNumericPredicate>();
     public static void SplitLikelyOne(this string str, string[] separators, ref OptimizedConditionTester<string> result)
     {
         foreach (var it in separators)
@@ -98,5 +102,14 @@ internal static partial class StringUtility
         }
 
         result = string.IsNullOrEmpty(str) ? default : new(str);
+    }
+    public static bool All<TPredicate>(this string str) where TPredicate : struct, IStructPredicate<char>
+    {
+        foreach (var c in str)
+        {
+            if (!default(TPredicate).Predicate(c)) return false;
+        }
+
+        return true;
     }
 }

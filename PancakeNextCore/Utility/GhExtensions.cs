@@ -45,4 +45,14 @@ internal static class GhExtensions
 
         return Garden.TreeFromTwigs(source.Paths, newTwigs);
     }
+    public static Tree<T> MimicTreeWithValueNulls<T>(ITree source, bool copyMeta = false) where T : struct
+    {
+        var newTwigs = source.AllTwigs.Select(x =>
+        {
+            var meta = (copyMeta && x.MetaCount != 0) ? x.ToMetaArray(ToArrayMethod.Always) : null;
+            return Garden.TwigFromList(Enumerable.Repeat(default(T), x.LeafCount), meta, Enumerable.Repeat(true, x.LeafCount));
+        });
+
+        return Garden.TreeFromTwigs(source.Paths, newTwigs);
+    }
 }

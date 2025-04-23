@@ -1,4 +1,4 @@
-﻿using Pancake.Interfaces;
+﻿using PancakeNextCore.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -6,8 +6,7 @@ namespace PancakeNextCore.Modules;
 
 public static class ModuleUtility
 {
-    private static Dictionary<string, IModuleManager> _managers =
-        new Dictionary<string, IModuleManager>();
+    private static readonly Dictionary<string, IModuleManager> _managers = [];
 
     public static ModuleManager<T> GetManager<T>(string name, bool createInstance = false)
         where T : class, IModule
