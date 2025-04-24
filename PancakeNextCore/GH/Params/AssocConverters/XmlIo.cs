@@ -239,17 +239,18 @@ internal sealed class XmlIo
     }
     private static bool IsDisallowedTagChar(char c)
     {
-        return c >= ' ' && c <= ',' || c == '/' || c >= ';' && c <= '@' || c >= '[' && c <= '^' || c == '`' || c >= '{' && c <= '~';
+        return (c >= ' ' && c <= ',') || c == '/' || (c >= ';' && c <= '@') || (c >= '[' && c <= '^') || c == '`' || (c >= '{' && c <= '~');
     }
     private static bool IsDisallowedFirstChar(char firstChar)
     {
-        return firstChar == '-' || firstChar == '.' || firstChar >= '0' && firstChar <= '9';
+        return firstChar == '-' || firstChar == '.' || (firstChar >= '0' && firstChar <= '9');
     }
-
+    internal static bool IsAllowedFirstChar(char c)
+    {
+        return !IsDisallowedTagChar(c) && !IsDisallowedFirstChar(c);
+    }
     public static GhAssocBase ReadXml(string content, out string? root, IEnumerable<string>? interested = null)
     {
-        var file = FileIo.IsValidPath(content);
-
         var settings = new XmlReaderSettings()
         {
             IgnoreComments = true,
@@ -258,7 +259,7 @@ internal sealed class XmlIo
         };
 
         using var sreader = new StringReader(content);
-        using var xml = file ? XmlReader.Create(content, settings) : XmlReader.Create(sreader, settings);
+        using var xml = XmlReader.Create(sreader, settings);
 
         var path = new Stack<string>();
         var storage = new Stack<GhAssoc>();

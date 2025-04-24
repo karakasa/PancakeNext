@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace PancakeNextCore.Utility;
 internal static partial class StringUtility
 {
+    [Obsolete]
     public static IEnumerable<string> SplitWhile(this string str, Func<char, bool> predicate)
     {
         int lastResult = -1;

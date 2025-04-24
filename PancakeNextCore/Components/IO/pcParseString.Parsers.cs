@@ -1,5 +1,6 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
+using Eto.Typesetting;
 using Grasshopper2.Data;
 using Grasshopper2.Types.Colour;
 using PancakeNextCore.GH;
@@ -122,26 +123,31 @@ public sealed partial class pcParseString
     static readonly Parser_Bool BoolParser;
 
     static readonly Parser[] Parsers = [
-        JsonParser = new Parser_Json(),
-        XmlParser = new Parser_XML(),
-        new Parser_DecimalLength(),
-        new Parser_FtInchLength(),
-        Point3dParser = new(),
-        new Parser_Interval(),
-        new Parser_Color(),
+        new Parser_Null(),
         IntParser = new Parser_Integer(),
         BoolParser = new Parser_Bool(),
         DoubleParser = new Parser_Number(),
+        Point3dParser = new(),
+        JsonParser = new Parser_Json(),
+        XmlParser = new Parser_XML(),
+        new Parser_Color(),
+        new Parser_DecimalLength(),
+        new Parser_FtInchLength(),
+        new Parser_Interval(),
         new Parser_DateTime(),
         new Parser_Guid(),
-        new Parser_CommaString(),
-        new Parser_Null(),
         new Parser_Quantity()
         ];
     private sealed class Parser_XML() : Parser<GhAssocBase>("xml")
     {
         protected override bool TryParse(string str, [NotNullWhen(true)] out GhAssocBase result)
         {
+            if (!IsXmlFast(str))
+            {
+                result = null;
+                return false;
+            }
+
             try
             {
                 var assoc = XmlIo.ReadXml(str, out _);
@@ -154,13 +160,36 @@ public sealed partial class pcParseString
                 return false;
             }
         }
+
+        private static bool IsXmlFast(string xml)
+        {
+            if (xml.Length < 6) return false;
+            if (xml[0] != '<' || xml[xml.Length - 1] != '>') return false;
+            if (xml.StartsWith("<?xml version=\"", StringComparison.Ordinal))
+            {
+                if (xml.Length < 28) return false;
+
+                var ind = xml.IndexOf("?>", 5, 100, StringComparison.Ordinal);
+                if (ind < 0) return false;
+                ind = xml.IndexOf("<", ind + 1, 20, StringComparison.Ordinal);
+                if (ind < 0) return false;
+
+                if (xml.Length < ind + 4) return false;
+                var firstChar = xml[ind + 1];
+                return XmlIo.IsAllowedFirstChar(firstChar);
+            }
+            else
+            {
+                return XmlIo.IsAllowedFirstChar(xml[1]);
+            }
+        }
     }
     private sealed class Parser_Null() : Parser<object?>("null")
     {
         protected override bool TryParse(string str, [NotNullWhen(true)] out object? result)
         {
             result = null;
-            return str == "null";
+            return str is "null" or "";
         }
     }
     private sealed class Parser_CommaString() : Parser<string>("CommaString")
@@ -178,7 +207,7 @@ public sealed partial class pcParseString
     }
     private sealed class Parser_Point3d() : Parser<Point3d>("Point")
     {
-        private struct ParsePointExecutor : IStringPartExecutor
+        private struct ParseExecutor : IStringPartExecutor
         {
             private double x;
             private double y;
@@ -189,30 +218,22 @@ public sealed partial class pcParseString
             {
                 switch (partId)
                 {
-                    case 0 when length == 1:
-                        return str[startIndex] == '{';
+                    case 0:
+                        return str.TrimmedEquals(startIndex, length, '{', '(');
                     case 1:
                         return str.TryParseTrimmedAsDouble(startIndex, length, out x);
-                    case 2 when length == 1:
-                        return str[startIndex] == ',';
+                    case 2:
+                        return str.TrimmedEquals(startIndex, length, ',');
                     case 3:
                         return str.TryParseTrimmedAsDouble(startIndex, length, out y);
-                    case 4 when length == 1:
-                        switch (str[startIndex])
-                        {
-                            case '}':
-                                threeDimensional = false;
-                                return true;
-                            case ',':
-                                threeDimensional = true;
-                                return true;
-                            default:
-                                return false;
-                        }
+                    case 4:
+                        var kind = str.TrimmedEquals(startIndex, length, '}', ')', ',');
+                        threeDimensional = kind == 2;
+                        return kind >= 0;
                     case 5 when threeDimensional:
                         return str.TryParseTrimmedAsDouble(startIndex, length, out z);
-                    case 6 when length == 1 && threeDimensional:
-                        return str[startIndex] == '}';
+                    case 6 when threeDimensional:
+                        return str.TrimmedEquals(startIndex, length, '}');
                     default:
                         return false;
                 }
@@ -221,114 +242,117 @@ public sealed partial class pcParseString
         internal bool IsValid(string strData) => TryParse(strData, out _);
         protected override bool TryParse(string strData, [NotNullWhen(true)] out Point3d point)
         {
-            try
-            {
-                var executor = new ParsePointExecutor();
+            var executor = new ParseExecutor();
 
-                if (!strData.TrySplitWhile(default(StringUtility.IsNumericAndNegativePredicate), ref executor))
-                {
-                    point = default;
-                    return false;
-                }
-
-                point = executor.CollectResult();
-                return true;
-            }
-            catch
+            if (!strData.TrySplitWhile(default(StringUtility.IsNumericAndNegativePredicate), ref executor))
             {
+                point = default;
+                return false;
             }
 
-            point = default;
-            return false;
+            point = executor.CollectResult();
+            return true;
         }
     }
     private sealed class Parser_Interval() : Parser<Interval>("Domain")
     {
+        private struct ParseExecutor : IStringPartExecutor
+        {
+            private double x;
+            private double y;
+            public readonly Interval CollectResult() => new(x, y);
+            public bool HandlePart(string str, int partId, int startIndex, int length)
+            {
+                switch (partId)
+                {
+                    case 0:
+                        return str.TryParseSubstrAsDouble(startIndex, length, out x);
+                    case 1:
+                        str.TrimToPosition(ref startIndex, ref length);
+                        return length switch
+                        {
+                            2 => StringSpanOperations.EqualsSubstring(str, startIndex, length, "To") ||
+                                 StringSpanOperations.EqualsSubstring(str, startIndex, length, "->"),
+                            1 => str[startIndex] == '~',
+                            _ => false,
+                        };
+                    case 2:
+                        return str.TryParseSubstrAsDouble(startIndex, length, out y1);
+                    default:
+                        return false;
+                }
+            }
+        }
         protected override bool TryParse(string strData, [NotNullWhen(true)] out Interval domain)
         {
-            try
+            ParseExecutor executor = default;
+            if (!strData.TrySplitWhile(default(StringUtility.IsNumericAndNegativePredicate), ref executor))
             {
-                var blocks = strData.SplitWhile(StringUtility.IsNumericAndNegative).Select(s => s.Trim()).ToArray();
-                if (blocks.Length == 3)
-                    if (blocks[1] == "To" || blocks[1] == "~" || blocks[1] == "->")
-                    {
-                        domain = new Interval(Convert.ToDouble(blocks[0]), Convert.ToDouble(blocks[2]));
-                        return true;
-                    }
-            }
-            catch
-            {
+                domain = default;
+                return false;
             }
 
-            domain = default;
-            return false;
+            domain = executor.CollectResult();
+            return true;
         }
     }
     private sealed class Parser_Color() : Parser<Colour>("Colour")
     {
         protected override bool TryParse(string strData, [NotNullWhen(true)] out Colour color)
         {
-            try
+            if (strData.Length is not (7 or 9) || !strData.StartsWith("#", StringComparison.Ordinal))
             {
-                if ((strData.Length == 7 || strData.Length == 9) &&
-                    strData.StartsWith("#", StringComparison.Ordinal))
+                color = null;
+                return false;
+            }
+
+            if (!strData.TryParseSubstrAsInt(1, 2, out var part1, NumberStyles.HexNumber) ||
+                !strData.TryParseSubstrAsInt(2, 2, out var part2, NumberStyles.HexNumber) ||
+                !strData.TryParseSubstrAsInt(3, 2, out var part3, NumberStyles.HexNumber))
+            {
+                color = null;
+                return false;
+            }
+
+            int part4;
+
+            if (strData.Length == 9)
+            {
+                if (!strData.TryParseSubstrAsInt(7, 2, out part4, NumberStyles.HexNumber))
                 {
-                    if (!strData.TryParseSubstrAsInt(1, 2, out var part1, NumberStyles.HexNumber) ||
-                        !strData.TryParseSubstrAsInt(2, 2, out var part2, NumberStyles.HexNumber) ||
-                        !strData.TryParseSubstrAsInt(3, 2, out var part3, NumberStyles.HexNumber))
-                    {
-                        color = null;
-                        return false;
-                    }
-
-                    int part4;
-
-                    if (strData.Length == 9)
-                    {
-                        if (!strData.TryParseSubstrAsInt(7, 2, out part4, NumberStyles.HexNumber))
-                        {
-                            color = null;
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        part4 = 0;
-                    }
-
-                    if (strData.Length == 9)
-                    {
-                        if (part1 <= 100)
-                        {
-                            // ARGB
-                            color = Colour.FromEto(Color.FromArgb(part1, part2, part3, part4));
-                        }
-                        else if (part4 <= 100)
-                        {
-                            // RGBA
-                            color = Colour.FromEto(Color.FromArgb(part4, part1, part2, part3));
-                        }
-                        else
-                        {
-                            color = default;
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        color = Colour.FromEto(Color.FromArgb(part1, part2, part3));
-                    }
-
-                    return true;
+                    color = null;
+                    return false;
                 }
             }
-            catch
+            else
             {
-
+                part4 = 0;
             }
 
-            color = default;
-            return false;
+            if (strData.Length == 9)
+            {
+                if (part1 <= 100)
+                {
+                    // ARGB
+                    color = Colour.FromEto(Color.FromArgb(part1, part2, part3, part4));
+                }
+                else if (part4 <= 100)
+                {
+                    // RGBA
+                    color = Colour.FromEto(Color.FromArgb(part4, part1, part2, part3));
+                }
+                else
+                {
+                    color = default;
+                    return false;
+                }
+            }
+            else
+            {
+                color = Colour.FromEto(Color.FromArgb(part1, part2, part3));
+            }
+
+            return true;
         }
     }
     private sealed class Parser_Json() : Parser<GhAssocBase>("Json")
@@ -441,7 +465,7 @@ public sealed partial class pcParseString
             {
                 Upgrade(ref cur, EducatedGuess.Number);
             }
-            else if (c is '{' or ',' or '}')
+            else if (c is '{' or ',' or '}' or '(' or ')')
             {
                 Upgrade(ref cur, EducatedGuess.TupleOf3Numbers);
             }

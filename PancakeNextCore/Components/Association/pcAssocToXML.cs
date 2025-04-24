@@ -81,8 +81,6 @@ public class pcAssocToXml : PancakeComponent<pcAssocToXml>, IPancakeLocalizable<
         set => SetValue(ConfigExpand, _expand = value);
     }
 
-    const string ChapterName = "XML Header";
-
     protected override InputOption[][] SimpleOptions => [
         [
             new ToggleOption("Omit header", Strings.ControlIfTheXMLHeaderIsOmitted, Headless, x => Headless = x, "Omit XML header", "Emit XML header")],[
