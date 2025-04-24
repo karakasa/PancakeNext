@@ -34,13 +34,13 @@ public abstract partial class ComponentMiddleware<T> : Component where T : Compo
 
     protected override void AddInputs(InputAdder inputs)
     {
-        var manager = new GH_InputParamManager(inputs);
+        var manager = new GH_InputParamManager(this, inputs);
         RegisterInputParams(manager);
     }
 
     protected override void AddOutputs(OutputAdder outputs)
     {
-        var manager = new GH_OutputParamManager(outputs);
+        var manager = new GH_OutputParamManager(this, outputs);
         RegisterOutputParams(manager);
     }
 

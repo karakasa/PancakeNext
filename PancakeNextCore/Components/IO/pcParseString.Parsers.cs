@@ -277,7 +277,7 @@ public sealed partial class pcParseString
                             _ => false,
                         };
                     case 2:
-                        return str.TryParseSubstrAsDouble(startIndex, length, out y1);
+                        return str.TryParseSubstrAsDouble(startIndex, length, out y);
                     default:
                         return false;
                 }
@@ -507,6 +507,8 @@ public sealed partial class pcParseString
     }
     private static Parser? GuessType(Tree<string> tree)
     {
+        const int MaxGuess = 128;
+        int currentGuessCount = 0;
         EducatedGuess lastGuess = EducatedGuess.Unknown;
 
         foreach (var it in tree.AllPears)
@@ -521,6 +523,10 @@ public sealed partial class pcParseString
 
             if (guess is EducatedGuess.Unknown)
                 return null;
+
+            ++currentGuessCount;
+            if (currentGuessCount > MaxGuess)
+                break;
 
             if (guess == lastGuess)
                 continue;

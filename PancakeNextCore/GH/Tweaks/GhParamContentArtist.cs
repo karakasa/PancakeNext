@@ -115,7 +115,10 @@ public sealed class GhParamContentArtist : ICanvasArtist
     }
     private static void DrawParameterContentPreview(IParameter it, CanvasPaintEventArgs ev)
     {
-        var tree = it.State?.Data?.Tree();
+        var state = it.State;
+        if (state is null || state.Phase != Phase.Completed) return;
+
+        var tree = state.Data?.Tree();
         if (tree is null) return;
 
         var dataCnt = tree.LeafCount;
@@ -138,11 +141,11 @@ public sealed class GhParamContentArtist : ICanvasArtist
 
         if (DrawAbove || !DrawObjectLabels)
         {
-            y += height - 6.0f; // Draw below component
+            y += height + 6.0f; // Draw below component
         }
         else
         {
-            y += 6.0f - height; // Draw above component
+            y -= height + 6.0f; // Draw above component
         }
 
         var rect = new RectangleF(bbox.X, y, bbox.Width, height);

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
+#if G2
 public enum GH_RuntimeMessageLevel : byte
 {
     /// <summary>
@@ -24,4 +25,4 @@ public enum GH_RuntimeMessageLevel : byte
     /// </summary>
     Error = 20
 }
-
+#endif
