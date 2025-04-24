@@ -8,7 +8,7 @@ TBD
 
 # Example project: One Code for Two Grasshopper Versions
 
-[csproj](/OneCodeTwoVersions)
+[prj](/example/OneCodeTwoVersions)
 
 It utilizes project configurations, preprocess directives and a thin compatibility layer for sharing codebases across GH1 & 2.
 
