@@ -41,6 +41,9 @@ internal static partial class StringUtility
         where TPredicate : struct, IStructPredicate<char>
         where TExecutor : struct, IStringPartExecutor
     {
+        if (str == "")
+            return false;
+
         int lastResult = -1;
         var index = 0;
 

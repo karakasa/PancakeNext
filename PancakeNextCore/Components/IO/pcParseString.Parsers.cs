@@ -80,13 +80,14 @@ public sealed partial class pcParseString
                 }
 
                 var meta = it.Meta;
-                if (TryParse(it.Item, out var v))
+                var str = it.Item;
+                if (TryParse(str, out var v))
                 {
                     factory.Add(v, meta, false);
                 }
                 else
                 {
-                    if (failOnInvalid)
+                    if (failOnInvalid && !string.IsNullOrEmpty(str))
                     {
                         return null;
                     }

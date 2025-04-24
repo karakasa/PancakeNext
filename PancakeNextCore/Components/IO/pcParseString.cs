@@ -77,6 +77,7 @@ public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPa
         var hasTypeOutput = Parameters.OutputCount > 1;
 
         access.GetTree<string>(0, out var tree);
+        var forceAll = false;
 
         _noFilterMode = false;
         if (!access.GetItem(1, out string desiredType) || string.IsNullOrEmpty(desiredType))
@@ -86,14 +87,24 @@ public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPa
         }
         else
         {
-            desiredType.ToLowerInvariant().SplitLikelyOne(DesiredTypeSeparators, ref _desiredTypeTester);
+            desiredType = desiredType.ToLowerInvariant();
+            if (desiredType == "forceall")
+            {
+                forceAll = true;
+                _desiredTypeTester = default;
+                _noFilterMode = true;
+            }
+            else
+            {
+                desiredType.SplitLikelyOne(DesiredTypeSeparators, ref _desiredTypeTester);
+            }
         }
 
         // var solutionCancellationToken = access.Solution.Token;
         ITree? result;
         Tree<string>? resultTypes = null;
 
-        if (HasOnlyOneDesiredType)
+        if (!forceAll && HasOnlyOneDesiredType)
         {
             var type = _desiredTypeTester.SingleValue;
 
@@ -116,7 +127,7 @@ public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPa
             result = null;
             var type = "";
 
-            if (GuessType(tree) is { } parser && parser.TryParseStringTreeAs(tree, ref result, ref type, true))
+            if (!forceAll && GuessType(tree) is { } parser && parser.TryParseStringTreeAs(tree, ref result, ref type, true))
             {
                 resultTypes = GhExtensions.MimicTreeWithOneValue(tree, type, false);
             }
