@@ -14,7 +14,7 @@ It utilizes project configurations, preprocess directives and a thin compatibili
 
 # License
 
-[Apache-2.0](LICENSE.md)
+[Apache-2.0](LICENSE.txt)
 
 In short:
 * No warranty.
