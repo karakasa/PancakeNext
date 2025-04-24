@@ -11,3 +11,12 @@ TBD
 [csproj](/OneCodeTwoVersions)
 
 It utilizes project configurations, preprocess directives and a thin compatibility layer for sharing codebases across GH1 & 2.
+
+# License
+
+[Apache-2.0](LICENSE.md)
+
+In short:
+* No warranty.
+* Free for both non-commercial and commercial use.
+* Attribution required, if you make derivate works of this repro.
