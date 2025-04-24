@@ -1,4 +1,5 @@
-﻿using Grasshopper2.Components;
+﻿#if G2
+using Grasshopper2.Components;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +12,6 @@ using Grasshopper2.Parameters.Standard;
 using Eto.Drawing;
 using Grasshopper2.Types.Numeric;
 
-#if G2
 namespace OneCodeTwoVersions.Polyfill;
 public sealed class GH_InputParamManager(Component comp, InputAdder adder) : GH_ParamManager
 {

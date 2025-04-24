@@ -1,4 +1,5 @@
-﻿using Grasshopper2.Parameters;
+﻿#if G2
+using Grasshopper2.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-#if G2
+
 internal static class PolyfillExtensions
 {
     public static Access To2(this GH_ParamAccess access)

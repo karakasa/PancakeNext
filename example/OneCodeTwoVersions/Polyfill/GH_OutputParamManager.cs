@@ -1,8 +1,8 @@
-﻿using Grasshopper2.Components;
+﻿#if G2
+using Grasshopper2.Components;
 using Grasshopper2.Types.Numeric;
 using Rhino.Geometry;
 
-#if G2
 namespace OneCodeTwoVersions.Polyfill;
 
 public sealed class GH_OutputParamManager(Component comp, OutputAdder adder) : GH_ParamManager

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35617.110
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneCodeTwoVersions", "OneCodeTwoVersions.csproj", "{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		G1Debug|Any CPU = G1Debug|Any CPU
+		G1Release|Any CPU = G1Release|Any CPU
+		G2Debug|Any CPU = G2Debug|Any CPU
+		G2Release|Any CPU = G2Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}.G1Debug|Any CPU.ActiveCfg = G1Debug|Any CPU
+		{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}.G1Debug|Any CPU.Build.0 = G1Debug|Any CPU
+		{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}.G1Release|Any CPU.ActiveCfg = G1Release|Any CPU
+		{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}.G1Release|Any CPU.Build.0 = G1Release|Any CPU
+		{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}.G2Debug|Any CPU.ActiveCfg = G2Debug|Any CPU
+		{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}.G2Debug|Any CPU.Build.0 = G2Debug|Any CPU
+		{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}.G2Release|Any CPU.ActiveCfg = G2Release|Any CPU
+		{F62BEF9F-CCE9-087B-7A8D-3586AD31B1C5}.G2Release|Any CPU.Build.0 = G2Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C139A20-1BAA-48EC-A902-E7AD23BD9E42}
+	EndGlobalSection
+EndGlobal

@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <Configurations>G1Debug;G1Release;G2Debug;G2Release</Configurations>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'G1Release' Or '$(Configuration)' == 'G1Debug' ">
@@ -14,6 +15,26 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'G2Release' Or '$(Configuration)' == 'G2Debug' ">
     <DefineConstants>G2</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='G1Release|net7.0|AnyCPU'">
+    <Optimize>True</Optimize>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='G1Release|net48|AnyCPU'">
+    <Optimize>True</Optimize>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='G2Release|net7.0|AnyCPU'">
+    <Optimize>True</Optimize>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='G2Release|net48|AnyCPU'">
+    <Optimize>True</Optimize>
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

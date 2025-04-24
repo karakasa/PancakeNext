@@ -1,4 +1,4 @@
-﻿using Grasshopper2.Interop;
+﻿#if G2
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,3 +19,4 @@ public abstract class GH_ParamManager
     /// </summary>
     public abstract IGH_Param this[int index] { get; }
 }
+#endif
