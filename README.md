@@ -6,7 +6,7 @@ A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) on GH
 
 TBD
 
-# Example project: One Code for 2 GHs
+# Example project: 1 Shared Codebase for 2 GHs
 
 [prj](/example/OneCodeTwoVersions)
 
