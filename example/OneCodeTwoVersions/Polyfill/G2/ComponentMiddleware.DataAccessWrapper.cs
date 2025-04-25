@@ -94,6 +94,26 @@ public abstract partial class ComponentMiddleware<T> where T : ComponentMiddlewa
         {
             return SetDataList(FindOutput(paramName), data);
         }
+
+        public bool SetDataTree(int paramIndex, IGH_DataTree tree)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetDataTree(int paramIndex, IGH_Structure tree)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool GetDataTree<T1>(int index, out GH_Structure<T1> tree) where T1 : IGH_Goo
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool GetDataTree<T1>(string name, out GH_Structure<T1> tree) where T1 : IGH_Goo
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

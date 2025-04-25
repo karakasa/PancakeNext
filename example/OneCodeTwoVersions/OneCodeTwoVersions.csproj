@@ -37,6 +37,18 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
 
+  <ItemGroup Condition=" '$(Configuration)' == 'G1Release' Or '$(Configuration)' == 'G1Debug' ">
+    <Compile Remove="Polyfill\G2\" />
+    <EmbeddedResource Remove="Polyfill\G2\" />
+    <None Remove="Polyfill\G2\" />
+  </ItemGroup>
+
+	<ItemGroup Condition=" '$(Configuration)' == 'G2Release' Or '$(Configuration)' == 'G2Debug' ">
+		<Compile Remove="Polyfill\G1\" />
+		<EmbeddedResource Remove="Polyfill\G1\" />
+		<None Remove="Polyfill\G1\" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="RhinoCommon" IncludeAssets="compile;build">
       <Version Condition=" '$(Configuration)' == 'G1Release' Or '$(Configuration)' == 'G1Debug' ">7.0.20314.3001</Version>
