@@ -20,9 +20,9 @@ public interface IGH_DataAccess
 
     bool SetDataList(string paramName, IEnumerable data);
 
-    // bool SetDataTree(int paramIndex, IGH_DataTree tree);
+    bool SetDataTree(int paramIndex, IGH_DataTree tree);
 
-    // bool SetDataTree(int paramIndex, IGH_Structure tree);
+    bool SetDataTree(int paramIndex, IGH_Structure tree);
     bool GetData<T>(int index, ref T destination);
     bool GetData<T>(string name, ref T destination);
 
@@ -30,8 +30,8 @@ public interface IGH_DataAccess
 
     bool GetDataList<T>(string name, List<T> list);
 
-    // bool GetDataTree<T>(int index, out GH_Structure<T> tree) where T : IGH_Goo;
+    bool GetDataTree<T>(int index, out GH_Structure<T> tree) where T : IGH_Goo;
 
-    // bool GetDataTree<T>(string name, out GH_Structure<T> tree) where T : IGH_Goo;
+    bool GetDataTree<T>(string name, out GH_Structure<T> tree) where T : IGH_Goo;
 }
 #endif
