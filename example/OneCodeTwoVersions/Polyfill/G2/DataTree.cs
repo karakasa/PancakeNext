@@ -6,17 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public sealed class GH_Structure<T> : IGH_Structure
-    where T : IGH_Goo
+public sealed class DataTree<T> : IGH_DataTree
 {
-    private readonly struct Enumerator(IEnumerable<IGH_Goo> goos) : IGH_StructureEnumerator
-    {
-        private readonly IEnumerable<IGH_Goo> _goos = goos;
-        public IEnumerator<IGH_Goo> GetEnumerator() => _goos.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
-
     private readonly SortedList<GH_Path, List<T>> _v = [];
     public bool IsEmpty => _v.Count == 0;
 
@@ -35,16 +26,9 @@ public sealed class GH_Structure<T> : IGH_Structure
     public List<T>? this[GH_Path path] => _v.TryGetValue(path, out var v) ? v : null;
 
     public T FirstItem => NonNulls.FirstOrDefault();
-    public IGH_StructureEnumerator AllData(bool skipNulls)
+    public List<T> AllData()
     {
-        if (skipNulls)
-        {
-            return new Enumerator(_v.SelectMany(static kv => kv.Value.Cast<IGH_Goo>().Where(static x => x is not null)));
-        }
-        else
-        {
-            return new Enumerator(_v.SelectMany(static kv => kv.Value.Cast<IGH_Goo>()));
-        }
+        return [.. _v.SelectMany(static kv => kv.Value)];
     }
 
     public void Clear() => _v.Clear();
@@ -115,5 +99,10 @@ public sealed class GH_Structure<T> : IGH_Structure
         }
 
         return _v[path] = [];
+    }
+
+    public bool MergeWithParameter(IGH_Param param)
+    {
+        throw new NotImplementedException();
     }
 }
