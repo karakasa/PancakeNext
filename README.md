@@ -12,6 +12,8 @@ TBD
 
 It utilizes project configurations, preprocess directives and a thin compatibility layer for sharing codebases across GH1 & 2.
 
+The project is merely for technical demonstration purpose. The API surface and interoperability implementation is subject to Grasshopper 1 terms by McNeel and David Rutten.
+
 # License
 
 [Apache-2.0](LICENSE.txt)
@@ -20,3 +22,5 @@ In short:
 * No warranty.
 * Free for both non-commercial and commercial use.
 * Attribution required, if you make derivate works of this repro.
+
+The example project above has its own license terms.
