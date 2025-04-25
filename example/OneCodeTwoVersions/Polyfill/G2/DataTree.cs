@@ -9,23 +9,53 @@ namespace OneCodeTwoVersions.Polyfill;
 public sealed class DataTree<T> : IGH_DataTree
 {
     private readonly SortedList<GH_Path, List<T>> _v = [];
-    public bool IsEmpty => _v.Count == 0;
-
-    public int PathCount => _v.Keys.Count;
+    public int BranchCount => _v.Keys.Count;
 
     public int DataCount => _v.Sum(static kv => kv.Value.Count);
 
     public IList<GH_Path> Paths => _v.Keys;
 
-    public IList<IList> StructureProxy => _v.Select(kv => (IList)kv.Value).ToList();
-
     public string TopologyDescription => "";
     public IList<List<T>> Branches => _v.Values;
-    public IEnumerable<T> NonNulls => [.. _v.SelectMany(static kv => kv.Value.Where(static x => x is not null))];
-    public List<T> this[int index] => _v.Values[index];
-    public List<T>? this[GH_Path path] => _v.TryGetValue(path, out var v) ? v : null;
+    public T this[GH_Path path, int index]
+    {
+        get => _v[path][index];
+        set => _v[path][index] = value;
+    }
 
-    public T FirstItem => NonNulls.FirstOrDefault();
+    private List<T> FirstOrDefaultBranch => BranchCount == 0 ? _v[new(0)] = new List<T>() : _v.Values[0];
+    public void Add(T value)
+    {
+        FirstOrDefaultBranch.Add(value);
+    }
+    public void Add(T value, GH_Path path) => EnsurePath(path).Add(value);
+
+    public void AddRange(IEnumerable<T> values) => FirstOrDefaultBranch.AddRange(values);
+    public void AddRange(IEnumerable<T> values, GH_Path path) => EnsurePath(path).AddRange(values);
+
+    public List<T> Branch(int index) => _v.Values[index];
+    public List<T> Branch(GH_Path path) => _v[path];
+    public List<T> Branch(params int[] path) => _v[new(path)];
+    public bool ItemExists(GH_Path path, int index)
+    {
+        if (index < 0 || !_v.TryGetValue(path, out var list) || list == null) { return false; }
+        return index < list.Count;
+    }
+    public void Insert(T data, GH_Path path, int index)
+    {
+        var list = EnsurePath(path);
+        if (index <= list.Count)
+        {
+            list.Insert(index, data);
+        }
+        else
+        {
+            list.AddRange(Enumerable.Repeat(default(T)!, index - list.Count));
+            list.Add(data);
+        }
+    }
+    public GH_Path Path(int index) => _v.Keys[index];
+
     public List<T> AllData()
     {
         return [.. _v.SelectMany(static kv => kv.Value)];
@@ -36,17 +66,6 @@ public sealed class DataTree<T> : IGH_DataTree
     public void ClearData()
     {
         foreach (var kv in _v) kv.Value.Clear();
-    }
-
-    public string DataDescription(bool includeIndices, bool includePaths)
-    {
-        return "";
-    }
-
-    public void EnsureCapacity(int capacity)
-    {
-        if (capacity < 8) capacity = 8;
-        _v.Capacity = Math.Max(_v.Capacity, capacity);
     }
 
     public void Flatten(GH_Path? path = null)
@@ -63,24 +82,11 @@ public sealed class DataTree<T> : IGH_DataTree
         EnsurePath(path).AddRange(list);
     }
 
-    public IList get_Branch(int index) => _v.Values[index];
-
-    public IList get_Branch(GH_Path path) => _v[path];
-
-    public GH_Path get_Path(int index) => _v.Keys[index];
-
     public bool PathExists(GH_Path path) => _v.ContainsKey(path);
+    public bool PathExists(params int[] path) => PathExists(new GH_Path(path));
 
     public void RemovePath(GH_Path path) => _v.Remove(path);
-
-    public void ReplacePath(GH_Path find, GH_Path replace)
-    {
-        var ind = _v.IndexOfKey(find);
-        if (ind < 0) return;
-        var list = _v.Values[ind];
-        _v.RemoveAt(ind);
-        _v[replace] = list;
-    }
+    public void RemovePath(params int[] path) => RemovePath(new GH_Path(path));
 
     public List<T> EnsurePath(params int[] path)
     {
