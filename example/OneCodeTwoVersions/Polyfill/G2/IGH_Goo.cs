@@ -13,7 +13,6 @@ public interface IGH_Goo
 
     string TypeDescription { get; }
     IGH_Goo Duplicate();
-    new string ToString();
     bool CastFrom(object source);
     bool CastTo<T>(out T target);
 

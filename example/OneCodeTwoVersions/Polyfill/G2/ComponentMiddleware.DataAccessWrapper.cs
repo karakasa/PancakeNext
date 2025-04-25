@@ -65,7 +65,7 @@ public abstract partial class ComponentMiddleware<T> where T : ComponentMiddlewa
 
         public bool SetData(int paramIndex, object data)
         {
-            Access.SetItem(paramIndex, data);
+            Access.SetItem(paramIndex, data.Peel());
             return true;
         }
 

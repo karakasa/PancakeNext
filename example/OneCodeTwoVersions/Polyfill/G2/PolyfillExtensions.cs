@@ -20,5 +20,11 @@ internal static class PolyfillExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(access), "Invalid GH_ParamAccess")
         };
     }
+
+    public static object? Peel(this object? obj)
+    {
+        if (obj is IGH_Goo goo) return goo.ScriptVariable();
+        return obj;
+    }
 }
 #endif

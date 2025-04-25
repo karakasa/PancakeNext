@@ -7,4 +7,5 @@ using System.Threading.Tasks;
 namespace OneCodeTwoVersions.Polyfill;
 public interface IGH_DataTree
 {
+    bool MergeWithParameter(IGH_Param param);
 }

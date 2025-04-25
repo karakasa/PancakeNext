@@ -9,51 +9,51 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public sealed class GH_Path : IComparable<GH_Path>, IComparer<GH_Path>, IEquatable<GH_Path>
+public sealed class GH_Path : IComparable<GH_Path>, IEquatable<GH_Path>
 {
-    private int[] indices;
+    private int[] _indices;
 
     public int this[int index]
     {
-        get => indices[index];
-        set => indices[index] = value;
+        get => _indices[index];
+        set => _indices[index] = value;
     }
 
     public int[] Indices
     {
-        get => indices;
-        set => indices = value ?? [];
+        get => _indices;
+        set => _indices = value ?? [];
     }
 
-    public int Length => indices?.Length ?? 0;
+    public int Length => _indices?.Length ?? 0;
 
     public bool Valid
     {
         get
         {
-            foreach (var index in indices)
+            foreach (var index in _indices)
                 if (index < 0) return false;
 
-            return indices.Length != 0;
+            return _indices.Length != 0;
         }
     }
 
     public GH_Path()
     {
-        indices = [];
+        _indices = [];
     }
 
     public GH_Path(int index)
     {
-        indices = [index];
+        _indices = [index];
     }
 
     public GH_Path(params int[] args)
     {
-        indices = ((args?.Length ?? 0) == 0) ? [] : ((int[])args.Clone());
+        _indices = ((args?.Length ?? 0) == 0) ? [] : ((int[])args.Clone());
     }
 
-    public GH_Path(GH_Path Other) : this(Other.indices)
+    public GH_Path(GH_Path Other) : this(Other._indices)
     {
     }
 
@@ -63,7 +63,21 @@ public sealed class GH_Path : IComparable<GH_Path>, IComparer<GH_Path>, IEquatab
     public static bool operator ==(GH_Path? A, GH_Path? B)
     {
         if (A is null || B is null) return A is null && B is null;
-        return A.indices.SequenceEqual(B.indices);
+        return Equals(A._indices, B._indices);
+    }
+
+    private static bool Equals(int[] a, int[] b)
+    {
+#if NET
+        return a.AsSpan().SequenceEqual(b.AsSpan());
+#else
+        if (a.Length != b.Length) return false;
+        for (var i = 0; i < a.Length; i++)
+        {
+            if (a[i] != b[i]) return false;
+        }
+        return true;
+#endif
     }
 
     public static bool operator !=(GH_Path? A, GH_Path? B)
@@ -73,81 +87,52 @@ public sealed class GH_Path : IComparable<GH_Path>, IComparer<GH_Path>, IEquatab
 
     public static bool operator <(GH_Path? A, GH_Path? B)
     {
-        int length = A.Length;
-        int length2 = B.Length;
+        var lA = A.Length;
+        var lB = B.Length;
+        var sharedLength = Math.Min(lA, lB);
 
-        if (length < length2)
+        if (sharedLength == 0) { return lA == 0 && lB != 0; }
+
+        for (int i = 0; i < sharedLength; i++)
         {
-            if (length == 0)
-            {
-                return true;
-            }
-            int num = length - 1;
-            for (int i = 0; i <= num; i++)
-            {
-                if (A.indices[i] < B.indices[i])
-                {
-                    return true;
-                }
-                if (A.indices[i] > B.indices[i])
-                {
-                    return false;
-                }
-            }
-            return true;
+            var iA = A._indices[i];
+            var iB = B._indices[i];
+
+            if (iA == iB) continue;
+            return iA < iB;
         }
-        if (length > length2)
-        {
-            if (length2 == 0)
-            {
-                return false;
-            }
-            int num2 = length2 - 1;
-            for (int j = 0; j <= num2; j++)
-            {
-                if (A.indices[j] < B.indices[j])
-                {
-                    return true;
-                }
-                if (A.indices[j] > B.indices[j])
-                {
-                    return false;
-                }
-            }
-            return false;
-        }
-        if (length == 0)
-        {
-            return false;
-        }
-        int num3 = length - 1;
-        for (int k = 0; k <= num3; k++)
-        {
-            if (A.indices[k] < B.indices[k])
-            {
-                return true;
-            }
-            if (A.indices[k] > B.indices[k])
-            {
-                return false;
-            }
-        }
-        return false;
+
+        return lA < lB;
     }
 
     public static bool operator >(GH_Path? A, GH_Path? B)
     {
-        return A != B && !(A < B);
+        var lA = A.Length;
+        var lB = B.Length;
+        var sharedLength = Math.Min(lA, lB);
+
+        if (sharedLength == 0) { return lB == 0 && lA != 0; }
+
+        for (int i = 0; i < sharedLength; i++)
+        {
+            var iA = A._indices[i];
+            var iB = B._indices[i];
+
+            if (iA == iB) continue;
+            return iA > iB;
+        }
+
+        return lA > lB;
     }
 
     public override int GetHashCode()
     {
-        if (indices is null) { return 0; }
+        if (_indices is null) { return 0; }
 
         var sum = 0;
         unchecked
         {
-            foreach (var i in indices)
+            foreach (var i in _indices)
             {
                 sum *= -1000037;
                 sum += i;
@@ -163,11 +148,6 @@ public sealed class GH_Path : IComparable<GH_Path>, IComparer<GH_Path>, IEquatab
         return this < other ? -1 : 1;
     }
 
-    public int Compare(GH_Path? x, GH_Path? y)
-    {
-        return x?.CompareTo(y) ?? -1;
-    }
-
     public override string ToString()
     {
         return Format("{{{0}}}", ";");
@@ -180,15 +160,15 @@ public sealed class GH_Path : IComparable<GH_Path>, IComparer<GH_Path>, IEquatab
 
     public string Format(string fString, string separator)
     {
-        var innerStr = indices is null ? "null" : string.Join(separator, indices);
+        var innerStr = _indices is null ? "null" : string.Join(separator, _indices);
         return string.Format(fString, innerStr);
     }
     public GH_Path AppendElement(int index)
     {
-        return new([..indices.Append(index)]);
+        return new([.._indices.Append(index)]);
     }
     public GH_Path PrependElement(int index)
     {
-        return new([.. indices.Prepend(index)]);
+        return new([.. _indices.Prepend(index)]);
     }
 }
