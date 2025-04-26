@@ -1,4 +1,4 @@
-﻿using Grasshopper2.Data;
+﻿using Grasshopper2.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,8 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public interface IGH_DataTree
+internal sealed class ParameterWrapper(IParameter p) : IGH_Param
 {
-    bool MergeWithParameter(IGH_Param param);
-    ITree To2();
+    private readonly IParameter _param = p;
 }

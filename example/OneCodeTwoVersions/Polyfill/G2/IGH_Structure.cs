@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Grasshopper2.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,6 +43,7 @@ public interface IGH_Structure
     void Flatten(GH_Path path = null);
 
     string DataDescription(bool includeIndices, bool includePaths);
+    ITree To2();
 }
 
 public interface IGH_StructureEnumerator : IEnumerable<IGH_Goo>

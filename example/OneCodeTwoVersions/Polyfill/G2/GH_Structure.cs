@@ -1,12 +1,20 @@
-﻿using System;
+﻿using Grasshopper2.Data;
+using Grasshopper2.Types.Conversion;
+using OneCodeTwoVersions.Polyfill.DataTypes;
+using Rhino.Geometry;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Path = Grasshopper2.Data.Path;
 
 namespace OneCodeTwoVersions.Polyfill;
-public sealed class GH_Structure<T> : IGH_Structure
+public sealed class GH_Structure<T> : IGH_Structure, IEnumerable<T>
     where T : IGH_Goo
 {
     private readonly struct Enumerator(IEnumerable<IGH_Goo> goos) : IGH_StructureEnumerator
@@ -46,6 +54,8 @@ public sealed class GH_Structure<T> : IGH_Structure
             return new Enumerator(_v.SelectMany(static kv => kv.Value.Cast<IGH_Goo>()));
         }
     }
+
+    private IEnumerable<T> AllData() => _v.SelectMany(static kv => kv.Value);
 
     public void Clear() => _v.Clear();
 
@@ -102,9 +112,9 @@ public sealed class GH_Structure<T> : IGH_Structure
     {
         return EnsurePath(new GH_Path(path));
     }
-    public List<T> EnsurePath(GH_Path path)
+    public List<T> EnsurePath(GH_Path? path)
     {
-        if (path.Length == 0)
+        if (path is null || path.Length == 0)
         {
             path = new GH_Path(0);
         }
@@ -115,5 +125,167 @@ public sealed class GH_Structure<T> : IGH_Structure
         }
 
         return _v[path] = [];
+    }
+    private List<T> LastOrDefaultBranch => PathCount == 0 ? _v[new(0)] = [] : _v.Values[_v.Count - 1];
+    public void Append(T data) => LastOrDefaultBranch.Add(data);
+    public void Append(T data, GH_Path? path) => EnsurePath(path).Add(data);
+    public void AppendRange(IEnumerable<T> data) => LastOrDefaultBranch.AddRange(data);
+    public void AppendRange(IEnumerable<T> data, GH_Path path) => EnsurePath(path).AddRange(data);
+    public void Insert(T data, GH_Path path, int index)
+    {
+        var list = EnsurePath(path);
+        if (index <= list.Count)
+        {
+            list.Insert(index, data);
+        }
+        else
+        {
+            list.AddRange(Enumerable.Repeat(default(T)!, index - list.Count));
+            list.Add(data);
+        }
+    }
+
+    public void MergeStructure(GH_Structure<T> other)
+    {
+        foreach (var kv in other._v)
+            AppendRange(kv.Value, kv.Key);
+    }
+    public void Reverse()
+    {
+        foreach (var kv in _v)
+            kv.Value.Reverse();
+    }
+    public GH_Structure<T> Duplicate() => new(this, false);
+    public GH_Structure<TTo> DuplicateCast<TTo>(Func<T, TTo> conversion) where TTo : IGH_Goo
+    {
+        var dest = new GH_Structure<TTo>();
+
+        foreach (var kv in _v)
+        {
+            var list = dest.EnsurePath(kv.Key);
+            foreach (var item in kv.Value)
+            {
+                list.Add(item is null ? default! : conversion(item));
+            }
+        }
+
+        return dest;
+    }
+
+    public IEnumerator<T> GetEnumerator() => AllData().GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public GH_Structure() { }
+    public GH_Structure(GH_Structure<T>? other, bool shallowCopy)
+    {
+        if (other?.IsEmpty ?? true) { return; }
+
+        foreach (var kv in other._v)
+        {
+            var list = EnsurePath(kv.Key);
+            foreach (var item in kv.Value)
+            {
+                list.Add((shallowCopy || item is null) ? item! : (T)item.Duplicate());
+            }
+        }
+    }
+
+    public ITree To2()
+    {
+        ITree? ret = null;
+        var paths = new Paths(_v.Keys.Select(static p => p.To2()));
+
+        if (
+            CreateTreeFastPath<int, GH_Integer>(ref ret, paths) ||
+            CreateTreeFastPath<bool, GH_Boolean>(ref ret, paths) ||
+            CreateTreeFastPath<double, GH_Number>(ref ret, paths) ||
+            CreateTreeFastPath<string, GH_Text>(ref ret, paths) ||
+            CreateTreeFastPath<Point3d, GH_Point>(ref ret, paths) ||
+            CreateTreeFastPath<Vector3d, GH_Vector>(ref ret, paths) ||
+            CreateTreeFastPath<Transform, GH_Transform>(ref ret, paths) ||
+            CreateTreeFastPath<Plane, GH_Plane>(ref ret, paths) ||
+            CreateTreeFastPath<Box, GH_Box>(ref ret, paths) ||
+            CreateTreeFastPath<Line, GH_Line>(ref ret, paths) ||
+            CreateTreeFastPath<Circle, GH_Circle>(ref ret, paths) ||
+            CreateTreeFastPath<Rectangle3d, GH_Rectangle>(ref ret, paths) ||
+            CreateTreeFastPath<Arc, GH_Arc>(ref ret, paths) ||
+            CreateTreeFastPath<Curve, GH_Curve>(ref ret, paths) ||
+            CreateTreeFastPath<Surface, GH_Surface>(ref ret, paths) ||
+            CreateTreeFastPath<Brep, GH_Brep>(ref ret, paths) ||
+            CreateTreeFastPath<SubD, GH_SubD>(ref ret, paths) ||
+            CreateTreeFastPath<Mesh, GH_Mesh>(ref ret, paths) ||
+            CreateTreeFastPath<MeshFace, GH_MeshFace>(ref ret, paths) ||
+            CreateTreeFastPath<DateTime, GH_Time>(ref ret, paths) ||
+            CreateTreeFastPath<Color, GH_Colour>(ref ret, paths) ||
+            CreateTreeFastPath<Interval, GH_Interval>(ref ret, paths) ||
+            CreateTreeFastPath<GeometryBase, GH_Geometry>(ref ret, paths) ||
+            CreateTreeFastPath<object, GH_ObjectWrapper>(ref ret, paths) ||
+            CreateTreeFastPath<GH_Path, GH_StructurePath, Path>(ref ret, paths, ConvertPath)
+            )
+        {
+            return ret;
+        }
+
+        return Garden.ITreeFromITwigs(paths, _v.Values.Select(v => Garden.ITwigFromList(v.Select(a => a?.ScriptVariable()))));
+    }
+
+    private Path ConvertPath(GH_Path data) => data.To2();
+
+    private bool CreateTreeFastPath<TData, TGoo>(ref ITree? tree, Paths paths) where TGoo : GH_Goo<TData>
+    {
+        if (typeof(T) != typeof(TGoo)) return false;
+
+        var list = new List<Twig<TData>>();
+
+        foreach (var kv in _v)
+        {
+            var factory = new TwigFactory<TData>(kv.Value.Count);
+            foreach (var it in kv.Value)
+            {
+                var goo = (TGoo)(object)it;
+                if (goo is null)
+                {
+                    factory.AddNull();
+                }
+                else
+                {
+                    factory.Add(goo.Value);
+                }
+            }
+
+            list.Add(factory.Create());
+        }
+
+        tree = Garden.TreeFromTwigs(paths, list);
+        return true;
+    }
+    private bool CreateTreeFastPath<TData, TGoo, TOutput>(ref ITree? tree, Paths paths, Func<TData, TOutput> converter) where TGoo : GH_Goo<TData>
+    {
+        if (typeof(T) != typeof(TGoo)) return false;
+
+        var list = new List<Twig<TOutput>>();
+
+        foreach (var kv in _v)
+        {
+            var factory = new TwigFactory<TOutput>(kv.Value.Count);
+            foreach (var it in kv.Value)
+            {
+                var goo = (TGoo)(object)it;
+                if (goo is null)
+                {
+                    factory.AddNull();
+                }
+                else
+                {
+                    factory.Add(converter(goo.Value));
+                }
+            }
+
+            list.Add(factory.Create());
+        }
+
+        tree = Garden.TreeFromTwigs(paths, list);
+        return true;
     }
 }

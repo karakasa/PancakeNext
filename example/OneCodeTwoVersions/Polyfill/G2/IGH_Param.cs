@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
 
-public sealed class IGH_Param(IParameter inner)
+public interface IGH_Param
 {
-    private readonly IParameter _inner = inner;
 }
 
 #endif

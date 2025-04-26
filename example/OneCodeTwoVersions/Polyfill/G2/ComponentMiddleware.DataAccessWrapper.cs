@@ -3,6 +3,7 @@ using Grasshopper2.Components;
 using Grasshopper2.Data;
 using Grasshopper2.Parameters;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace OneCodeTwoVersions.Polyfill;
 public abstract partial class ComponentMiddleware<T> where T : ComponentMiddleware<T>
@@ -97,12 +98,14 @@ public abstract partial class ComponentMiddleware<T> where T : ComponentMiddlewa
 
         public bool SetDataTree(int paramIndex, IGH_DataTree tree)
         {
-            throw new NotImplementedException();
+            Access.SetTree(paramIndex, tree.To2());
+            return true;
         }
 
         public bool SetDataTree(int paramIndex, IGH_Structure tree)
         {
-            throw new NotImplementedException();
+            Access.SetTree(paramIndex, tree.To2());
+            return true;
         }
 
         public bool GetDataTree<T1>(int index, out GH_Structure<T1> tree) where T1 : IGH_Goo
@@ -112,7 +115,7 @@ public abstract partial class ComponentMiddleware<T> where T : ComponentMiddlewa
 
         public bool GetDataTree<T1>(string name, out GH_Structure<T1> tree) where T1 : IGH_Goo
         {
-            throw new NotImplementedException();
+            return GetDataTree(FindInput(name), out tree);
         }
     }
 }

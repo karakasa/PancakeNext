@@ -1,4 +1,5 @@
-﻿using Grasshopper2.Data.Meta.Summary;
+﻿using Grasshopper2.Data;
+using Grasshopper2.Data.Meta.Summary;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Path = Grasshopper2.Data.Path;
 
 namespace OneCodeTwoVersions.Polyfill;
 public sealed class GH_Path : IComparable<GH_Path>, IEquatable<GH_Path>
@@ -171,4 +173,5 @@ public sealed class GH_Path : IComparable<GH_Path>, IEquatable<GH_Path>
     {
         return new([.. _indices.Prepend(index)]);
     }
+    public Path To2() => new(_indices);
 }
