@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public interface IGH_TypeHint
+public interface IGH_DocumentObject : IGH_InstanceDescription
 {
-    string TypeName { get; }
-    Guid HintID { get; }
-    bool Cast(object data, out object target);
+    Guid ComponentGuid { get; }
 }

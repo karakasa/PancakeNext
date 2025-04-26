@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public interface IGH_TypeHint
+public enum GH_ParamKind
 {
-    string TypeName { get; }
-    Guid HintID { get; }
-    bool Cast(object data, out object target);
+    unknown,
+    floating,
+    input,
+    output
 }

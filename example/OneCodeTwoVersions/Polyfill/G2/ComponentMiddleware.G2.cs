@@ -11,7 +11,8 @@ using Grasshopper2.UI;
 using GrasshopperIO;
 
 namespace OneCodeTwoVersions.Polyfill;
-public abstract partial class ComponentMiddleware<T> : Component where T : ComponentMiddleware<T>
+public abstract partial class ComponentMiddleware<TComp> : Component, IGH_InstanceDescription
+    where TComp : ComponentMiddleware<TComp>
 {
     protected ComponentMiddleware(string name, string nickname, string desc, string category, string subcategory) : base(CreateNomen(name, nickname, desc, category, subcategory))
     {
@@ -25,7 +26,7 @@ public abstract partial class ComponentMiddleware<T> : Component where T : Compo
     }
 
     // Placeholder
-    public virtual Guid ComponentGuid => throw new UnreachableException();
+    public virtual Guid ComponentGuid => ComponentIdCacher.GetId(GetType());
 
     protected abstract void RegisterInputParams(GH_InputParamManager pManager);
 

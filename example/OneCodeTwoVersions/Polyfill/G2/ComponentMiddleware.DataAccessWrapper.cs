@@ -2,15 +2,17 @@
 using Grasshopper2.Components;
 using Grasshopper2.Data;
 using Grasshopper2.Parameters;
+using OneCodeTwoVersions.Polyfill.DataTypes;
+using Rhino.Geometry;
 using System.Collections;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Drawing;
 
 namespace OneCodeTwoVersions.Polyfill;
-public abstract partial class ComponentMiddleware<T> where T : ComponentMiddleware<T>
+public abstract partial class ComponentMiddleware<TComp> where TComp : ComponentMiddleware<TComp>
 {
-    private sealed class DataAccessWrapper(ComponentMiddleware<T> comp) : IGH_DataAccess
+    private sealed class DataAccessWrapper(ComponentMiddleware<TComp> comp) : IGH_DataAccess
     {
-        private readonly ComponentMiddleware<T> _comp = comp;
+        private readonly ComponentMiddleware<TComp> _comp = comp;
         private IDataAccess Access => _comp._currentAccess!;
         public int Iteration => Access.Iterations;
 
@@ -108,15 +110,124 @@ public abstract partial class ComponentMiddleware<T> where T : ComponentMiddlewa
             return true;
         }
 
-        public bool GetDataTree<T1>(int index, out GH_Structure<T1> tree) where T1 : IGH_Goo
-        {
-            throw new NotImplementedException();
-        }
-
         public bool GetDataTree<T1>(string name, out GH_Structure<T1> tree) where T1 : IGH_Goo
         {
             return GetDataTree(FindInput(name), out tree);
         }
+
+        public bool GetDataTree<T1>(int index, out GH_Structure<T1> tree) where T1 : IGH_Goo
+        {
+            tree = null;
+
+            if (
+                TryConvertDataTree<int, GH_Integer, T1>(index, ref tree) ||
+                TryConvertDataTree<bool, GH_Boolean, T1>(index, ref tree) ||
+                TryConvertDataTree<double, GH_Number, T1>(index, ref tree) ||
+                TryConvertDataTree<Vector3d, GH_Vector, T1>(index, ref tree) ||
+                TryConvertDataTree<Transform, GH_Transform, T1>(index, ref tree) ||
+                TryConvertDataTree<Plane, GH_Plane, T1>(index, ref tree) ||
+                TryConvertDataTree<Box, GH_Box, T1>(index, ref tree) ||
+                TryConvertDataTree<Line, GH_Line, T1>(index, ref tree) ||
+                TryConvertDataTree<Circle, GH_Circle, T1>(index, ref tree) ||
+                TryConvertDataTree<Rectangle3d, GH_Rectangle, T1>(index, ref tree) ||
+                TryConvertDataTree<Arc, GH_Arc, T1>(index, ref tree) ||
+                TryConvertDataTree<Curve, GH_Curve, T1>(index, ref tree) ||
+                TryConvertDataTree<Surface, GH_Surface, T1>(index, ref tree) ||
+                TryConvertDataTree<Brep, GH_Brep, T1>(index, ref tree) ||
+                TryConvertDataTree<SubD, GH_SubD, T1>(index, ref tree) ||
+                TryConvertDataTree<Mesh, GH_Mesh, T1>(index, ref tree) ||
+                TryConvertDataTree<MeshFace, GH_MeshFace, T1>(index, ref tree) ||
+                TryConvertDataTree<DateTime, GH_Time, T1>(index, ref tree) ||
+                TryConvertDataTree<Color, GH_Colour, T1>(index, ref tree) ||
+                TryConvertDataTree<string, GH_Text, T1>(index, ref tree) ||
+                TryConvertDataTree<Interval, GH_Interval, T1>(index, ref tree) ||
+                TryConvertDataTree<GeometryBase, GH_Geometry, T1>(index, ref tree) ||
+                TryConvertDataTree<GH_Path, GH_StructurePath, T1, Grasshopper2.Data.Path>(index, ref tree, x => x.To1()) ||
+                TryConvertDataTreeGeneric<T1>(index, ref tree)
+                )
+            {
+                return true;
+            }
+
+            tree = null;
+            return false;
+        }
+
+        private bool TryConvertDataTreeGeneric<TInput>(int index, ref GH_Structure<TInput?> gh1Tree)
+            where TInput : IGH_Goo
+        {
+            if (typeof(TInput) != typeof(IGH_Goo)) return false;
+            if (!Access.GetITree(index, out var tree)) return false;
+
+            gh1Tree = (GH_Structure<TInput>)(object)tree.To1();
+            return true;
+        }
+
+        private bool TryConvertDataTree<TData, TGoo, TInput>(int index, ref GH_Structure<TInput?> gh1Tree)
+            where TGoo : GH_Goo<TData>
+            where TInput : IGH_Goo
+        {
+            if (typeof(TInput) != typeof(TGoo)) return false;
+            if (!Access.GetTree<TData>(index, out var tree)) return false;
+
+            var tree1 = new GH_Structure<TInput>();
+
+            for (var i = 0; i < tree.PathCount; i++)
+            {
+                var path = tree.Paths[i];
+                var twig = tree.Twigs[i];
+                var list = tree1.EnsurePath(path.To1());
+                var cnt = twig.LeafCount;
+                for (var j = 0; j < cnt; j++)
+                {
+                    if (twig.NullAt(j))
+                    {
+                        list.Add(default);
+                    }
+                    else
+                    {
+                        list.Add((TInput)PolyfillExtensions.Create(twig[j].Item));
+                    }
+                }
+            }
+
+            gh1Tree = tree1;
+            return true;
+        }
+
+        private bool TryConvertDataTree<TData, TGoo, TInput, TData2>(int index, ref GH_Structure<TInput?> gh1Tree, Func<TData2, TData> converter)
+            where TGoo : GH_Goo<TData>
+            where TInput : IGH_Goo
+        {
+            if (typeof(TInput) != typeof(TGoo)) return false;
+            if (!Access.GetTree<TData2>(index, out var tree)) return false;
+
+            var tree1 = new GH_Structure<TInput>();
+
+            for (var i = 0; i < tree.PathCount; i++)
+            {
+                var path = tree.Paths[i];
+                var twig = tree.Twigs[i];
+                var list = tree1.EnsurePath(path.To1());
+                var cnt = twig.LeafCount;
+                for (var j = 0; j < cnt; j++)
+                {
+                    if (twig.NullAt(j))
+                    {
+                        list.Add(default);
+                    }
+                    else
+                    {
+                        list.Add((TInput)PolyfillExtensions.Create(converter(twig[j].Item)));
+                    }
+                }
+            }
+
+            gh1Tree = tree1;
+            return true;
+        }
+
+       
     }
 }
 
