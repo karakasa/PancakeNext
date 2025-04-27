@@ -1,8 +1,7 @@
 ﻿#if G1
 using Grasshopper.Kernel;
-#else
-using GrasshopperIO;
 #endif
+using GrasshopperIO;
 using OneCodeTwoVersions.Polyfill;
 using System;
 using System.Collections.Generic;

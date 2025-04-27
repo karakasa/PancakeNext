@@ -1,6 +1,5 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Parameters.Special;
-using OneCodeTwoVersions.Polyfill.G2;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -195,7 +194,7 @@ public sealed class DataTree<T> : IGH_DataTree
 
     public bool MergeWithParameter(IGH_Param param)
     {
-        throw new NotSupportedException("This method is not supported in compatibility middleware. The middleware would use other ways to create trees.");
+        throw new NotSupportedException("This method is not supported in compatibility middleware. The middleware uses another approach to create trees.");
     }
 
     public DataTree() { }

@@ -173,9 +173,9 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
         }
     }
 
-    protected override void PreProcess(Solution solution)
+    protected override void BeforeProcess(Solution solution)
     {
-        base.PreProcess(solution);
+        base.BeforeProcess(solution);
 
         if (Parameters.OutputCount == 0 && AllowAutoFillOutputs && GlobalAutoFillOutputs && Parameters.Input(0).Inputs.Count > 0)
         {

@@ -17,36 +17,26 @@
     <DefineConstants>G2</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='G1Release|net7.0|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'G1Release'">
     <Optimize>True</Optimize>
     <DebugType>none</DebugType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='G1Release|net48|AnyCPU'">
-    <Optimize>True</Optimize>
-    <DebugType>none</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='G2Release|net7.0|AnyCPU'">
-    <Optimize>True</Optimize>
-    <DebugType>none</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='G2Release|net48|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'G2Release'">
     <Optimize>True</Optimize>
     <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(Configuration)' == 'G1Release' Or '$(Configuration)' == 'G1Debug' ">
-    <Compile Remove="Polyfill\G2\" />
-    <EmbeddedResource Remove="Polyfill\G2\" />
-    <None Remove="Polyfill\G2\" />
+    <Compile Remove="Polyfill\G2\**" />
+    <EmbeddedResource Remove="Polyfill\G2\**" />
+    <None Remove="Polyfill\G2\**" />
   </ItemGroup>
 
 	<ItemGroup Condition=" '$(Configuration)' == 'G2Release' Or '$(Configuration)' == 'G2Debug' ">
-		<Compile Remove="Polyfill\G1\" />
-		<EmbeddedResource Remove="Polyfill\G1\" />
-		<None Remove="Polyfill\G1\" />
+		<Compile Remove="Polyfill\G1\**" />
+		<EmbeddedResource Remove="Polyfill\G1\**" />
+		<None Remove="Polyfill\G1\**" />
 	</ItemGroup>
 
   <ItemGroup>

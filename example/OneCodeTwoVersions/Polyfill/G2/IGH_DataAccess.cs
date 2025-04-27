@@ -30,8 +30,8 @@ public interface IGH_DataAccess
 
     bool GetDataList<T>(string name, List<T> list);
 
-    bool GetDataTree<T>(int index, out GH_Structure<T> tree) where T : IGH_Goo;
+    bool GetDataTree<T>(int index, out GH_Structure<T>? tree) where T : IGH_Goo;
 
-    bool GetDataTree<T>(string name, out GH_Structure<T> tree) where T : IGH_Goo;
+    bool GetDataTree<T>(string name, out GH_Structure<T>? tree) where T : IGH_Goo;
 }
 #endif
