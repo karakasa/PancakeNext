@@ -1,7 +1,9 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Doc;
 using Grasshopper2.UI;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
+using Rhino.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,4 +113,15 @@ public abstract partial class GH_Component : Component, IGH_ActiveObject
         set => Label = value;
     }
     public new GH_SolutionPhase Phase => base.Phase.To1();
+
+    public new virtual System.Drawing.Icon? Icon => null;
+    protected override IIcon? IconInternal
+    {
+        get
+        {
+            var icon = Icon;
+            if (icon is null) return null;
+            return AbstractIcon.FromBitmap([.. icon.ToEto().Frames.Select(f => f.Bitmap)]);
+        }
+    }
 }
