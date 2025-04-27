@@ -110,4 +110,5 @@ public abstract partial class GH_Component : Component, IGH_ActiveObject
         get => Label;
         set => Label = value;
     }
+    public new GH_SolutionPhase Phase => base.Phase.To1();
 }

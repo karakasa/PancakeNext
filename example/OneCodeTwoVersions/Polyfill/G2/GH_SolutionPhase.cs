@@ -5,8 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public interface IGH_ActiveObject : IGH_DocumentObject
+public enum GH_SolutionPhase : byte
 {
-    GH_SolutionPhase Phase { get; }
-    bool Locked { get; set; }
+    Blank = 0,
+    Collecting,
+    Collected,
+    Computing,
+    Computed,
+    Failed = 10
 }

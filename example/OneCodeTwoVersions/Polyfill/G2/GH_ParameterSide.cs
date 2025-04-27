@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public interface IGH_ActiveObject : IGH_DocumentObject
+public enum GH_ParameterSide
 {
-    GH_SolutionPhase Phase { get; }
-    bool Locked { get; set; }
+    Input,
+    Output
 }

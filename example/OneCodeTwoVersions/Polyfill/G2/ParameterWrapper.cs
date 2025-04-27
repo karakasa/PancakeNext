@@ -196,4 +196,6 @@ internal sealed class ParameterWrapper(IParameter p) : ActiveObjectWrapper<IPara
                 _value.Modifiers = _value.Modifiers.WithoutSimplify();
         }
     }
+
+    public IParameter CreateIfRequired() => throw new NotSupportedException();
 }

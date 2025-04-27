@@ -13,6 +13,7 @@ namespace OneCodeTwoVersions.Polyfill;
 public interface IGH_Param : IGH_ActiveObject
 {
     public IParameter UnderlyingObject { get; }
+    public IParameter CreateIfRequired();
     GH_DataMapping DataMapping { get; set; }
     bool Reverse { get; set; }
     bool Simplify { get; set; }

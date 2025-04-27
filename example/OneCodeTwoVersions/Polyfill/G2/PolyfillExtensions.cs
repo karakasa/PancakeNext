@@ -1,5 +1,7 @@
 ﻿#if G2
+using Grasshopper2.Components;
 using Grasshopper2.Data;
+using Grasshopper2.Doc;
 using Grasshopper2.Parameters;
 using OneCodeTwoVersions.Polyfill.DataTypes;
 using Rhino.Geometry;
@@ -13,6 +15,37 @@ namespace OneCodeTwoVersions.Polyfill;
 
 internal static class PolyfillExtensions
 {
+    public static GH_SolutionPhase To1(this Phase phase)
+    {
+        return phase switch
+        {
+            Phase.Irrelevant => GH_SolutionPhase.Blank,
+            Phase.Expired => GH_SolutionPhase.Blank,
+            Phase.Computing => GH_SolutionPhase.Computing,
+            Phase.Completed => GH_SolutionPhase.Computed,
+            Phase.Cancelled => GH_SolutionPhase.Blank,
+            Phase.Faulted => GH_SolutionPhase.Failed,
+            _ => throw new ArgumentOutOfRangeException(nameof(phase), "Invalid Phase")
+        };
+    }
+    public static Side To2(this GH_ParameterSide side)
+    {
+        return side switch
+        {
+            GH_ParameterSide.Input => Side.Input,
+            GH_ParameterSide.Output => Side.Output,
+            _ => throw new ArgumentOutOfRangeException(nameof(side), "Invalid GH_ParameterSide")
+        };
+    }
+    public static GH_ParameterSide To1(this Side side)
+    {
+        return side switch
+        {
+            Side.Input => GH_ParameterSide.Input,
+            Side.Output => GH_ParameterSide.Output,
+            _ => throw new ArgumentOutOfRangeException(nameof(side), "Invalid GH_ParameterSide")
+        };
+    }
     public static Access To2(this GH_ParamAccess access)
     {
         return access switch

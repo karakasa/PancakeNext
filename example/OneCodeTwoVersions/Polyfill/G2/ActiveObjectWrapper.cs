@@ -36,4 +36,6 @@ public abstract class ActiveObjectWrapper<T>(T val) : IGH_ActiveObject
     }
 
     public Guid ComponentGuid => ComponentIdCacher.GetId(_value.GetType());
+
+    public GH_SolutionPhase Phase => _value.Phase.To1();
 }
