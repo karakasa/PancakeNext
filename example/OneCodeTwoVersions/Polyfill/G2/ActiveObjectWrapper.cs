@@ -9,7 +9,7 @@ namespace OneCodeTwoVersions.Polyfill;
 public abstract class ActiveObjectWrapper<T>(T val) : IGH_ActiveObject
     where T : IDocumentObject
 {
-    protected T _value => val;
+    protected T _value { get; set; } = val;
     public string Name
     {
         get => _value.Nomen.Name;

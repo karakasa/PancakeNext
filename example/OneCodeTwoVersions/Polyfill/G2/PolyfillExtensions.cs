@@ -61,7 +61,10 @@ internal static class PolyfillExtensions
     {
         return new(path.ToArray());
     }
-
+    public static Grasshopper2.Data.Path ToCurrent(this GH_Path path)
+    {
+        return new(path.Indices);
+    }
     public static object? Peel(this object? obj)
     {
         if (obj is IGH_Goo goo) return goo.ScriptVariable();

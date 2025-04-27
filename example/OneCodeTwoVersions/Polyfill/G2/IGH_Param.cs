@@ -13,7 +13,6 @@ namespace OneCodeTwoVersions.Polyfill;
 public interface IGH_Param : IGH_ActiveObject
 {
     public IParameter UnderlyingObject { get; }
-    public IParameter CreateIfRequired();
     GH_DataMapping DataMapping { get; set; }
     bool Reverse { get; set; }
     bool Simplify { get; set; }
@@ -26,8 +25,12 @@ public interface IGH_Param : IGH_ActiveObject
 
     bool Optional { get; set; }
 
-    GH_ParamAccess Access { get; }
+    GH_ParamAccess Access { get; set; }
 
+    /// <summary>
+    /// Be advised this value is a snapshot. Any changes won't be reflected back to the original object under GH2.
+    /// Use <see cref="AddSource(IGH_Param)"/>, <see cref="RemoveSource(Guid)"/>, ... instead.
+    /// </summary>
     IList<IGH_Param> Sources { get; }
 
     int SourceCount { get; }
@@ -36,6 +39,9 @@ public interface IGH_Param : IGH_ActiveObject
 
     int VolatileDataCount { get; }
 
+    /// <summary>
+    /// Be advised this value is a snapshot. Any changes won't be reflected back to the original object under GH2.
+    /// </summary>
     IGH_Structure VolatileData { get; }
 	void RemoveEffects();
     void AddSource(IGH_Param source);

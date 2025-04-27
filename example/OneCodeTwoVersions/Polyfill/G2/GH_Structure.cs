@@ -1,6 +1,6 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Types.Conversion;
-using OneCodeTwoVersions.Polyfill.DataTypes;
+using OneCodeTwoVersions.Polyfill.G2;
 using Rhino.Geometry;
 using System;
 using System.Collections;
@@ -190,7 +190,16 @@ public sealed class GH_Structure<T> : IGH_Structure, IEnumerable<T>
         }
     }
 
-    public ITree To2()
+    public ITree? To2<TGoo, TGh1Inner, TGh2Inner>(Func<TGh1Inner, TGh2Inner> converter, bool allowGeneric = true)
+        where TGoo : GH_Goo<TGh1Inner>
+    {
+        ITree? ret = null;
+        var paths = new Paths(_v.Keys.Select(static p => p.To2()));
+
+        return CreateTreeFastPath<TGh1Inner, TGoo, TGh2Inner>(ref ret, paths, converter) ? ret : null;
+    }
+    public ITree? To2() => To2(true);
+    public ITree? To2(bool allowGeneric)
     {
         ITree? ret = null;
         var paths = new Paths(_v.Keys.Select(static p => p.To2()));
@@ -226,7 +235,14 @@ public sealed class GH_Structure<T> : IGH_Structure, IEnumerable<T>
             return ret;
         }
 
-        return Garden.ITreeFromITwigs(paths, _v.Values.Select(v => Garden.ITwigFromList(v.Select(a => a?.ScriptVariable()))));
+        if (allowGeneric)
+        {
+            return Garden.ITreeFromITwigs(paths, _v.Values.Select(v => Garden.ITwigFromList(v.Select(a => a?.ScriptVariable()))));
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private Path ConvertPath(GH_Path data) => data.To2();

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OneCodeTwoVersions.Polyfill.DataTypes;
+namespace OneCodeTwoVersions.Polyfill;
 public abstract class GH_Goo<T> : IGH_Goo
 {
     public virtual T Value { get; set; }

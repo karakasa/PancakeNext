@@ -4,11 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-internal sealed class ParameterWrapper(IParameter p) : ActiveObjectWrapper<IParameter>(p), IGH_Param
+public class ParameterWrapper(IParameter p) : ActiveObjectWrapper<IParameter>(p), IGH_Param
 {
     IParameter IGH_Param.UnderlyingObject => _value;
     public GH_ParamKind Kind => _value.Kind switch
@@ -45,13 +46,40 @@ internal sealed class ParameterWrapper(IParameter p) : ActiveObjectWrapper<IPara
         set => _value.Requirement = value ? Requirement.MayBeMissing : Requirement.MayBeNull;
     }
 
-    public GH_ParamAccess Access => _value.Access switch
+    public GH_ParamAccess Access
     {
-        Grasshopper2.Parameters.Access.Item => GH_ParamAccess.item,
-        Grasshopper2.Parameters.Access.Twig => GH_ParamAccess.list,
-        Grasshopper2.Parameters.Access.Tree => GH_ParamAccess.tree,
-        _ => throw new NotSupportedException($"{_value.Kind} cannot be mapped into a GH1 access.")
-    };
+        get => _value.Access switch
+        {
+            Grasshopper2.Parameters.Access.Item => GH_ParamAccess.item,
+            Grasshopper2.Parameters.Access.Twig => GH_ParamAccess.list,
+            Grasshopper2.Parameters.Access.Tree => GH_ParamAccess.tree,
+            _ => throw new NotSupportedException($"{_value.Kind} cannot be mapped into a GH1 access.")
+        };
+        set
+        {
+            if (value == this.Access) return;
+
+            EnsureReflection();
+            _access.Invoke(_value, [value]);
+        }
+    }
+
+    private static bool _reflectionDone = false;
+    private static MethodInfo? _access;
+    private static void EnsureReflection()
+    {
+        if (_reflectionDone)
+        {
+            if (_access is null)
+                throw new InvalidOperationException("Cannot find AbstractParameter.set_Access().");
+            else
+                return;
+        }
+
+        _access = typeof(AbstractParameter).GetProperty("Access", 
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.SetMethod;
+        _reflectionDone = true;
+    }
 
     private static NotSupportedException NotAbstractParameter() => new("Underlying object is not an AbstractParameter.");
 
@@ -137,7 +165,7 @@ internal sealed class ParameterWrapper(IParameter p) : ActiveObjectWrapper<IPara
 
     public int VolatileDataCount => _value.PersistentDataWeak.LeafCount;
 
-    public IGH_Structure VolatileData => _value.PersistentDataWeak.To1();
+    public virtual IGH_Structure VolatileData => _value.PersistentDataWeak.To1();
 
     public GH_DataMapping DataMapping
     {
@@ -196,6 +224,4 @@ internal sealed class ParameterWrapper(IParameter p) : ActiveObjectWrapper<IPara
                 _value.Modifiers = _value.Modifiers.WithoutSimplify();
         }
     }
-
-    public IParameter CreateIfRequired() => throw new NotSupportedException();
 }

@@ -21,7 +21,7 @@ public abstract partial class VariableParameterComponent<TComp> : ComponentMiddl
     public override bool CanRemoveParameter(Side side, int index) => CanRemoveParameter(side.To1(), index);
     public override void DoCreateParameter(Side side, int index)
     {
-        var param = CreateParameter(side.To1(), index).CreateIfRequired();
+        var param = CreateParameter(side.To1(), index).UpdateIfRequired();
         if (side == Side.Input)
             Parameters.AddInput(param, index);
         else

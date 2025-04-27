@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Plane = Rhino.Geometry.Plane;
 
-namespace OneCodeTwoVersions.Polyfill.DataTypes;
+namespace OneCodeTwoVersions.Polyfill;
 public sealed class GH_Boolean() : GH_Goo<bool>("Boolean")
 {
     public GH_Boolean(GH_Boolean other) : this() { Value = other.Value; }
