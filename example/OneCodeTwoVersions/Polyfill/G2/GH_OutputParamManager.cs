@@ -12,7 +12,7 @@ public sealed class GH_OutputParamManager(Component comp, OutputAdder adder) : G
 
     public override int ParamCount => _adder.Count;
 
-    public override IGH_Param this[int index] => new ParameterWrapper(_owner.Parameters.Output(index));
+    public override IGH_Param this[int index] => ParameterWrapper.CreateFrom(_owner.Parameters.Output(index));
 
     public int AddParameter(IGH_Param param)
     {

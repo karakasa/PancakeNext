@@ -20,7 +20,7 @@ public sealed class GH_InputParamManager(Component comp, InputAdder adder) : GH_
 
     public override int ParamCount => _adder.Count;
 
-    public override IGH_Param this[int index] => new ParameterWrapper(_owner.Parameters.Input(index));
+    public override IGH_Param this[int index] => ParameterWrapper.CreateFrom(_owner.Parameters.Input(index));
 
     public int AddParameter(IGH_Param param)
     {

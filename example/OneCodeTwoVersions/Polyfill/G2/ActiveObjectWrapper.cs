@@ -35,7 +35,7 @@ public abstract class ActiveObjectWrapper<T>(T val) : IGH_ActiveObject
         set => _value.Activity = value ? ObjectActivity.Disabled : ObjectActivity.Enabled;
     }
 
-    public Guid ComponentGuid => ComponentIdCacher.GetId(_value.GetType());
+    public Guid ComponentGuid => ComponentIdCacher.Instance[_value.GetType()];
 
     public GH_SolutionPhase Phase => _value.Phase.To1();
 }

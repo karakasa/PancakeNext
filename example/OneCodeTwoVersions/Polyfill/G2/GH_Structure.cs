@@ -1,6 +1,5 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Types.Conversion;
-using OneCodeTwoVersions.Polyfill.G2;
 using Rhino.Geometry;
 using System;
 using System.Collections;
