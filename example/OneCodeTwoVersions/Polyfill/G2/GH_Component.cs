@@ -1,5 +1,7 @@
 ﻿using Grasshopper2.Components;
+using Grasshopper2.Data.Meta;
 using Grasshopper2.Doc;
+using Grasshopper2.Extensions;
 using Grasshopper2.UI;
 using Grasshopper2.UI.Icon;
 using GrasshopperIO;
@@ -122,6 +124,38 @@ public abstract partial class GH_Component : Component, IGH_ActiveObject
             var icon = Icon;
             if (icon is null) return null;
             return AbstractIcon.FromBitmap([.. icon.ToEto().Frames.Select(f => f.Bitmap)]);
+        }
+    }
+
+    private GH_ComponentParamServer? _params;
+    public GH_ComponentParamServer Params => _params ??= new(this);
+    protected bool GetValue(string valueName, bool @default) => CustomValues.Get(valueName, @default);
+
+    protected int GetValue(string valueName, int @default) => CustomValues.Get(valueName, @default);
+
+    protected double GetValue(string valueName, double @default) => CustomValues.Get(valueName, @default);
+
+    protected string GetValue(string valueName, string @default) => CustomValues.Get(valueName, @default);
+
+    protected System.Drawing.Color GetValue(string valueName, System.Drawing.Color @default) => CustomValues.Get(valueName, ColourExtensionMethods.ToEto(@default)).ToGdi();
+
+    protected void SetValue(string valueName, bool value) => CustomValues.Set(valueName, value);
+
+    protected void SetValue(string valueName, int value) => CustomValues.Set(valueName, value);
+
+    protected void SetValue(string valueName, double value) => CustomValues.Set(valueName, value);
+    protected void SetValue(string valueName, string value) => CustomValues.Set(valueName, value);
+
+    protected void SetValue(string valueName, System.Drawing.Color value) => CustomValues.Set(valueName, ColourExtensionMethods.ToEto(value));
+    protected void ExpireSolution(bool recompute)
+    {
+        if (recompute)
+        {
+            Document?.Solution.DelayedExpire(this);
+        }
+        else
+        {
+            State?.Expire();
         }
     }
 }

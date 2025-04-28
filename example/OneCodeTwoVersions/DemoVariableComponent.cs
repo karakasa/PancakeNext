@@ -1,10 +1,13 @@
 ﻿using GrasshopperIO;
 using OneCodeTwoVersions.Polyfill;
+using Rhino.Render;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Grasshopper2.Data.Meta.StandardNames;
 
 namespace OneCodeTwoVersions;
 [IoId("BF647C43-8B2F-49C6-84D3-708BCAF2F126")]
@@ -21,7 +24,7 @@ public sealed class DemoVariableComponent : VariableParameterComponent<DemoVaria
     }
     public override bool CanRemoveParameter(GH_ParameterSide side, int index)
     {
-        return false;
+        return side == GH_ParameterSide.Input;
     }
     public override IGH_Param CreateParameter(GH_ParameterSide side, int index)
     {
@@ -43,10 +46,24 @@ public sealed class DemoVariableComponent : VariableParameterComponent<DemoVaria
     }
     public override void VariableParameterMaintenance()
     {
-        throw new NotImplementedException();
+        var cnt = Params.Input.Count;
+        for (var i = 0; i < cnt; i++)
+        {
+            var p = Params.Input[i];
+            p.Name = p.NickName = $"{i}";
+        }
     }
     protected override void SolveInstance(IGH_DataAccess DA)
     {
-        throw new NotImplementedException();
+        var sum = 0.0;
+        var data = 0.0;
+        var cnt = Params.Input.Count;
+        for (var i = 0; i < cnt; i++)
+        {
+            DA.GetData(i, ref data);
+            sum += data;
+        }
+
+        DA.SetData(0, sum);
     }
 }

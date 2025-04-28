@@ -14,7 +14,7 @@ public abstract class GH_Param<TGoo, TGh2Parameter, TInner> : ParameterWrapper
     where TGh2Parameter : IParameter, new()
     where TGoo : GH_Goo<TInner>
 {
-    protected TGh2Parameter Value
+    internal TGh2Parameter Value
     {
         get => (TGh2Parameter)_value;
         set => _value = value;
@@ -30,7 +30,7 @@ public abstract class GH_Param<TGoo, TGh2Parameter, TGh1Inner, TGh2Inner> : Para
     where TGh2Parameter : IParameter, new()
     where TGoo : GH_Goo<TGh1Inner>
 {
-    protected TGh2Parameter Value
+    internal TGh2Parameter Value
     {
         get => (TGh2Parameter)_value;
         set => _value = value;

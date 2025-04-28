@@ -1,5 +1,6 @@
 ﻿using Grasshopper2.Data;
 using Grasshopper2.Parameters;
+using Grasshopper2.Parameters.Standard;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,36 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public class ParameterWrapper(IParameter p) : ActiveObjectWrapper<IParameter>(p), IGH_Param
+public class ParameterWrapper : ActiveObjectWrapper<IParameter>, IGH_Param
 {
+    protected ParameterWrapper(IParameter p) : base(p)
+    {
+    }
+    public static ParameterWrapper CreateFrom(IParameter p) => p switch
+    {
+        BooleanParameter bp => new Param_Boolean(bp),
+        Point3Parameter pp => new Param_Point(pp),
+        VectorParameter vp => new Param_Vector(vp),
+        TransformParameter tp => new Param_Transform(tp),
+        PlaneParameter plp => new Param_Plane(plp),
+        BoxParameter bp => new Param_Box(bp),
+        LineParameter lp => new Param_Line(lp),
+        CircleParameter cp => new Param_Circle(cp),
+        RectangleParameter rp => new Param_Rectangle(rp),
+        ArcParameter ap => new Param_Arc(ap),
+        MeshParameter mp => new Param_Mesh(mp),
+        MeshFacetParameter mfp => new Param_MeshFace(mfp),
+        IntegerParameter ip => new Param_Integer(ip),
+        NumberParameter np => new Param_Number(np),
+        DateTimeParameter dtp => new Param_Time(dtp),
+        TextParameter tp => new Param_Text(tp),
+        IntervalParameter ip => new Param_Interval(ip),
+        ColourParameter cp => new Param_Colour(cp),
+        PathParameter pp => new Param_StructurePath(pp),
+        CurveParameter cp => new Param_Curve(cp),
+        SurfaceParameter sp => new Param_Surface(sp),
+        _ => new ParameterWrapper(p)
+    };
     IParameter IGH_Param.UnderlyingObject => _value;
     public GH_ParamKind Kind => _value.Kind switch
     {
