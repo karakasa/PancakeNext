@@ -14,6 +14,7 @@ namespace OneCodeTwoVersions.Polyfill;
 [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
 public sealed class RibbonPositionAttribute : Attribute
 {
+    public static readonly RibbonPositionAttribute Default = new(0);
     private int _slot { get; }
     public bool Hidden { get; set; }
     public bool Obsecure { get; set; }

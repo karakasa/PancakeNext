@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions;
 [IoId("BF647C43-8B2F-49C6-84D3-708BCAF2F125")]
+[RibbonPosition(0)]
 public sealed class DemoComponent : ComponentMiddleware<DemoComponent>
 {
     public DemoComponent() : base("Demo", "Demo", "Demo component for Grasshopper 1 and 2", "Demo", "Demo")

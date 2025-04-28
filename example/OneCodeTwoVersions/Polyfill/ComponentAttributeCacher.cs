@@ -34,7 +34,9 @@ internal sealed class ComponentIdCacher : ComponentAttributeCacher<IoIdAttribute
 internal sealed class ComponentSlotCacher : ComponentAttributeCacher<RibbonPositionAttribute, RibbonPositionAttribute>
 {
     public static readonly ComponentSlotCacher Instance = new();
-    protected override RibbonPositionAttribute Convert(RibbonPositionAttribute? attribute) => attribute!;
+    protected override RibbonPositionAttribute Convert(RibbonPositionAttribute? attribute)
+        => attribute ?? RibbonPositionAttribute.Default;
+    protected override bool ThrowOnMissing => false;
 }
 internal sealed class ObsoleteCacher : ComponentAttributeCacher<ObsoleteAttribute, bool>
 {
