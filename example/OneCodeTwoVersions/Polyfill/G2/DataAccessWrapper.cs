@@ -3,7 +3,6 @@ using Grasshopper2.Components;
 using Grasshopper2.Data;
 using Grasshopper2.Parameters;
 using Grasshopper2.Types.Constraints.Goals;
-using OneCodeTwoVersions.Polyfill.G2;
 using Rhino.Geometry;
 using System.Collections;
 using System.Drawing;
