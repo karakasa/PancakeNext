@@ -18,7 +18,8 @@ public abstract class ComponentMiddleware<T> : GH_Component where T : ComponentM
     {
         // Placeholder
     }
-    public override Guid ComponentGuid => ComponentIdCacher.GetId(GetType());
+    public override Guid ComponentGuid => ComponentIdCacher.Instance[GetType()];
+    public override GH_Exposure Exposure => ComponentSlotCacher.Instance[GetType()].ToExposure();
 }
 
 #endif

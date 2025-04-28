@@ -41,7 +41,7 @@ public abstract partial class GH_Component : Component, IGH_ActiveObject
         set => Activity = value ? ObjectActivity.Disabled : ObjectActivity.Enabled;
     }
 
-    public virtual Guid ComponentGuid => ComponentIdCacher.GetId(GetType());
+    public virtual Guid ComponentGuid => ComponentIdCacher.Instance[GetType()];
 
     protected abstract void RegisterInputParams(GH_InputParamManager pManager);
 

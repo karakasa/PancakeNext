@@ -22,7 +22,9 @@ public abstract partial class ComponentMiddleware<TComp> : GH_Component where TC
 
     private static Nomen CreateNomen(string name, string nickname, string desc, string category, string subcategory)
     {
-        return new Nomen(name, desc, category, subcategory, slot: 0, rank: Rank.Normal, null);
+        var slot = ComponentSlotCacher.Instance[typeof(TComp)].ToSlot();
+        var obsolete = ObsoleteCacher.Instance[typeof(TComp)];
+        return new Nomen(name, desc, category, subcategory, slot: slot.Slot, rank: obsolete ? Rank.Hidden : slot.Rank, null);
     }
 }
 
