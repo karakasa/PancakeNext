@@ -16,12 +16,17 @@ public sealed class GH_OutputParamManager(Component comp, OutputAdder adder) : G
 
     public int AddParameter(IGH_Param param)
     {
-        throw new NotSupportedException();
+        _adder.Add(param.UnderlyingObject);
+        return _adder.Count - 1;
     }
 
     public int AddParameter(IGH_Param param, string name, string nickname, string description, GH_ParamAccess access)
     {
-        throw new NotSupportedException();
+        param.Name = name;
+        param.NickName = nickname;
+        param.Description = description;
+        param.Access = access;
+        return AddParameter(param);
     }
 
     public int AddPointParameter(string name, string nickname, string description, GH_ParamAccess access)
@@ -39,11 +44,6 @@ public sealed class GH_OutputParamManager(Component comp, OutputAdder adder) : G
     {
         _adder.AddField(name, nickname, description, access.To2());
         return _adder.Count - 1;
-    }
-
-    public int AddMatrixParameter(string name, string nickname, string description, GH_ParamAccess access)
-    {
-        throw new NotSupportedException();
     }
 
     public int AddTransformParameter(string name, string nickname, string description, GH_ParamAccess access)
