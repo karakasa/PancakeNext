@@ -4,6 +4,7 @@ using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
 using Grasshopper2.Types.Colour;
 using Grasshopper2.Types.Conversion;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH;
@@ -265,4 +266,6 @@ public sealed partial class pcParseString : PancakeComponent<pcParseString>, IPa
     protected override InputOption[][] SimpleOptions => [[
             new ToggleOption("Try as file path", "Try to interpret input as a file path", TryAsFilePath, x => TryAsFilePath = x, "Try as file", "Don't try as file")
             ]];
+
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("ParseString");
 }

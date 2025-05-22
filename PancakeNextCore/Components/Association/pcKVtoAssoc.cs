@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
@@ -118,4 +119,6 @@ public sealed class pcKvToAssoc : PancakeComponent<pcKvToAssoc>, IPancakeLocaliz
             new ToggleOption(Strings.AppendMode, Strings.WhenThereReDuplicatedEntriesAppendToTheAssocRatherThanModifySeeExampleForMoreInformation,
                 AddMode, x => AddMode = x, "Append", "Overwrite", "If keys already exists")
             ]];
+
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("KeyValuePairToAssoc");
 }

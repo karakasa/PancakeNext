@@ -5,6 +5,7 @@ using Grasshopper2.Components;
 using Grasshopper2.Data;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
@@ -161,4 +162,5 @@ public sealed class pcCsvToAssoc : PancakeComponent<pcCsvToAssoc>, IPancakeLocal
 
     private const string RecognizeTypeOption = "RecognizeType";
     private const string ParseAsQuantityOption = "ParseAsQuantity";
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("CsvToAssoc");
 }

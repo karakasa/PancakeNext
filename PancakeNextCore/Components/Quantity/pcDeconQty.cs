@@ -1,10 +1,12 @@
 ﻿using System;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Quantity;
 
@@ -37,4 +39,5 @@ public sealed class pcDeconQty : PancakeComponent<pcDeconQty>, IPancakeLocalizab
         access.SetItem(1, quantity.UnitName);
         access.SetItem(2, quantity.UnitType);
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("DeconstructQuantity");
 }

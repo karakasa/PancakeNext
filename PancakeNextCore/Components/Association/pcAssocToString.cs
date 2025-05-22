@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Dataset;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Association;
 
@@ -125,4 +127,5 @@ public sealed class pcAssocToString : PancakeComponent<pcAssocToString>, IPancak
     protected override InputOption[][] SimpleOptions => [[
             new PickOneOption<StringConversionType>("Style", ConversionType, x => ConversionType = x, Styles)
             ]];
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("AssocToString");
 }

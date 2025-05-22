@@ -1,8 +1,10 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 
 namespace PancakeNextCore.Components.Miscellaneous;
@@ -33,4 +35,5 @@ public sealed class pcNull : PancakeComponent<pcNull>, IPancakeLocalizable<pcNul
         access.SetItem(2, double.PositiveInfinity);
         access.SetItem(3, double.NegativeInfinity);
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("SpecialValues");
 }

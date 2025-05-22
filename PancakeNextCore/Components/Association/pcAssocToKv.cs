@@ -4,6 +4,7 @@ using Grasshopper2.Components;
 using Grasshopper2.Data;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
@@ -53,4 +54,5 @@ public class pcAssocToKv : PancakeComponent<pcAssocToKv>, IPancakeLocalizable<pc
         access.SetTwig(0, Garden.TwigFromList(names));
         access.SetTwig(1, Garden.ITwigFromPears(values));
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("AssocToKeyValuePair");
 }

@@ -44,14 +44,29 @@
     <Compile Remove="UI\EtoForms\PortabilityReportUi.cs" />
     <Compile Remove="UI\EtoForms\TransferSettingUi.cs" />
     <Compile Remove="UI\IFormPortabilityReport.cs" />
+    <Compile Remove="Utility\PathBasedIcon\PixelIconPlayingMahjong.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Icons.archive" />
     <None Remove="Resources\Pancake48.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Icons\ExportSTL.svg" />
+    <Compile Include="..\SvgIcon\DeflateHelper.cs" Link="Utility\PathBasedIcon\DeflateHelper.cs" />
+    <Compile Include="..\SvgIcon\IconArchive.cs" Link="Utility\PathBasedIcon\IconArchive.cs" />
+    <Compile Include="..\SvgIcon\PathCommand.cs" Link="Utility\PathBasedIcon\PathCommand.cs" />
+    <Compile Include="..\SvgIcon\PathCommandType.cs" Link="Utility\PathBasedIcon\PathCommandType.cs" />
+    <Compile Include="..\SvgIcon\PathIcon.cs" Link="Utility\PathBasedIcon\PathIcon.cs" />
+    <Compile Include="..\SvgIcon\PathLoop.cs" Link="Utility\PathBasedIcon\PathLoop.cs" />
+    <Compile Include="..\SvgIcon\RegionElement.cs" Link="Utility\PathBasedIcon\RegionElement.cs" />
+    <Compile Include="..\SvgIcon\RegionElementType.cs" Link="Utility\PathBasedIcon\RegionElementType.cs" />
+    <Compile Include="..\SvgIcon\SmallArchive.cs" Link="Utility\PathBasedIcon\SmallArchive.cs" />
+    <Compile Include="..\SvgIcon\StrokeDescription.cs" Link="Utility\PathBasedIcon\StrokeDescription.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Icons.archive" />
     <EmbeddedResource Include="Resources\Pancake48.png" />
   </ItemGroup>
 
@@ -114,6 +129,7 @@
     <None Include="UI\EtoForms\PortabilityReportUi.cs" />
     <None Include="UI\EtoForms\TransferSettingUi.cs" />
     <None Include="UI\IFormPortabilityReport.cs" />
+    <None Include="Utility\PathBasedIcon\PixelIconPlayingMahjong.cs" />
   </ItemGroup>
 
   <ItemGroup>

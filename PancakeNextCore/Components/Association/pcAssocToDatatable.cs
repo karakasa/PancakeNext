@@ -3,10 +3,12 @@ using Grasshopper2.Components;
 using Grasshopper2.Data;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,4 +107,6 @@ public sealed class pcAssocToDatatable : PancakeComponent<pcAssocToDatatable>, I
                 OnColor = OpenColor.Blue7
             }
             ]];
+
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("AssocToDatatable");
 }

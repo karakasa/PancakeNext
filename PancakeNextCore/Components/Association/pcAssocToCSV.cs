@@ -5,10 +5,12 @@ using System.Text;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using Rhino.Commands;
 
 namespace PancakeNextCore.Components.Association;
@@ -87,4 +89,5 @@ public sealed class pcAssocToCsv : PancakeComponent<pcAssocToCsv>, IPancakeLocal
         output = null;
         return false;
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("AssocToCsv");
 }

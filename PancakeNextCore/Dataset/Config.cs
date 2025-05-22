@@ -27,7 +27,8 @@ public static class Config
 
     internal static bool SafeMode = false;
 
-    public static bool IsRunningOnMac { get; } = Environment.OSVersion.Platform != PlatformID.Win32NT;
+    private static bool? _isRunningOnMac;
+    public static bool IsRunningOnMac => _isRunningOnMac ??= Environment.OSVersion.Platform != PlatformID.Win32NT;
 
     internal static string Read(string name, string def = "", string safeDef = "")
     {

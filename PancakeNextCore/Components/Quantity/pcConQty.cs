@@ -1,6 +1,7 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Dataset;
@@ -74,4 +75,5 @@ public sealed class pcConQty : PancakeComponent<pcConQty>, IPancakeLocalizable<p
 
         access.SetItem(0, len);
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("ConstructQuantity");
 }

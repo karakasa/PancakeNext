@@ -188,7 +188,7 @@ public sealed class pcExportSTL : PancakeComponent<pcExportSTL>, IPancakeLocaliz
         writer.Write("endsolid PancakeGHSTLMaker\n");
     }
 
-    protected override IIcon IconInternal => SvgGhIcon.CreateFromSvgResource("ExportSTL", 32, 32);
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("ExportSTL");
 
     public static string StaticLocalizedName => Strings.ExportSTL;
 

@@ -25,7 +25,7 @@ public sealed class DemoComponent : ComponentMiddleware<DemoComponent>
     protected override void RegisterInputParams(GH_InputParamManager pManager)
     {
         pManager.AddIntegerParameter("List", "L", "List of integers to be added", GH_ParamAccess.list);
-        pManager.AddIntegerParameter("Pivot", "P", "Pivot", GH_ParamAccess.list, 0);
+        pManager.AddIntegerParameter("Pivot", "P", "Pivot", GH_ParamAccess.item, 0);
     }
 
     protected override void RegisterOutputParams(GH_OutputParamManager pManager)

@@ -2,9 +2,11 @@
 using Grasshopper2.Data;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -139,4 +141,6 @@ public sealed class pcFileSeries : PancakeComponent<pcFileSeries>, IPancakeLocal
     protected override InputOption[][] SimpleOptions => [[
             new ButtonOption("Reset counter", Strings.ResetInternalCounter, () => counterSet = false)
             ]];
+
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("FileSeries");
 }

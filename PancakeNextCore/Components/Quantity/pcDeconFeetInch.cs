@@ -1,10 +1,12 @@
 ﻿using System;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Quantity;
 
@@ -49,4 +51,5 @@ public class pcDeconFeetInch : PancakeComponent<pcDeconFeetInch>, IPancakeLocali
         access.SetItem(5, q.InchFractionPartSecond);
         access.SetItem(6, q.Error);
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("DeconstructFtInLength");
 }

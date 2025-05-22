@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Association;
 
@@ -31,4 +33,5 @@ public sealed class pcWrapList : PancakeComponent<pcWrapList>, IPancakeLocalizab
         access.GetITwig(0, out var list);
         access.SetItem(0, new GhAtomList(list));
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("WrapList");
 }

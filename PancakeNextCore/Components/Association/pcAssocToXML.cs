@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Xml;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Association;
 
@@ -86,4 +88,6 @@ public class pcAssocToXml : PancakeComponent<pcAssocToXml>, IPancakeLocalizable<
             new ToggleOption("Omit header", Strings.ControlIfTheXMLHeaderIsOmitted, Headless, x => Headless = x, "Omit XML header", "Emit XML header")],[
             new ToggleOption("Expand attributes", Strings.ExpandAttributesToSubNodesSeeExampleForMoreInformation, Expand, x => Expand = x, "Expand attributes to subnodes", "Keep attributes"),
             ]];
+
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("AssocToXML");
 }

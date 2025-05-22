@@ -1,11 +1,13 @@
 ﻿using System;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Dataset;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Quantity;
 
@@ -44,4 +46,5 @@ public sealed class pcToDecimalLen : PancakeComponent<pcToDecimalLen>, IPancakeL
         var len = quantity.ConvertToDecimalUnit(internalUnit);
         access.SetItem(0, len);
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("ToDecimalLength");
 }

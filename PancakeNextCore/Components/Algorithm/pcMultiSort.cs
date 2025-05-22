@@ -2,6 +2,7 @@
 using Grasshopper2.Data;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH;
@@ -169,4 +170,5 @@ public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocaliz
             access.SetTwig(i, Garden.ITwigFromPears(orderedIndices.Select(indice => listObjs[indice])));
         }
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("MultiSort");
 }

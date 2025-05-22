@@ -2,9 +2,11 @@
 using Grasshopper2.Doc;
 using Grasshopper2.Parameters.Standard;
 using Grasshopper2.UI;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 using System.IO;
 using Path = System.IO.Path;
@@ -59,4 +61,5 @@ public sealed class pcGhFilePath : PancakeComponent<pcGhFilePath>, IPancakeLocal
         access.SetItem(0, Path.GetDirectoryName(path));
         access.SetItem(1, Path.GetFileName(path));
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("FilePath");
 }

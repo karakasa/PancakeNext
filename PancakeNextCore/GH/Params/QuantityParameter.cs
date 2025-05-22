@@ -2,6 +2,7 @@
 using Grasshopper2.Parameters;
 using Grasshopper2.Types.Assistant;
 using Grasshopper2.UI;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Interfaces;
@@ -27,5 +28,6 @@ public sealed class QuantityParameter : PancakeParameter<GhQuantity, QuantityPar
     {
         return GhQuantity.TryParseString(text, out value!);
     }
-   
+
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("ParamQuantity");
 }

@@ -1,11 +1,13 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 
@@ -72,4 +74,5 @@ public sealed class pcXmlToAssoc : PancakeComponent<pcXmlToAssoc>, IPancakeLocal
     public static string StaticLocalizedName => Strings.XMLToAssoc;
 
     public static string StaticLocalizedDescription => Strings.ReadXMLFileIntoAssocYouMayNeedAssocToKeyValuesToConvert;
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("XMLToAssoc");
 }

@@ -4,6 +4,7 @@ using Grasshopper2.Data;
 using Grasshopper2.Doc;
 using Grasshopper2.Parameters;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Dataset;
@@ -268,4 +269,5 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
             ExpireSolution(true);
         }
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("DeconstructAssoc");
 }

@@ -7,12 +7,14 @@ using Grasshopper2.Extensions;
 using Grasshopper2.Parameters;
 using Grasshopper2.UI;
 using Grasshopper2.UI.Flex;
+using Grasshopper2.UI.Icon;
 using Grasshopper2.UI.Primitives;
 using Grasshopper2.UI.Skinning;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Components;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,4 +106,5 @@ public sealed class BigRedButton : PancakeParameter<bool, BigRedButton>, IPancak
         intermediateResult.SetTree(GetTreeWithSingleTrue());
         return intermediateResult;
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("TrueButton");
 }

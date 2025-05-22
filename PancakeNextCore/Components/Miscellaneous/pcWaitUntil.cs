@@ -1,8 +1,10 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 
 namespace PancakeNextCore.Components.Miscellaneous;
@@ -30,4 +32,5 @@ public sealed class pcWaitUntil : PancakeComponent<pcWaitUntil>, IPancakeLocaliz
         access.GetITree(1, out var tree);
         access.SetTree(0, tree);
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("WaitUntil");
 }

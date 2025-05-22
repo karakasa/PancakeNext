@@ -1,8 +1,10 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 using System.IO;
 using System.Text;
@@ -90,5 +92,8 @@ public sealed class pcExportTXT : PancakeComponent<pcExportTXT>, IPancakeLocaliz
         {
             access.AddError("IO error", ex.Message);
         }
-    }        
+    }
+
+    internal static string IconResourceName => GlobalizationResolver.IsChineseCharacterSpecialized ? "ExportTXTChn" : "ExportTXT";
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource(pcExportTXT.IconResourceName);
 }

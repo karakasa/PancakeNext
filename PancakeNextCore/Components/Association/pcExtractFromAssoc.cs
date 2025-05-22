@@ -1,6 +1,7 @@
 ﻿using System;
 using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
@@ -64,5 +65,5 @@ public sealed class pcExtractFromAssoc : PancakeComponent<pcExtractFromAssoc>, I
 
         access.SetPear(0, obj);
     }
-
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("ExtractFromAssoc");
 }

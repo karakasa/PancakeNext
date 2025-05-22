@@ -1,10 +1,12 @@
 ﻿using Grasshopper2.Components;
 using Grasshopper2.Parameters.Standard;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.GH.Params.AssocConverters;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,4 +92,5 @@ public sealed class pcJsonToAssoc : PancakeComponent<pcJsonToAssoc>, IPancakeLoc
     public static string StaticLocalizedName => "Json to Assoc";
 
     public static string StaticLocalizedDescription => "Converts a json string to Assoc object.\r\nUse 'Assoc to String' to convert assoc to json.";
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("JsonToAssoc");
 }

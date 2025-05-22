@@ -150,4 +150,5 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
     public static string StaticLocalizedName => Strings.Categorize;
 
     public static string StaticLocalizedDescription => Strings.CategorizeValuesByKeys;
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("Categorize");
 }

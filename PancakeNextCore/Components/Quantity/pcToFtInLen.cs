@@ -1,10 +1,12 @@
 ﻿using System;
 
 using Grasshopper2.Components;
+using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
+using PancakeNextCore.Utility;
 
 namespace PancakeNextCore.Components.Quantity;
 
@@ -34,4 +36,5 @@ public sealed class pcToFtInLen : PancakeComponent<pcToFtInLen>, IPancakeLocaliz
         var len = new GhLengthFeetInch(quantity.ToNeutralUnit(), precision);
         access.SetItem(0, len);
     }
+    protected override IIcon? IconInternal => IconHost.CreateFromPathResource("ToFtInLength");
 }
