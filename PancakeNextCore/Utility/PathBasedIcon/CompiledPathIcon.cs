@@ -1,4 +1,5 @@
 ﻿using Eto.Drawing;
+using Grasshopper2.UI.Flex;
 using Grasshopper2.UI.Icon;
 using SvgIcon;
 using System;
@@ -11,151 +12,144 @@ namespace PancakeNextCore.Utility.PathBasedIcon;
 internal sealed class CompiledPathIcon : AbstractIcon
 {
     static readonly List<CompiledPathIcon> IconInstances = [];
-    private enum DarkModeSpecialValue
+    private readonly struct FillElement(Brush artist, IGraphicsPath path)
     {
-        None,
-        Black,
-        White
-    }
-    private readonly struct FillElement(DarkModeSpecialValue darkMode, Color color, Brush artist, IGraphicsPath path)
-    {
-        public readonly DarkModeSpecialValue DarkModeSpecial = darkMode;
-        public readonly Color OriginalColor = color;
         public readonly Brush Artist = artist;
         public readonly IGraphicsPath Path = path;
     }
-    private readonly struct PathElement(DarkModeSpecialValue darkMode, Color color, float width, Pen artist, IGraphicsPath path)
+    private readonly struct PathElement(Pen artist, IGraphicsPath path)
     {
-        public readonly DarkModeSpecialValue DarkModeSpecial = darkMode;
-        public readonly Color OriginalColor = color;
-        public readonly float StrokeWidth = width;
         public readonly Pen Artist = artist;
         public readonly IGraphicsPath Path = path;
     }
 
+    private bool InstanceDarkMode = IconHost.DarkMode;
+
     static readonly Dictionary<Color, Brush> _brushes = [];
     static readonly Dictionary<StrokeDescription, Pen> _pen = [];
+#if DEBUG
+    private readonly PathIcon _underlyingIcon;
+#endif
 
-    FillElement[] _fillCache = [];
-    PathElement[] _pathCache = [];
+    FillElement[] _fillCacheNormal = [];
+    PathElement[] _pathCacheNormal = [];
+    FillElement[] _fillCacheDark = [];
+    PathElement[] _pathCacheDark = [];
     public CompiledPathIcon(PathIcon icon) : base(IconType.Vector)
     {
-        IconInstances.Add(this);
+#if DEBUG
+        _underlyingIcon = icon;
+#endif
+        BuildCache(icon);
 
-        List<FillElement> fillCache = [];
-        List<PathElement> pathCache = [];
+        IconInstances.Add(this);
+    }
+    private void BuildCache(PathIcon icon)
+    {
+        List<FillElement> fillCacheNormal = [];
+        List<PathElement> pathCacheNormal = [];
+        List<FillElement> fillCacheDark = [];
+        List<PathElement> pathCacheDark = [];
 
         foreach (var elem in icon.Regions.Where(x => x.Type == RegionElementType.Fill))
         {
-            var dm = GetDarkModeSpecial(elem.FillColor);
-            var brush = GetBrush(dm, elem.FillColor);
-            fillCache.Add(new(dm, elem.FillColor, brush, elem.ToGraphicsPath()));
+            var path = elem.ToGraphicsPath();
+            fillCacheNormal.Add(new(GetBrush(false, elem.FillColor), path));
+            fillCacheDark.Add(new(GetBrush(true, elem.FillColor), path));
         }
 
         foreach (var grp in icon.Regions.Where(x => x.Type is RegionElementType.OpenPath or RegionElementType.Path).GroupBy(x => x.Stroke))
         {
             foreach (var item in grp)
             {
-                var dm = GetDarkModeSpecial(item.StrokeColor);
-                var pen = GetPen(dm, item.Stroke);
-                pathCache.Add(new(dm, item.StrokeColor, item.StrokeWidth, pen, item.ToGraphicsPath()));
+                var path = item.ToGraphicsPath();
+                pathCacheNormal.Add(new(GetPen(false, item.Stroke), path));
+                pathCacheDark.Add(new(GetPen(true, item.Stroke), path));
             }
         }
 
-        _fillCache = fillCache.ToArray();
-        _pathCache = pathCache.ToArray();
+        _fillCacheNormal = fillCacheNormal.ToArray();
+        _pathCacheNormal = pathCacheNormal.ToArray();
+        _fillCacheDark = fillCacheDark.ToArray();
+        _pathCacheDark = pathCacheDark.ToArray();
     }
-    private static DarkModeSpecialValue GetDarkModeSpecial(Color color)
+    private static Color GetDarkModeMappedColor(Color color)
     {
-        if (color.Equals(Colors.Black)) return DarkModeSpecialValue.Black;
-        if (color.Equals(Colors.White)) return DarkModeSpecialValue.White;
-        return DarkModeSpecialValue.None;
-    }
-    private static Brush GetBrush(DarkModeSpecialValue dm, Color color)
-    {
-        if (IconHost.DarkMode)
+        return unchecked((uint)color.ToArgb()) switch
         {
-            color = dm switch
-            {
-                DarkModeSpecialValue.Black => Colors.White,
-                DarkModeSpecialValue.White => Colors.Black,
-                _ => color
-            };
-        }
+            0xFF000000 or 0xFF606060 => Colors.White,
+            0xFFFFFFFF => Colors.Black,
+            0xFF808080 => Colors.LightGrey,
+            _ => color,
+        };
+    }
+    private static Brush GetBrush(bool darkMode, Color color)
+    {
+        if (darkMode) color = GetDarkModeMappedColor(color);
 
         if (_brushes.TryGetValue(color, out var brush)) return brush;
         return _brushes[color] = new SolidBrush(color);
     }
-    private static Pen GetPen(DarkModeSpecialValue dm, StrokeDescription desc)
+    private static Pen GetPen(bool darkMode, StrokeDescription desc)
     {
-        if (IconHost.DarkMode)
-        {
-            desc = dm switch
-            {
-                DarkModeSpecialValue.Black => new(Colors.White, desc.Width),
-                DarkModeSpecialValue.White => new(Colors.Black, desc.Width),
-                _ => desc
-            };
-        }
+        if (darkMode) desc = new(GetDarkModeMappedColor(desc.Color), desc.Width);
 
         if (_pen.TryGetValue(desc, out var pen)) return pen;
         return _pen[desc] = new Pen(desc.Color, desc.Width);
     }
-    private static bool IsIdentityScale(float proposedWidth, float proposedHeight, float size)
+    const float IconSize = 24.0f;
+    private static bool IsIdentityScale(float proposedWidth, float proposedHeight)
     {
         const float tol = 0.01f;
-        return proposedWidth > size - tol && proposedWidth < size + tol && proposedHeight > size - tol && proposedHeight < size + tol;
+        return proposedWidth > IconSize - tol && proposedWidth < IconSize + tol && proposedHeight > IconSize - tol && proposedHeight < IconSize + tol;
     }
     protected override sealed void DrawInternal(IconContext context)
     {
         var frame = context.Frame;
         var g = context.Context.Graphics;
 
-        float iconSize = 24.0f;
         using var iconXform = g.SaveTransformState();
 
-        if (!IsIdentityScale(frame.Width, frame.Height, iconSize))
-            g.ScaleTransform(frame.Width / iconSize, frame.Height / iconSize);
         g.TranslateTransform(frame.X, frame.Y);
+        if (!IsIdentityScale(frame.Width, frame.Height))
+            // Eto should filter out identity xforms (since in most cases icons are 24x24, except in thumbnail mode)
+            // We still do it in case platform implementations are different.
+            g.ScaleTransform(frame.Width / IconSize, frame.Height / IconSize);
 
-        foreach (var kv in _fillCache)
-        {
-            var brush = kv.Artist;
-            var gpath = kv.Path;
-            g.FillPath(brush, gpath);
-        }
+        // Only canvas is rendered in the dark mode.
+        // Ribbon tab & tooltips are always light.
+        var parentControl = context.Context.Control;
+        var darkMode = InstanceDarkMode && ShouldTryDarkMode(parentControl);
 
-        foreach (var kv in _pathCache)
-        {
-            var brush = kv.Artist;
-            var gpath = kv.Path;
-            g.DrawPath(brush, gpath);
-        }
+        foreach (var kv in darkMode ? _fillCacheDark : _fillCacheNormal)
+            g.FillPath(kv.Artist, kv.Path);
+
+        foreach (var kv in darkMode ? _pathCacheDark : _pathCacheNormal)
+            g.DrawPath(kv.Artist, kv.Path);
+    }
+
+    private static bool ShouldTryDarkMode(IFlexControl control)
+    {
+        return control is Grasshopper2.UI.Canvas.Canvas;
+
+        if (control is Grasshopper2.UI.TabbedPanel.TabControl) return false;
+        return true;
     }
 
     private void HandleDarkMode()
     {
-        List<FillElement> fillCache = new(_fillCache.Length);
-        List<PathElement> pathCache = new(_pathCache.Length);
-
-        foreach (var elem in _fillCache)
-        {
-            var brush = GetBrush(elem.DarkModeSpecial, elem.OriginalColor);
-            fillCache.Add(new(elem.DarkModeSpecial, elem.OriginalColor, brush, elem.Path));
-        }
-
-        foreach (var elem in _pathCache)
-        {
-            var pen = GetPen(elem.DarkModeSpecial, new(elem.OriginalColor, elem.StrokeWidth));
-            pathCache.Add(new(elem.DarkModeSpecial, elem.OriginalColor, elem.StrokeWidth, pen, elem.Path));
-        }
-
-        _fillCache = fillCache.ToArray();
-        _pathCache = pathCache.ToArray();
+        InstanceDarkMode = IconHost.DarkMode;
     }
     public static void RefreshAllForDarkModeChange()
     {
         foreach (var icon in IconInstances)
             icon.HandleDarkMode();
     }
+#if DEBUG
+    public static void DestroyAllCaches()
+    {
+        foreach (var icon in IconInstances)
+            icon.BuildCache(icon._underlyingIcon);
+    }
+#endif
 }

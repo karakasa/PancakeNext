@@ -147,7 +147,7 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
         AllowAutoFillOutputs = false;
 
         var param = new GenericParameter("", "", "", Access.Item).With(Requirement.MayBeNull);
-        Parameters.AddInput(param);
+        Parameters.AddOutput(param);
     }
     public override void DoRemoveParameter(Side side, int index)
     {
@@ -164,6 +164,7 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
             if (t.Nomen.Name == "")
             {
                 t.ModifyNameAndInfo(indStr, $"Item {indStr}");
+                t.UserName = indStr;
             }
             else if (!string.IsNullOrEmpty(t.UserName))
             {
@@ -252,16 +253,18 @@ public sealed class pcDeconAssoc : PancakeComponent<pcDeconAssoc>, IPancakeLocal
 
         if (!TestOutputForFill(quiet)) return;
 
-        var cnt = Parameters.OutputCount;
-        for (var i = cnt - 1; i >= 0; i++)
+        while (Parameters.OutputCount > 0)
         {
-            Parameters.RemoveOutput(i);
+            Parameters.RemoveOutput(0);
         }
+       
+        var ind = 0;
 
         foreach (var name in names)
         {
-            var param = new GenericParameter("", "", "", Access.Item);
+            var param = new GenericParameter(name, name, $"Item {ind} : {name}", Access.Item);
             Parameters.AddOutput(param);
+            ++ind;
         }
 
         if (expire)

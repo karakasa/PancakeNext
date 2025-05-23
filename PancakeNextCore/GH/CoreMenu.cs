@@ -270,10 +270,14 @@ internal sealed class CoreMenu
             dropdown.AddToggleEntry(Strings.CoreMenu_AddMenuFeatures_EnableDeveloperMode, () => Config.DevMode, x => Config.DevMode = x);
             dropdown.AddSeparator();
             dropdown.AddEntry("List core components...", mnuListCoreComponents);
-            dropdown.AddEntry("Internal settings...", mnuListInternalSettings);
+            dropdown.AddEntry("G2 Internal settings...", mnuListInternalSettings);
             dropdown.AddSeparator();
             dropdown.AddEntry("Enable canvas debug overlay", mnuEnableDebugOverlay);
             dropdown.AddEntry("Benchmark canvas performance", mnuBenchmarkCanvas);
+#if DEBUG
+            dropdown.AddSeparator();
+            dropdown.AddEntry("Force clear compiled icons", () => Utility.PathBasedIcon.CompiledPathIcon.DestroyAllCaches());
+#endif
         }
     }
 
