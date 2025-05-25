@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace PancakeNextCore.GH.Params;
 
-public abstract class GhQuantity : IEquatable<GhQuantity>, IComparable<GhQuantity>
+public abstract class GhQuantity : IEquatable<GhQuantity>, IComparable<GhQuantity>, IComparable
 {
     public abstract string UnitName { get; }
     public abstract QuantityType UnitType { get; }
@@ -233,5 +233,13 @@ public abstract class GhQuantity : IEquatable<GhQuantity>, IComparable<GhQuantit
         ThrowWhenIncompatible(other);
 
         return ToNeutralUnit().CompareTo(other.ToNeutralUnit());
+    }
+
+    int IComparable.CompareTo(object? obj)
+    {
+        if (obj is null) return 1;
+        return obj is GhQuantity other
+            ? CompareTo(other)
+            : throw new ArgumentException($"Object must be of type {nameof(GhQuantity)}", nameof(obj));
     }
 }

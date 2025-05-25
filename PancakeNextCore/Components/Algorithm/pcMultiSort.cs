@@ -6,6 +6,7 @@ using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.GH;
+using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
 using PancakeNextCore.Utility;
 using Rhino;
@@ -17,7 +18,7 @@ namespace PancakeNextCore.Components.Algorithm;
 
 [ComponentCategory("misc", 0)]
 [IoId("{14AF2C8E-E79F-4E95-B26E-FD6386170508}")]
-public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocalizable<pcMultiSort>
+public sealed class pcMultiSort : PancakeComponentPinCapable<pcMultiSort>, IPancakeLocalizable<pcMultiSort>
 {
     public pcMultiSort() { }
     public pcMultiSort(IReader reader) : base(reader) { }
@@ -121,6 +122,8 @@ public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocaliz
 
     protected override void Process(IDataAccess access)
     {
+        access.GetItem(ComparerPin.TypeId, out ICustomComparer comparer);
+
         var keys = new List<ITwig>();
         for (var i = 0; i < FirstValueIndex; i++)
         {
@@ -142,11 +145,11 @@ public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocaliz
                 }
 
         var ordered = Enumerable.Range(0, baseCnt)
-            .OrderBy(indice => keys[0][indice], PearComparerGeneric.Instance);
+            .OrderBy(indice => keys[0][indice], comparer?.GetAt(0)?.GetComparer() ?? PearComparerGeneric.Instance);
         for (var i = 1; i < keys.Count; i++)
         {
             var localIndex = i;
-            ordered = ordered.ThenBy(indice => keys[localIndex][indice], PearComparerGeneric.Instance);
+            ordered = ordered.ThenBy(indice => keys[localIndex][indice], comparer?.GetAt(i)?.GetComparer() ?? PearComparerGeneric.Instance);
         }
 
         var orderedIndices = ordered.ToArray();
@@ -170,5 +173,8 @@ public sealed class pcMultiSort : PancakeComponent<pcMultiSort>, IPancakeLocaliz
             access.SetTwig(i, Garden.ITwigFromPears(orderedIndices.Select(indice => listObjs[indice])));
         }
     }
+
+    protected override Guid[] GetSupportedPins() => [ComparerPin.TypeId];
+
     protected override IIcon? IconInternal => IconHost.CreateFromPathResource("MultiSort");
 }

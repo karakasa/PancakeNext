@@ -1,4 +1,5 @@
 ﻿using Grasshopper2.Data;
+using Grasshopper2.Types.Assistant;
 using Grasshopper2.Types.Colour;
 using Grasshopper2.Types.Numeric;
 using Grasshopper2.Types.Shapes;
@@ -46,7 +47,7 @@ internal static class OptimizedOperators
         }
         else
         {
-            return null;
+            return FastCompare(type, a, b) == 0;
         }
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -94,15 +95,54 @@ internal static class OptimizedOperators
         }
     }
 
+    private static int CompareTwoNumericValues(Pear<double> a, Pear<int> b)
+    {
+        return a.Item.CompareTo(b.Item);
+    }
+    private static int CompareTwoNumericValues(Pear<int> a, Pear<double> b)
+    {
+        return ((double)a.Item).CompareTo(b.Item);
+    }
+    private static int CompareHeterogeneousValues(Type aType, IPear a, IPear b)
+    {
+        if (a is Pear<int> pi1 && b is Pear<double> pd1)
+        {
+            return CompareTwoNumericValues(pi1, pd1);
+        }
+        else if (a is Pear<double> pd2 && b is Pear<int> pi2)
+        {
+            return CompareTwoNumericValues(pd2, pi2);
+        }
+
+        return string.Compare(aType.FullName, b.Type.FullName, StringComparison.Ordinal);
+    }
     public static int Compare(IPear? a, IPear? b)
     {
-        if (a is null || b is null || (a.Type != b.Type)) return Garden.PearComparison(a, b, false);
-        return FastCompare(a, b) ?? Garden.PearComparison(a, b, false);
-    }
+        if (object.ReferenceEquals(a, b)) return 0;
+        if (a is null) return -1;
+        if (b is null) return 1;
 
-    private static int? FastCompare(IPear a, IPear b)
-    {
         var type = a.Type;
+        if (type != b.Type) return CompareHeterogeneousValues(type, a, b);
+        if (FastCompare(type, a, b) is { } result) return result;
+
+        var itemA = a.Item;
+        var itemB = b.Item;
+
+        return CompareByCLRInterface(itemA, itemB) ?? CompareByTypeAssistant(type, itemA, itemB) ?? 0;
+    }
+    private static int? CompareByCLRInterface(object a, object b)
+    {
+        return (a as IComparable)?.CompareTo(b);
+    }
+    private static int? CompareByTypeAssistant(Type type, object a, object b)
+    {
+        var assistant = TypeAssistantServer.FindByType(type);
+        if (assistant is null) return null;
+        return assistant.Sort(a, b);
+    }
+    private static int? FastCompare(Type type, IPear a, IPear b)
+    {
         if (type == typeof(int))
         {
             return FastCompare(a as Pear<int>, b as Pear<int>);
@@ -118,6 +158,26 @@ internal static class OptimizedOperators
         else if (type == typeof(bool))
         {
             return FastCompare(a as Pear<bool>, b as Pear<bool>);
+        }
+        else if (type == typeof(Angle))
+        {
+            return FastCompare(a as Pear<Angle>, b as Pear<Angle>);
+        }
+        else if (type == typeof(DateTime))
+        {
+            return FastCompare(a as Pear<DateTime>, b as Pear<DateTime>);
+        }
+        else if (type == typeof(Guid))
+        {
+            return FastCompare(a as Pear<Guid>, b as Pear<Guid>);
+        }
+        else if (type == typeof(Interval))
+        {
+            return FastCompare(a as Pear<Interval>, b as Pear<Interval>);
+        }
+        else if (type == typeof(TimeSpan))
+        {
+            return FastCompare(a as Pear<TimeSpan>, b as Pear<TimeSpan>);
         }
         else
         {

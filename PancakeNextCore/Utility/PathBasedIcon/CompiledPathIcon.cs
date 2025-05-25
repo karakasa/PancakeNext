@@ -1,6 +1,7 @@
 ﻿using Eto.Drawing;
 using Grasshopper2.UI.Flex;
 using Grasshopper2.UI.Icon;
+using GrasshopperIO.DataBase;
 using SvgIcon;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ internal sealed class CompiledPathIcon : AbstractIcon
         public readonly IGraphicsPath Path = path;
     }
 
-    private bool InstanceDarkMode = IconHost.DarkMode;
+    private bool DarkMode { get; set; }
 
     static readonly Dictionary<Color, Brush> _brushes = [];
     static readonly Dictionary<StrokeDescription, Pen> _pen = [];
@@ -35,11 +36,12 @@ internal sealed class CompiledPathIcon : AbstractIcon
     PathElement[] _pathCacheNormal = [];
     FillElement[] _fillCacheDark = [];
     PathElement[] _pathCacheDark = [];
-    public CompiledPathIcon(PathIcon icon) : base(IconType.Vector)
+    public CompiledPathIcon(PathIcon icon, bool initialDarkMode) : base(IconType.Vector)
     {
 #if DEBUG
         _underlyingIcon = icon;
 #endif
+        DarkMode = initialDarkMode;
         BuildCache(icon);
 
         IconInstances.Add(this);
@@ -51,20 +53,23 @@ internal sealed class CompiledPathIcon : AbstractIcon
         List<FillElement> fillCacheDark = [];
         List<PathElement> pathCacheDark = [];
 
-        foreach (var elem in icon.Regions.Where(x => x.Type == RegionElementType.Fill))
+        foreach (var elem in icon.Regions)
         {
             var path = elem.ToGraphicsPath();
-            fillCacheNormal.Add(new(GetBrush(false, elem.FillColor), path));
-            fillCacheDark.Add(new(GetBrush(true, elem.FillColor), path));
-        }
 
-        foreach (var grp in icon.Regions.Where(x => x.Type is RegionElementType.OpenPath or RegionElementType.Path).GroupBy(x => x.Stroke))
-        {
-            foreach (var item in grp)
+            if (elem.Type is RegionElementType.Fill)
             {
-                var path = item.ToGraphicsPath();
-                pathCacheNormal.Add(new(GetPen(false, item.Stroke), path));
-                pathCacheDark.Add(new(GetPen(true, item.Stroke), path));
+                // fill
+
+                fillCacheNormal.Add(new(GetBrush(false, elem.FillColor), path));
+                fillCacheDark.Add(new(GetBrush(true, elem.FillColor), path));
+            }
+            else
+            {
+                // path
+
+                pathCacheNormal.Add(new(GetPen(false, elem.Stroke), path));
+                pathCacheDark.Add(new(GetPen(true, elem.Stroke), path));
             }
         }
 
@@ -92,7 +97,7 @@ internal sealed class CompiledPathIcon : AbstractIcon
     }
     private static Pen GetPen(bool darkMode, StrokeDescription desc)
     {
-        if (darkMode) desc = new(GetDarkModeMappedColor(desc.Color), desc.Width);
+        if (darkMode) desc = desc.With(GetDarkModeMappedColor(desc.Color));
 
         if (_pen.TryGetValue(desc, out var pen)) return pen;
         return _pen[desc] = new Pen(desc.Color, desc.Width);
@@ -119,7 +124,7 @@ internal sealed class CompiledPathIcon : AbstractIcon
         // Only canvas is rendered in the dark mode.
         // Ribbon tab & tooltips are always light.
         var parentControl = context.Context.Control;
-        var darkMode = InstanceDarkMode && ShouldTryDarkMode(parentControl);
+        var darkMode = DarkMode && ShouldTryDarkMode(parentControl);
 
         foreach (var kv in darkMode ? _fillCacheDark : _fillCacheNormal)
             g.FillPath(kv.Artist, kv.Path);
@@ -131,19 +136,12 @@ internal sealed class CompiledPathIcon : AbstractIcon
     private static bool ShouldTryDarkMode(IFlexControl control)
     {
         return control is Grasshopper2.UI.Canvas.Canvas;
-
-        if (control is Grasshopper2.UI.TabbedPanel.TabControl) return false;
-        return true;
     }
 
-    private void HandleDarkMode()
-    {
-        InstanceDarkMode = IconHost.DarkMode;
-    }
-    public static void RefreshAllForDarkModeChange()
+    public static void NotifyForDarkModeChange(bool newValue)
     {
         foreach (var icon in IconInstances)
-            icon.HandleDarkMode();
+            icon.DarkMode = newValue;
     }
 #if DEBUG
     public static void DestroyAllCaches()

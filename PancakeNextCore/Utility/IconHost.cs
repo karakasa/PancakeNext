@@ -1,6 +1,5 @@
 ﻿using Eto.Drawing;
 using Grasshopper2;
-using Grasshopper2.UI.Animation;
 using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Dataset;
@@ -25,7 +24,7 @@ internal static class IconHost
     public const int Size2 = 96;
     public const int Size3 = 192;
 
-    private static readonly int[] DefaultSizes = [Size0, Size1, Size2, Size3];
+    // private static readonly int[] DefaultSizes = [Size0, Size1, Size2, Size3];
 
     private static IconArchive? _archive;
     private static bool _archiveReadFail;
@@ -37,29 +36,29 @@ internal static class IconHost
         using var stream = typeof(IconHost).Assembly.GetManifestResourceStream("PancakeNextCore.Icons.archive");
         if (stream is null)
         {
-            UiHelper.ErrorReport("IconHost", "Cannot find icon archive. DLL corrupt.");
+            UiHelper.ErrorReport("IconHost", "Cannot find icon archive. DLL is corrupt.");
             _archiveReadFail = true; 
             return false;
         }
-        
+
         try
         {
             _archive = new IconArchive();
             _archive.ReadFrom(DeflateHelper.Decompress(stream));
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             UiHelper.ErrorReport("IconHost", "Cannot load icon archive: " + ex.Message);
             _archiveReadFail = true;
             return false;
         }
 
-        HandleDarkMode();
+        RegisterDarkModeHandler();
 
         return true;
     }
 
-    private static void HandleDarkMode()
+    private static void RegisterDarkModeHandler()
     {
         DarkMode = Settings.DarkMode.Value;
         Settings.DarkMode.Changed += OnDarkModeChanged;
@@ -68,7 +67,7 @@ internal static class IconHost
     private static void OnDarkModeChanged(object? sender, EventArgs e)
     {
         DarkMode = Settings.DarkMode.Value;
-        CompiledPathIcon.RefreshAllForDarkModeChange();
+        CompiledPathIcon.NotifyForDarkModeChange(DarkMode);
     }
 
     //private static Bitmap CreateBitmapFromPathResource(string svg, int defaultWidth, int defaultHeight)
@@ -95,13 +94,7 @@ internal static class IconHost
         if (!EnsureIconArchiveLoaded()) return null;
         if (!_archive.TryGet(name, out var icon)) return null;
 
-        //if (false && Config.IsRunningOnMac) // TODO: Test on mac
-        //{
-        //    return CreateFallbackIcon(icon.SvgFallback);
-        //}
-        //else
-        //{
-            return new CompiledPathIcon(icon);
-        //}
+        return new CompiledPathIcon(icon, IconHost.DarkMode);
+        // return CreateFallbackIcon(icon.SvgFallback);
     }
 }

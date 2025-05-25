@@ -33,4 +33,8 @@ public readonly struct StrokeDescription(Color color, float width) : IEquatable<
     {
         return !(left == right);
     }
+    public StrokeDescription With(Color newColor)
+    {
+        return new(newColor, Width);
+    }
 }
