@@ -18,6 +18,7 @@ public sealed class ComparerPin : Pin<ICustomComparer>
     }
     public ComparerPin() : base(new Grasshopper2.UI.Nomen("Pancake", "Custom Comparer", rank: Grasshopper2.UI.Rank.Hidden))
     {
+        UserName = "comparer";
     }
 
     public override Guid PinTypeId => TypeId;

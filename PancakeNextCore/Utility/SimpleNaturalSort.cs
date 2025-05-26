@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -156,6 +157,30 @@ internal sealed class SimpleNaturalSort : IComparer<string>, IComparer
 
         return 0;
     }
+    const int MaxULongLength = 19; // 2^64 - 1 = 18446744073709551615, which has 20 digits, but we use 19 to avoid overflow.
+    // The SIMD version is less performant because it uses a probabilistic map.
+    // .NET 8+ features SearchValues<T> which is on par with the vanilla version.
+#if false
+    private static int LocateFirstNonDigitChar(string str, int startIndex, int length, out ulong? number, out bool overflow)
+    {
+        var span = str.AsSpan(startIndex, length);
+        var index = span.IndexOfAnyExcept("0123456789");
+        if (index < 0) index = length;
+
+        var numberLength = index - startIndex;
+        if (overflow = (numberLength > MaxULongLength))
+        {
+            number = null;
+        }
+        else
+        {
+            ulong.TryParse(span.Slice(0, numberLength), NumberStyles.Integer, CultureInfo.InvariantCulture, out var result);
+            number = result;
+        }
+
+        return startIndex + index;
+    }
+#else
     private static int LocateFirstNonDigitChar(string str, int startIndex, int length, out ulong? number, out bool overflow)
     {
         number = (ulong)(str[startIndex] - '0');
@@ -173,10 +198,11 @@ internal sealed class SimpleNaturalSort : IComparer<string>, IComparer
             ++numberLength;
         }
 
-        overflow = numberLength >= 20;
+        overflow = numberLength > MaxULongLength;
 
         return i;
     }
+#endif
     private static bool IsDigit(char c)
         => c >= '0' && c <= '9';
     public int Compare(object x, object y)
