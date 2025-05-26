@@ -6,6 +6,7 @@ using Grasshopper2.Parameters.Standard;
 using Grasshopper2.UI.Icon;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
+using PancakeNextCore.GH.Params;
 using PancakeNextCore.Interfaces;
 using PancakeNextCore.Utility;
 using System;
@@ -16,7 +17,7 @@ namespace PancakeNextCore.Components.Algorithm;
 
 [IoId("b521157b-0ed0-5229-940a-7c9c2d9357ee")]
 [ComponentCategory("misc", 0)]
-public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLocalizable<pcCountUnique>
+public sealed class pcCountUnique : PancakeComponentPinCapable<pcCountUnique>, IPancakeLocalizable<pcCountUnique>
 {
     public pcCountUnique() { }
     public pcCountUnique(IReader reader) : base(reader) { }
@@ -34,6 +35,9 @@ public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLoc
 
     protected override void Process(IDataAccess access)
     {
+        access.GetItem(ComparerPin.TypeId, out ICustomComparer pin);
+        var comparer = pin?.GetAt(0);
+
         access.GetITwig(0, out var keyList);
         
         if (keyList.LeafCount == 0)
@@ -54,23 +58,23 @@ public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLoc
         switch (keyList)
         {
             case Twig<int> listOfInts:
-                FastCountKeys(listOfInts, out var kInt, out occurenceOut, SortIfPossible);
+                FastCountKeys(listOfInts, out var kInt, out occurenceOut, SortIfPossible, comparer);
                 keysOut = kInt;
                 break;
             case Twig<double> listOfDoubles:
-                FastCountKeys(listOfDoubles, out var kDouble, out occurenceOut, SortIfPossible);
+                FastCountKeys(listOfDoubles, out var kDouble, out occurenceOut, SortIfPossible, comparer);
                 keysOut = kDouble;
                 break;
             case Twig<string> listOfStrings:
-                FastCountKeys(listOfStrings, out var kString, out occurenceOut, SortIfPossible);
+                FastCountKeys(listOfStrings, out var kString, out occurenceOut, SortIfPossible, comparer);
                 keysOut = kString;
                 break;
             case Twig<bool> listOfBooleans:
-                FastCountKeys(listOfBooleans, out var kBoolean, out occurenceOut, SortIfPossible);
+                FastCountKeys(listOfBooleans, out var kBoolean, out occurenceOut, SortIfPossible, comparer);
                 keysOut = kBoolean;
                 break;
             default:
-                CountKeysFallback(keyList, out keysOut, out occurenceOut, SortIfPossible);
+                CountKeysFallback(keyList, out keysOut, out occurenceOut, SortIfPossible, comparer);
                 break;
         }
 
@@ -102,7 +106,7 @@ public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLoc
         public CountEntry<T> Invoke(T param) => new();
     }
 
-    private static void FastCountKeys<T>(Twig<T> keyList, out Twig<T> keysOut, out Twig<int> countOut, bool sortIfPossible = true)
+    private static void FastCountKeys<T>(Twig<T> keyList, out Twig<T> keysOut, out Twig<int> countOut, bool sortIfPossible = true, CustomComparer? comparer = null)
         where T : IComparable<T>, IEquatable<T>
     {
         var result = new StructFuncCache<CountEntryFactory<T>, T, CountEntry<T>>(default);
@@ -126,15 +130,23 @@ public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLoc
             ++index;
         }
 
-        KeyValuePair<T, CountEntry<T>>[] kvs = [ .. sortIfPossible
+        KeyValuePair<T, CountEntry<T>>[] kvs;
+        if (comparer is not null)
+        {
+            kvs = [.. result.InnerDictionary.OrderBy(kv => kv.Key, comparer.GetStronglyTypedComparer<T>())];
+        }
+        else
+        {
+            kvs = [ .. sortIfPossible
             ? result.InnerDictionary.OrderBy(kv => kv.Key)
             : result.InnerDictionary.OrderBy(kv => kv.Value.Index)];
+        }
 
         keysOut = Garden.TwigFromPears(kvs.Select(kv => kv.Value.Pear));
         countOut = Garden.TwigFromList(kvs.Select(kv => kv.Value.Count));
     }
 
-    private static void CountKeysFallback(ITwig keyList, out ITwig keysOut, out Twig<int> countOut, bool sortIfPossible = true)
+    private static void CountKeysFallback(ITwig keyList, out ITwig keysOut, out Twig<int> countOut, bool sortIfPossible = true, CustomComparer? comparer = null)
     {
         var result = new StructFuncCache<CountEntryFactory, IPear, CountEntry>(default, PearEqualityComparerGeneric.Instance);
 
@@ -156,9 +168,17 @@ public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLoc
             ++index;
         }
 
-        KeyValuePair<IPear, CountEntry>[] kvs = [ .. sortIfPossible
+        KeyValuePair<IPear, CountEntry>[] kvs;
+        if (comparer is not null)
+        {
+            kvs = [.. result.InnerDictionary.OrderBy(kv => kv.Key, comparer.GetComparer())];
+        }
+        else
+        {
+            kvs = [ .. sortIfPossible
             ? result.InnerDictionary.OrderBy(kv => kv.Key)
             : result.InnerDictionary.OrderBy(kv => kv.Value.Index)];
+        }
 
         keysOut = Garden.ITwigFromPears(kvs.Select(kv => kv.Value.Pear));
         countOut = Garden.TwigFromList(kvs.Select(kv => kv.Value.Count));
@@ -192,4 +212,5 @@ public sealed class pcCountUnique : PancakeComponent<pcCountUnique>, IPancakeLoc
         _sortIfPossible = CustomValues.Get(SortIfPossibleConfigName, false);
     }
     protected override IIcon? IconInternal => IconHost.CreateFromPathResource("CountUnique");
+    public override IEnumerable<Guid> SupportedPins => ComparerPin.PinIdSingleton;
 }

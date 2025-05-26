@@ -174,7 +174,6 @@ public sealed class pcMultiSort : PancakeComponentPinCapable<pcMultiSort>, IPanc
         }
     }
 
-    protected override Guid[] GetSupportedPins() => [ComparerPin.TypeId];
-
     protected override IIcon? IconInternal => IconHost.CreateFromPathResource("MultiSort");
+    public override IEnumerable<Guid> SupportedPins => ComparerPin.PinIdSingleton;
 }

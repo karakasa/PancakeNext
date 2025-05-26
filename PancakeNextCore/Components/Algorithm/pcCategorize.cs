@@ -17,12 +17,14 @@ using Eto.Drawing;
 using PancakeNextCore.Attributes;
 using PancakeNextCore.Interfaces;
 using PancakeNextCore.Utility;
+using PancakeNextCore.GH.Params;
+using Grasshopper2.Imaging;
 
 namespace PancakeNextCore.Components.Algorithm;
 
 [IoId("b521157b-0ed0-4229-940a-7c9c2d9357ee")]
 [ComponentCategory("misc")]
-public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocalizable<pcCategorize>
+public sealed class pcCategorize : PancakeComponentPinCapable<pcCategorize>, IPancakeLocalizable<pcCategorize>
 {
     public pcCategorize() {}
     public pcCategorize(IReader reader) : base(reader) {}
@@ -41,6 +43,9 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
 
     protected override void Process(IDataAccess access)
     {
+        access.GetItem(ComparerPin.TypeId, out ICustomComparer pin);
+        var comparer = pin?.GetAt(0);
+
         access.GetITwig(0, out var keyList);
         access.GetITwig(1, out var valList);
 
@@ -68,23 +73,23 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
         switch (keyList)
         {
             case Twig<int> listOfInts:
-                FastSortKeyValues(listOfInts, valList, out var kInt, out valsOut, SortIfPossible);
+                FastSortKeyValues(listOfInts, valList, out var kInt, out valsOut, SortIfPossible, comparer);
                 keysOut = kInt;
                 break;
             case Twig<double> listOfDoubles:
-                FastSortKeyValues(listOfDoubles, valList, out var kDouble, out valsOut, SortIfPossible);
+                FastSortKeyValues(listOfDoubles, valList, out var kDouble, out valsOut, SortIfPossible, comparer);
                 keysOut = kDouble;
                 break;
             case Twig<string> listOfStrings:
-                FastSortKeyValues(listOfStrings, valList, out var kString, out valsOut, SortIfPossible);
+                FastSortKeyValues(listOfStrings, valList, out var kString, out valsOut, SortIfPossible, comparer);
                 keysOut = kString;
                 break;
             case Twig<bool> listOfBooleans:
-                FastSortKeyValues(listOfBooleans, valList, out var kBoolean, out valsOut, SortIfPossible);
+                FastSortKeyValues(listOfBooleans, valList, out var kBoolean, out valsOut, SortIfPossible, comparer);
                 keysOut = kBoolean;
                 break;
             default:
-                SortKeyValuesFallback(keyList, valList, out keysOut, out valsOut, SortIfPossible);
+                SortKeyValuesFallback(keyList, valList, out keysOut, out valsOut, SortIfPossible, comparer);
                 break;
         }
 
@@ -92,12 +97,20 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
         access.SetTree(1, valsOut);
     }
 
-    private static void FastSortKeyValues<T>(Twig<T> keyList, ITwig valList, out Twig<T> keysOut, out ITree valsOut, bool sortIfPossible = true)
+    private static void FastSortKeyValues<T>(Twig<T> keyList, ITwig valList, out Twig<T> keysOut, out ITree valsOut, bool sortIfPossible = true, CustomComparer? comparer = null)
         where T : IComparable<T>, IEquatable<T>
     {
         var grps = keyList.Pears.Zip(valList.Pears, (k, v) => (k, v)).GroupBy(kv => kv.k, PearEqualityComparer<T>.Instance);
-        if (sortIfPossible)
-            grps = grps.OrderBy(kv => kv.Key.Item);
+
+        if (comparer is not null)
+        {
+            grps = grps.OrderBy(kv => kv.Key.Item, comparer.GetStronglyTypedComparer<T>());
+        }
+        else
+        {
+            if (sortIfPossible)
+                grps = grps.OrderBy(kv => kv.Key.Item);
+        }       
 
         var realizedGroups = grps.ToArray();
         var keys = realizedGroups.Select(kv => kv.Key).ToArray();
@@ -106,11 +119,21 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
         valsOut = Garden.ITreeFromITwigs(realizedGroups.Select(x => Garden.ITwigFromPears(x.Select(y => y.v))));
     }
 
-    private static void SortKeyValuesFallback(ITwig keyList, ITwig valList, out ITwig keysOut, out ITree valsOut, bool sortIfPossible = true)
+    private static void SortKeyValuesFallback(ITwig keyList, ITwig valList, out ITwig keysOut, out ITree valsOut, bool sortIfPossible = true, CustomComparer? comparer = null)
     {
         var grps = keyList.Pears.Zip(valList.Pears, (k, v) => (k, v)).GroupBy(kv => kv.k, PearEqualityComparerGeneric.Instance);
-        if (sortIfPossible)
-            grps = grps.OrderBy(kv => kv.Key, PearComparerGeneric.Instance);
+
+        if (comparer is not null)
+        {
+            grps = grps.OrderBy(kv => kv.Key, comparer.GetComparer());
+        }
+        else
+        {
+            if (sortIfPossible)
+            {
+                grps = grps.OrderBy(kv => kv.Key, PearComparerGeneric.Instance);
+            }
+        }
 
         var realizedGroups = grps.ToArray();
         var keys = realizedGroups.Select(kv => kv.Key).ToArray();
@@ -151,4 +174,5 @@ public sealed class pcCategorize : PancakeComponent<pcCategorize>, IPancakeLocal
 
     public static string StaticLocalizedDescription => Strings.CategorizeValuesByKeys;
     protected override IIcon? IconInternal => IconHost.CreateFromPathResource("Categorize");
+    public override IEnumerable<Guid> SupportedPins => ComparerPin.PinIdSingleton;
 }

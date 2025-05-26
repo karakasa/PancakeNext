@@ -38,10 +38,11 @@ internal sealed class PearComparerGenericReversed : IComparer<IPear>
         return result;
     }
 }
-internal sealed class PearComparerNaturalSort : IComparer<IPear>
+internal sealed class PearComparerNaturalSort : IComparer<IPear>, IComparer<string>
 {
     public static readonly PearComparerNaturalSort Instance = new();
     public int Compare(IPear? x, IPear? y) => CompareString(x, y);
+    public int Compare(string? x, string? y) => CompareString(x, y);
     public static int CompareString(IPear? x, IPear? y)
     {
         if (ReferenceEquals(x, y)) return 0;
@@ -59,9 +60,20 @@ internal sealed class PearComparerNaturalSort : IComparer<IPear>
         if (x is Pear<string> pearStr) return pearStr.Item;
         return x.Item?.ToString() ?? "";
     }
+
+    public static int CompareString(string? x, string? y)
+    {
+        if (ReferenceEquals(x, y)) return 0;
+        if (x is null) return -1;
+        if (y is null) return 1;
+
+        return default(SimpleNaturalSort.Struct).Compare(x, y);
+    }
 }
-internal sealed class PearComparerNaturalSortReversed : IComparer<IPear>
+internal sealed class PearComparerNaturalSortReversed : IComparer<IPear>, IComparer<string>
 {
     public static readonly PearComparerNaturalSortReversed Instance = new();
     public int Compare(IPear? x, IPear? y) => -PearComparerNaturalSort.CompareString(x, y);
+
+    public int Compare(string? x, string? y) => -PearComparerNaturalSort.CompareString(x, y);
 }

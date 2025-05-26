@@ -23,4 +23,5 @@ public sealed class ComparerPin : Pin<ICustomComparer>
     }
 
     public override Guid PinTypeId => TypeId;
+    internal static readonly Guid[] PinIdSingleton = [TypeId];
 }

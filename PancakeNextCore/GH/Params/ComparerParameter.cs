@@ -1,4 +1,5 @@
-﻿using Grasshopper2.Parameters;
+﻿using Eto.Drawing;
+using Grasshopper2.Parameters;
 using Grasshopper2.Types.Assistant;
 using Grasshopper2.UI;
 using GrasshopperIO;
@@ -28,7 +29,7 @@ public sealed class ComparerParameter : PancakeParameter<ICustomComparer, Compar
         presets.Clear();
         presets.Add("Default ↑", "The default Pancake order, similar to Grasshopper built-in.", CustomComparer.DefaultAscending);
         presets.Add("Default ↓", "The default Pancake order, similar to Grasshopper built-in, in reversed order.", CustomComparer.DefaultDescending);
-        presets.Add("Natural ↑", "Natural sort order. Keys must be texts or will be converted to texts.", CustomComparer.NaturalAscending);
-        presets.Add("Natural ↓", "Natural sort order. Keys must be texts or will be converted to texts, in reversed order.", CustomComparer.NaturalDescending);
+        presets.Add("Natural ↑", "Natural sort order. Keys must be texts or will be converted to texts.", Colors.Azure, CustomComparer.NaturalAscending);
+        presets.Add("Natural ↓", "Natural sort order. Keys must be texts or will be converted to texts, in reversed order.", Colors.Azure, CustomComparer.NaturalDescending);
     }
 }

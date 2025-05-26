@@ -18,7 +18,6 @@ public abstract class PancakeComponentPinCapable<T> : PancakeComponent<T>, IPinC
     protected PancakeComponentPinCapable(IReader reader) : base(reader)
     {
     }
-    protected abstract Guid[] GetSupportedPins();
-    private Guid[]? _supportedPins;
-    public IEnumerable<Guid> SupportedPins => _supportedPins ??= GetSupportedPins();
+
+    public abstract IEnumerable<Guid> SupportedPins { get; }
 }

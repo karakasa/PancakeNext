@@ -47,17 +47,49 @@ public sealed class CustomComparer : ICustomComparer
         {
             case ComparerType.Default:
                 return OriginalOrder ? PearComparerGeneric.Instance : PearComparerGenericReversed.Instance;
+
             case ComparerType.BuiltinNaturalSort:
                 return OriginalOrder ? PearComparerNaturalSort.Instance : PearComparerNaturalSortReversed.Instance;
+
             case ComparerType.Custom:
                 if (CustomPear is null) throw new InvalidOperationException("Custom comparer is not set.");
                 return OriginalOrder ? CustomPear : new ReverselyOrderedComparer(CustomPear);
+
             case ComparerType.CustomNative:
                 if (CustomNative is null) throw new InvalidOperationException("Custom comparer is not set.");
                 return new CustomNativeWrapper(CustomNative, !OriginalOrder);
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(Type), Type, null);
         }
+    }
+    public IComparer<T> GetStronglyTypedComparer<T>()
+    {
+        switch (Type)
+        {
+            case ComparerType.Default:
+                return OriginalOrder ? Comparer<T>.Default : new ReverselyOrderedNativeComparer<T>(Comparer<T>.Default);
+
+            case ComparerType.BuiltinNaturalSort:
+                if (typeof(T) != typeof(string)) throw new InvalidOperationException($"Natural sort cannot be applied to type {typeof(T).FullName}");
+                return (IComparer<T>)(object)(OriginalOrder ? PearComparerNaturalSort.Instance : PearComparerNaturalSortReversed.Instance);
+
+            case ComparerType.Custom:
+                if (CustomPear is not IComparer<Pear<T>> comp2) throw new InvalidOperationException(CustomPear is null ? "Custom comparer is not set." : $"Custom comparer is not of type IComparer<Pear<{typeof(T).Name}>>.");
+                return new CustomPearWrapper<T>(comp2, OriginalOrder);
+
+            case ComparerType.CustomNative:
+                if (CustomNative is not IComparer<T> comp) throw new InvalidOperationException(CustomNative is null ? "Custom comparer is not set." : $"Custom comparer is not of type IComparer<{typeof(T).Name}>.");
+                return OriginalOrder ? comp : new ReverselyOrderedNativeComparer<T>(comp);
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(Type), Type, null);
+        }
+    }
+    private sealed class ReverselyOrderedNativeComparer<T>(IComparer<T> comparer) : IComparer<T>
+    {
+        readonly IComparer<T> _comparer = comparer;
+        public int Compare(T x, T y) => -_comparer.Compare(x, y);
     }
     private sealed class ReverselyOrderedComparer(IComparer<IPear> comparer) : IComparer<IPear>
     {
@@ -71,6 +103,17 @@ public sealed class CustomComparer : ICustomComparer
         public int Compare(IPear? x, IPear? y)
         {
             var result = _comparer.Compare(x?.Item, y?.Item);
+            if (_reverse) result = -result;
+            return result;
+        }
+    }
+    private sealed class CustomPearWrapper<T>(IComparer<Pear<T>> comparer, bool reverse) : IComparer<T>
+    {
+        readonly IComparer<Pear<T>> _comparer = comparer;
+        readonly bool _reverse = reverse;
+        public int Compare(T x, T y)
+        {
+            var result = _comparer.Compare(Garden.Pear(x), Garden.Pear(y));
             if (_reverse) result = -result;
             return result;
         }
