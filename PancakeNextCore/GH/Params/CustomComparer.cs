@@ -6,23 +6,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.XPath;
 
 namespace PancakeNextCore.GH.Params;
 public enum ComparerType
 {
     Default,
     BuiltinNaturalSort,
-    Custom
+    Custom,
+    CustomNative
 }
 public sealed class CustomComparer : ICustomComparer
 {
+    internal static readonly CustomComparer DefaultAscending = new(){ Type = ComparerType.Default, OriginalOrder = true };
+    internal static readonly CustomComparer DefaultDescending = new() { Type = ComparerType.Default, OriginalOrder = false };
+    internal static readonly CustomComparer NaturalAscending = new() { Type = ComparerType.BuiltinNaturalSort, OriginalOrder = true };
+    internal static readonly CustomComparer NaturalDescending = new() { Type = ComparerType.BuiltinNaturalSort, OriginalOrder = false };
+    public static CustomComparer ByBuiltIn(ComparerType type, bool reversed = false)
+    {
+        return type switch
+        {
+            ComparerType.Default => reversed ? DefaultDescending : DefaultAscending,
+            ComparerType.BuiltinNaturalSort => reversed ? NaturalDescending : NaturalAscending,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Invalid comparer type.")
+        };
+    }
+    public static CustomComparer ByPearComparer(IComparer<IPear> comparer, bool reversed = false)
+        => new() { CustomPear = comparer, Type = ComparerType.Custom, OriginalOrder = !reversed };
+    public static CustomComparer ByNativeComparer(IComparer comparer, bool reversed = false)
+        => new() { CustomNative = comparer, Type = ComparerType.CustomNative, OriginalOrder = !reversed };
     public ComparerType Type { get; set; } = ComparerType.Default;
     public bool OriginalOrder { get; set; } = true;
-
     int ICustomComparer.Count => 1;
-
     CustomComparer ICustomComparer.GetAt(int index) => this;
     public IComparer<IPear>? CustomPear { get; private set; }
+    public IComparer? CustomNative { get; private set; }
     public IComparer<IPear> GetComparer()
     {
         switch (Type)
@@ -34,14 +52,27 @@ public sealed class CustomComparer : ICustomComparer
             case ComparerType.Custom:
                 if (CustomPear is null) throw new InvalidOperationException("Custom comparer is not set.");
                 return OriginalOrder ? CustomPear : new ReverselyOrderedComparer(CustomPear);
+            case ComparerType.CustomNative:
+                if (CustomNative is null) throw new InvalidOperationException("Custom comparer is not set.");
+                return new CustomNativeWrapper(CustomNative, !OriginalOrder);
             default:
                 throw new ArgumentOutOfRangeException(nameof(Type), Type, null);
         }
     }
-
     private sealed class ReverselyOrderedComparer(IComparer<IPear> comparer) : IComparer<IPear>
     {
         readonly IComparer<IPear> _comparer = comparer;
         public int Compare(IPear? x, IPear? y) => 1 - _comparer.Compare(x, y);
+    }
+    private sealed class CustomNativeWrapper(IComparer comparer, bool reverse) : IComparer<IPear>
+    {
+        readonly IComparer _comparer = comparer;
+        readonly bool _reverse = reverse;
+        public int Compare(IPear? x, IPear? y)
+        {
+            var result = _comparer.Compare(x?.Item, y?.Item);
+            if (_reverse) result = 1 - result;
+            return result;
+        }
     }
 }
