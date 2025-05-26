@@ -32,7 +32,11 @@ internal sealed class PearComparerGeneric : IComparer<IPear>
 internal sealed class PearComparerGenericReversed : IComparer<IPear>
 {
     public static readonly PearComparerGenericReversed Instance = new();
-    public int Compare(IPear? x, IPear? y) => 1 - OptimizedOperators.Compare(x, y);
+    public int Compare(IPear? x, IPear? y)
+    {
+        var result = -OptimizedOperators.Compare(x, y);
+        return result;
+    }
 }
 internal sealed class PearComparerNaturalSort : IComparer<IPear>
 {
@@ -59,5 +63,5 @@ internal sealed class PearComparerNaturalSort : IComparer<IPear>
 internal sealed class PearComparerNaturalSortReversed : IComparer<IPear>
 {
     public static readonly PearComparerNaturalSortReversed Instance = new();
-    public int Compare(IPear? x, IPear? y) => 1 - PearComparerNaturalSort.CompareString(x, y);
+    public int Compare(IPear? x, IPear? y) => -PearComparerNaturalSort.CompareString(x, y);
 }

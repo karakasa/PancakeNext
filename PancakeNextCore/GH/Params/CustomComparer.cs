@@ -62,7 +62,7 @@ public sealed class CustomComparer : ICustomComparer
     private sealed class ReverselyOrderedComparer(IComparer<IPear> comparer) : IComparer<IPear>
     {
         readonly IComparer<IPear> _comparer = comparer;
-        public int Compare(IPear? x, IPear? y) => 1 - _comparer.Compare(x, y);
+        public int Compare(IPear? x, IPear? y) => -_comparer.Compare(x, y);
     }
     private sealed class CustomNativeWrapper(IComparer comparer, bool reverse) : IComparer<IPear>
     {
@@ -71,7 +71,7 @@ public sealed class CustomComparer : ICustomComparer
         public int Compare(IPear? x, IPear? y)
         {
             var result = _comparer.Compare(x?.Item, y?.Item);
-            if (_reverse) result = 1 - result;
+            if (_reverse) result = -result;
             return result;
         }
     }
