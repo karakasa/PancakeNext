@@ -2,6 +2,7 @@
 using Grasshopper2.UI;
 using GrasshopperIO;
 using PancakeNextCore.GH.Params;
+using PancakeNextCore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PancakeNextCore.Components.Algorithm;
-public sealed class pcGetBuiltinComparer : PancakeComponent<pcGetBuiltinComparer>
+[IoId("1FAE7885-835B-4265-9CE1-28DE34F0703C")]
+public sealed class pcGetBuiltinComparer : PancakeComponent<pcGetBuiltinComparer>, IPancakeLocalizable<pcGetBuiltinComparer>
 {
+    public static string StaticLocalizedName => "Get Built-in Comparer"; // TODO
+
+    public static string StaticLocalizedDescription => "Get Built-in Comparers"; // TODO
+
     private enum BuiltInComparerType : int
     {
         Default = ComparerType.Default,
