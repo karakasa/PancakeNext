@@ -27,7 +27,7 @@ public sealed class pcMultiSort : PancakeComponentPinCapable<pcMultiSort>, IPanc
     public static string StaticLocalizedDescription => Strings.SortDataByNonNumericOrMultipleKeys;
 
     private const string CfgFirstValueIndex = "FirstValueIndex";
-    private int _firstValueIndex;
+    private int _firstValueIndex = 1;
     private int FirstValueIndex
     {
         get => _firstValueIndex;

@@ -1,4 +1,5 @@
-﻿using Grasshopper2.Components;
+﻿using Eto.Drawing;
+using Grasshopper2.Components;
 using Grasshopper2.UI;
 using GrasshopperIO;
 using PancakeNextCore.Attributes;
@@ -52,7 +53,7 @@ public sealed class pcGetBuiltinComparer : PancakeComponent<pcGetBuiltinComparer
     {
         var ip = AddParam("builtInCompare", 0);
         ip.Presets.Add("Default", "The default Pancake order, similar to Grasshopper built-in.", (int)BuiltInComparerType.Default);
-        ip.Presets.Add("Natural", "Natural sort order of texts. Key must be text or will be converted to text.", (int)BuiltInComparerType.NaturalSort);
+        ip.Presets.Add("Natural", "Natural sort order of texts. Key must be text or will be converted to text.", Colors.Aqua, (int)BuiltInComparerType.NaturalSort);
 
         AddParam("reversed", false);
     }
