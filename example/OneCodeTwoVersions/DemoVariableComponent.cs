@@ -14,7 +14,7 @@ namespace OneCodeTwoVersions;
 [RibbonPosition(1)]
 public sealed class DemoVariableComponent : VariableParameterComponent<DemoVariableComponent>
 {
-    public DemoVariableComponent() : base("DemoVar", "DemoVar", "Demo variable component for Grasshopper 1 and 2", "Demo", "Demo")
+    public DemoVariableComponent() : base("VarComp", "VarComp", "Demo variable component for Grasshopper 1 and 2", "Demo", "Demo")
     {
     }
     public DemoVariableComponent(IReader reader) : base(reader) { }
@@ -22,8 +22,11 @@ public sealed class DemoVariableComponent : VariableParameterComponent<DemoVaria
     {
         return side == GH_ParameterSide.Input;
     }
-    public override bool CanRemoveParameter(GH_ParameterSide side, int index)
+    public override bool CanRemoveParameter2(GH_ParameterSide side, int index)
     {
+        // Due to limitations in Grasshopper2's reflection implementation, the method cannot be named after CanRemoveParameter.
+        // This may change in future versions.
+
         return side == GH_ParameterSide.Input;
     }
     public override IGH_Param CreateParameter(GH_ParameterSide side, int index)
@@ -46,6 +49,7 @@ public sealed class DemoVariableComponent : VariableParameterComponent<DemoVaria
     }
     public override void VariableParameterMaintenance()
     {
+        Params.Refresh();
         var cnt = Params.Input.Count;
         for (var i = 0; i < cnt; i++)
         {

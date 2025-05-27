@@ -18,7 +18,7 @@ public abstract partial class VariableParameterComponent<TComp> : ComponentMiddl
 
     protected VariableParameterComponent(IReader reader) : base(reader) { }
     public override bool CanCreateParameter(Side side, int index) => CanInsertParameter(side.To1(), index);
-    public override bool CanRemoveParameter(Side side, int index) => CanRemoveParameter(side.To1(), index);
+    public override bool CanRemoveParameter(Side side, int index) => CanRemoveParameter2(side.To1(), index);
     public override void DoCreateParameter(Side side, int index)
     {
         var param = CreateParameter(side.To1(), index).UnderlyingObject;
@@ -37,7 +37,7 @@ public abstract partial class VariableParameterComponent<TComp> : ComponentMiddl
     {
     }
     public abstract bool CanInsertParameter(GH_ParameterSide side, int index);
-    public abstract bool CanRemoveParameter(GH_ParameterSide side, int index);
+    public abstract bool CanRemoveParameter2(GH_ParameterSide side, int index);
     public abstract IGH_Param CreateParameter(GH_ParameterSide side, int index);
     public abstract bool DestroyParameter(GH_ParameterSide side, int index);
 }

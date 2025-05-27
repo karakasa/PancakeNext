@@ -18,7 +18,7 @@ public sealed class GH_ComponentParamServer
         Owner = comp_owner;
     }
 
-    private void InvalidateList()
+    internal void InvalidateList()
     {
         _inputs = null;
         _outputs = null;
