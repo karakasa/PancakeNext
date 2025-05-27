@@ -29,13 +29,13 @@ public sealed class pcChainComparer : PancakeComponent<pcChainComparer>, IPancak
 
     protected override void RegisterInputs()
     {
-        AddParam<ComparerParameter>("comparer");
-        AddParam<ComparerParameter>("comparer");
+        AddParam<ComparerParameter>("comparer", Access.Item);
+        AddParam<ComparerParameter>("comparer", Access.Item);
     }
 
     protected override void RegisterOutputs()
     {
-        AddParam<ComparerParameter>("comparer");
+        AddParam<ComparerParameter>("comparer", Access.Item);
     }
 
     protected override void Process(IDataAccess access)
@@ -72,7 +72,7 @@ public sealed class pcChainComparer : PancakeComponent<pcChainComparer>, IPancak
 
     public override void DoCreateParameter(Side side, int index)
     {
-        Parameters.AddInput(new ComparerParameter(), index);
+        Parameters.AddInput(new ComparerParameter(Access.Item), index);
     }
 
     public override void DoRemoveParameter(Side side, int index)

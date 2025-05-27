@@ -15,4 +15,10 @@ public sealed class CustomComparerCollection : List<CustomComparer>, ICustomComp
         if (index >= Count) return this[Count - 1];
         return this[index];
     }
+    public override string ToString()
+    {
+        if (Count == 0) return "Invalid comparer collection";
+        if (Count == 1) return this[0]?.ToString() ?? "";
+        return $"Chained {Count} comparers";
+    }
 }

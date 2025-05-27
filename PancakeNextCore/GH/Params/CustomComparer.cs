@@ -118,4 +118,16 @@ public sealed class CustomComparer : ICustomComparer
             return result;
         }
     }
+
+    public override string ToString()
+    {
+        return Type switch
+        {
+            ComparerType.Default => $"Pancake default comparer" + (OriginalOrder ? "" : " (descending)"),
+            ComparerType.BuiltinNaturalSort => $"Natural sort comparer" + (OriginalOrder ? "" : " (descending)"),
+            ComparerType.Custom => $"Custom comparer ({CustomPear?.GetType().Name ?? "null"})" + (OriginalOrder ? "" : " (reversed)"),
+            ComparerType.CustomNative => $"Custom CLR comparer ({CustomNative?.GetType().Name ?? "null"})" + (OriginalOrder ? "" : " (reversed)"),
+            _ => "Invalid comparer"
+        };
+    }
 }

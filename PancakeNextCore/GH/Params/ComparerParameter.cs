@@ -19,6 +19,7 @@ public sealed class ComparerParameter : PancakeParameter<ICustomComparer, Compar
     public ComparerParameter(IReader reader) : base(reader) { }
     public ComparerParameter() { AddPresets(this); }
     public ComparerParameter(Nomen nomen, Access access) : base(nomen, access) { AddPresets(this); }
+    public ComparerParameter(Access access) : base(access) { AddPresets(this); }
     public static string StaticLocalizedName => "Comparer";
     public static string StaticLocalizedDescription => "XXX"; // TODO
     // public override ITypeAssistant<ICustomComparer> TypeAssistant => AssociationTypeAssistant.Instance;
