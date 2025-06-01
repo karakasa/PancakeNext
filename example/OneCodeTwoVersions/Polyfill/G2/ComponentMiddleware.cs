@@ -11,7 +11,7 @@ using Grasshopper2.UI;
 using GrasshopperIO;
 
 namespace OneCodeTwoVersions.Polyfill;
-public abstract partial class ComponentMiddleware<TComp> : GH_Component where TComp : ComponentMiddleware<TComp>
+public abstract partial class ComponentMiddleware<TSelf> : GH_Component where TSelf : ComponentMiddleware<TSelf>
 {
     protected ComponentMiddleware(string name, string nickname, string desc, string category, string subcategory) :
         base(CreateNomen(name, nickname, desc, category, subcategory))
@@ -22,8 +22,8 @@ public abstract partial class ComponentMiddleware<TComp> : GH_Component where TC
 
     private static Nomen CreateNomen(string name, string nickname, string desc, string category, string subcategory)
     {
-        var slot = ComponentSlotCacher.Instance[typeof(TComp)].ToSlot();
-        var obsolete = ObsoleteCacher.Instance[typeof(TComp)];
+        var slot = ComponentSlotCacher.Instance[typeof(TSelf)].ToSlot();
+        var obsolete = ObsoleteCacher.Instance[typeof(TSelf)];
         return new Nomen(name, desc, category, subcategory, slot: slot.Slot, rank: obsolete ? Rank.Hidden : slot.Rank, null);
     }
 }

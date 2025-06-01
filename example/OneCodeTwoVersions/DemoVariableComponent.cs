@@ -24,8 +24,8 @@ public sealed class DemoVariableComponent : VariableParameterComponent<DemoVaria
     }
     public override bool CanRemoveParameter2(GH_ParameterSide side, int index)
     {
-        // Due to limitations in Grasshopper2's reflection implementation, the method cannot be named after CanRemoveParameter.
-        // This may change in future versions.
+        // Due to limitations in Grasshopper2's reflection implementation (GH2's equivalent method is also called this),
+        // the method cannot be named after CanRemoveParameter. This may change in future versions.
 
         return side == GH_ParameterSide.Input;
     }

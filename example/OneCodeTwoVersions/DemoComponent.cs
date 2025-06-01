@@ -1,5 +1,7 @@
 ﻿#if G1
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Parameters;
+
 #endif
 using GrasshopperIO;
 using OneCodeTwoVersions.Polyfill;
@@ -14,7 +16,7 @@ namespace OneCodeTwoVersions;
 [RibbonPosition(0)]
 public sealed class DemoComponent : ComponentMiddleware<DemoComponent>
 {
-    public DemoComponent() : base("Demo", "Demo", "Demo component for Grasshopper 1 and 2", "Demo", "Demo")
+    public DemoComponent() : base("Comp", "Comp", "Demo component for Grasshopper 1 and 2", "Demo", "Demo")
     {
     }
 
@@ -25,7 +27,12 @@ public sealed class DemoComponent : ComponentMiddleware<DemoComponent>
     protected override void RegisterInputParams(GH_InputParamManager pManager)
     {
         pManager.AddIntegerParameter("List", "L", "List of integers to be added", GH_ParamAccess.list);
-        pManager.AddIntegerParameter("Pivot", "P", "Pivot", GH_ParamAccess.item, 0);
+        var lastIdx = pManager.AddIntegerParameter("Pivot", "P", "Pivot", GH_ParamAccess.item, 0);
+
+        var ip = (Param_Integer)pManager[lastIdx];
+        ip.AddNamedValue("Zero", 0);
+        ip.AddNamedValue("One", 1);
+        ip.AddNamedValue("Two", 2);
     }
 
     protected override void RegisterOutputParams(GH_OutputParamManager pManager)

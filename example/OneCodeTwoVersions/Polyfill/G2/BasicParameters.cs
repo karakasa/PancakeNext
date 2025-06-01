@@ -2,6 +2,7 @@
 using Grasshopper2.Parameters.Standard;
 using Grasshopper2.Types.Colour;
 using Rhino.Geometry;
+using Rhino.Render;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -74,6 +75,17 @@ public sealed class Param_Integer : GH_PersistentParam<GH_Integer, IntegerParame
 {
     public Param_Integer() { }
     public Param_Integer(IntegerParameter p) : base(p) { }
+    public void AddNamedValue(string name, int value)
+    {
+        var presets = Value.Presets;
+        if (!presets.IsAvailable(name))
+            throw new NotSupportedException("GH2 doesn't allow replacing same-named preset.");
+        else
+            presets.Add(name, name, value);
+    }
+    public void ClearNamedValues() => Value.Presets?.Clear();
+    public bool HasNamedValues => Value.Presets?.Count > 0;
+
 }
 public sealed class Param_Number : GH_PersistentParam<GH_Number, NumberParameter, double>
 {

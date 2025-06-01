@@ -77,4 +77,8 @@
     </Reference>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'G1Release' Or '$(Configuration)' == 'G1Debug' ">
+    <Exec Command="Copy &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(ProjectName).gha&quot;" />
+  </Target>
+
 </Project>

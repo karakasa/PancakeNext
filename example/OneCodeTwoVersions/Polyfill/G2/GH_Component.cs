@@ -116,14 +116,14 @@ public abstract partial class GH_Component : Component, IGH_ActiveObject
     }
     public new GH_SolutionPhase Phase => base.Phase.To1();
 
-    public new virtual System.Drawing.Icon? Icon => null;
+    public new virtual System.Drawing.Bitmap? Icon => null;
     protected override IIcon? IconInternal
     {
         get
         {
             var icon = Icon;
             if (icon is null) return null;
-            return AbstractIcon.FromBitmap([.. icon.ToEto().Frames.Select(f => f.Bitmap)]);
+            return AbstractIcon.FromBitmap(icon.ToEto());
         }
     }
 

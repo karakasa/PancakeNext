@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneCodeTwoVersions.Polyfill;
-public abstract class ComponentMiddleware<T> : GH_Component where T : ComponentMiddleware<T>
+public abstract class ComponentMiddleware<TSelf> : GH_Component where TSelf : ComponentMiddleware<TSelf>
 {
     protected ComponentMiddleware(string name, string nickname, string desc, string category, string subcategory) : base(name, nickname, desc, category, subcategory)
     {

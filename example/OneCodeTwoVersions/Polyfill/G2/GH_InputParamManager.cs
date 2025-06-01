@@ -11,6 +11,7 @@ using Rhino.Geometry;
 using Grasshopper2.Parameters.Standard;
 using Eto.Drawing;
 using Grasshopper2.Types.Numeric;
+using Grasshopper2.Parameters;
 
 namespace OneCodeTwoVersions.Polyfill;
 public sealed class GH_InputParamManager(Component comp, InputAdder adder) : GH_ParamManager
@@ -22,6 +23,22 @@ public sealed class GH_InputParamManager(Component comp, InputAdder adder) : GH_
 
     public override IGH_Param this[int index] => ParameterWrapper.CreateFrom(_owner.Parameters.Input(index));
 
+    public int AddParameter(IParameter param)
+    {
+        _adder.Add(param);
+        return _adder.Count - 1;
+    }
+
+    public int AddParameter(IParameter p, string name, string nickname, string description, GH_ParamAccess access)
+    {
+        var param = ParameterWrapper.CreateFrom(p);
+
+        param.Name = name;
+        param.NickName = nickname;
+        param.Description = description;
+        param.Access = access;
+        return AddParameter(param);
+    }
     public int AddParameter(IGH_Param param)
     {
         _adder.Add(param.UnderlyingObject);

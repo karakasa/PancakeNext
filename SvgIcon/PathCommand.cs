@@ -71,10 +71,11 @@ public sealed class LineCommand() : PathCommand(PathCommandType.Line)
 }
 public sealed class PolylineCommand() : PathCommand(PathCommandType.Polyline)
 {
-    public List<PointF> points;
+    public List<PointF>? points;
 
     public override void AppendToGraphicsPath(IGraphicsPath path)
     {
+        if (points is null) return;
         path.AddLines(points);
     }
 

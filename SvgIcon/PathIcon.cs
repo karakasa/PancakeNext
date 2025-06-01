@@ -10,6 +10,7 @@ public sealed class PathIcon
 {
     const int MagicNumber = 1665753936;
     public List<RegionElement> Regions { get; } = [];
+    public List<ColorDescriptor> Colors { get; } = [];
     public string? SvgFallback { get; set; }
 
     [Flags]
@@ -36,6 +37,12 @@ public sealed class PathIcon
         if (SvgFallback != null)
         {
             writer.Write(SvgFallback);
+        }
+
+        writer.Write(Colors.Count);
+        foreach (var color in Colors)
+        {
+            color.WriteTo(writer);
         }
 
         writer.Write(Regions.Count);
@@ -68,9 +75,18 @@ public sealed class PathIcon
             SvgFallback = reader.ReadString();
         }
 
+        int n;
+        Colors.Clear();
+
+        n = reader.ReadInt32();
+        for (var i = 0; i < n; i++)
+        {
+            Colors.Add(ColorDescriptor.CreateFrom(reader));
+        }
+
         Regions.Clear();
 
-        var n = reader.ReadInt32();
+        n = reader.ReadInt32();
         for (var i = 0; i < n; i++)
         {
             var loop = new RegionElement();

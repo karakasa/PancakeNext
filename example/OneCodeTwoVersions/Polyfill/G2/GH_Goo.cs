@@ -56,7 +56,7 @@ public abstract class GH_Goo<T> : IGH_Goo
 
         return false;
     }
-    public virtual bool CastTo<Q>(out Q target)
+    public virtual bool CastTo<Q>(ref Q target)
     {
         if (typeof(T) == typeof(Q))
         {
@@ -69,4 +69,10 @@ public abstract class GH_Goo<T> : IGH_Goo
     }
 
     public virtual object ScriptVariable() => Value;
+
+    bool IGH_Goo.CastTo<T1>(out T1 target)
+    {
+        target = default;
+        return CastTo(ref target);
+    }
 }

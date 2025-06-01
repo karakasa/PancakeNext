@@ -36,8 +36,9 @@ internal sealed class CompiledPathIcon : AbstractIcon
     PathElement[] _pathCacheNormal = [];
     FillElement[] _fillCacheDark = [];
     PathElement[] _pathCacheDark = [];
-    public CompiledPathIcon(PathIcon icon, bool initialDarkMode) : base(IconType.Vector)
+    public CompiledPathIcon(PathIcon icon, bool initialDarkMode, float size = 24.0f) : base(IconType.Vector)
     {
+        IconSize = size;
 #if DEBUG
         _underlyingIcon = icon;
 #endif
@@ -102,8 +103,8 @@ internal sealed class CompiledPathIcon : AbstractIcon
         if (_pen.TryGetValue(desc, out var pen)) return pen;
         return _pen[desc] = new Pen(desc.Color, desc.Width);
     }
-    const float IconSize = 24.0f;
-    private static bool IsIdentityScale(float proposedWidth, float proposedHeight)
+    float IconSize { get; } = 24.0f;
+    private bool IsIdentityScale(float proposedWidth, float proposedHeight)
     {
         const float tol = 0.01f;
         return proposedWidth > IconSize - tol && proposedWidth < IconSize + tol && proposedHeight > IconSize - tol && proposedHeight < IconSize + tol;
