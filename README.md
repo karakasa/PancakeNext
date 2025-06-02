@@ -2,13 +2,13 @@
 
 A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) on GH2.
 
-# Handbook of Porting Plugin from GH1 to GH2
+# Handbook of Porting
 
 [Wiki](https://github.com/karakasa/PancakeNext/wiki)
 
-# Example project: 1 Shared Codebase for 2 GHs
+# Example: 1 shared codebase for 2 GHs
 
-[prj](/example/OneCodeTwoVersions)
+[Codebase](/example/OneCodeTwoVersions)
 
 It utilizes project configurations, preprocess directives and a thin compatibility layer for sharing codebases across GH1 & 2.
 
