@@ -53,6 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\SvgIcon\ColorDescriptor.cs" Link="Utility\PathBasedIcon\ColorDescriptor.cs" />
     <Compile Include="..\SvgIcon\DeflateHelper.cs" Link="Utility\PathBasedIcon\DeflateHelper.cs" />
     <Compile Include="..\SvgIcon\IconArchive.cs" Link="Utility\PathBasedIcon\IconArchive.cs" />
     <Compile Include="..\SvgIcon\PathCommand.cs" Link="Utility\PathBasedIcon\PathCommand.cs" />
