@@ -23,7 +23,7 @@ public sealed class pcAssocToString : PancakeComponent<pcAssocToString>, IPancak
     public static string StaticLocalizedDescription => Strings.ConvertAnAssociativeArrayToAStringOfCertainStyleSuchAsJsonPythonEtcRightClickTheComponentToChooseStyle;
     protected override void RegisterInputs()
     {
-        AddParam<QuantityParameter>("assoc");
+        AddParam<AssociationParameter>("assoc");
     }
     protected override void RegisterOutputs()
     {

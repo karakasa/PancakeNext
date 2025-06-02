@@ -11,6 +11,10 @@ namespace PancakeNextCore.GH.Params.AssocConverters;
 
 internal static partial class AssociationStringifier
 {
+    static AssociationStringifier()
+    {
+        InitToStringStyles();
+    }
     public static string? ToString(GhAssocBase pancakeObj, StringConversionType style)
     {
         if (pancakeObj == null)
@@ -160,5 +164,16 @@ internal static partial class AssociationStringifier
             $"{name}={AssocStringUtility.EscapeForUrl(value?.Item?.ToString() ?? "null")}"));
 
         return innerStr;
+    }
+    private static void InitToStringStyles()
+    {
+        StyleKeywords[StringConversionType.Json] = new[]
+        { "true", "false", "[", "]", "\"", "\"", "{", "}", ", ", ", ", "\"{0}\": {1}" };
+
+        StyleKeywords[StringConversionType.Association] = new[]
+        { "True", "False", "{", "}", "\"", "\"", "<|", "|>", ", ", ", ", "\"{0}\" -> {1}" };
+
+        StyleKeywords[StringConversionType.Python] = new[]
+        { "True", "False", "[", "]", "'", "'", "{", "}", ", ", ", ", "'{0}': {1}" };
     }
 }
