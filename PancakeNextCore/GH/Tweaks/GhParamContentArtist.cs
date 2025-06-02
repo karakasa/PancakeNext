@@ -63,7 +63,7 @@ public sealed class GhParamContentArtist : ICanvasArtist
         }
 
         item = tree.Items[0, 0]!;
-        return true;
+        return item is not null;
     }
 
     private static string? DescribeFirstData<T>(Parameter<T> param)
