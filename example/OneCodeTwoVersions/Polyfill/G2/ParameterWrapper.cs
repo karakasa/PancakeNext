@@ -88,6 +88,12 @@ public class ParameterWrapper : ActiveObjectWrapper<IParameter>, IGH_Param
         {
             if (value == this.Access) return;
 
+            if (_value is AbstractParameter ap)
+            {
+                ap.OverrideAccess(value.To2(), false);
+                return;
+            }
+
             EnsureReflection();
             _access.Invoke(_value, [value]);
         }
