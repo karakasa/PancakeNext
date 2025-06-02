@@ -16,7 +16,8 @@ public sealed class PathIcon
     [Flags]
     private enum StorageFlag : int
     {
-        HasSvgFallback = 1
+        HasSvgFallback = 1,
+        HasColorDescriptor = 2
     }
     private StorageFlag GetFlags()
     {
@@ -31,18 +32,23 @@ public sealed class PathIcon
 #if DEBUG
     public void WriteTo(BinaryWriter writer)
     {
+        var flags = GetFlags();
+
         writer.Write(MagicNumber);
-        writer.Write((int)GetFlags());
+        writer.Write((int)flags);
 
         if (SvgFallback != null)
         {
             writer.Write(SvgFallback);
         }
 
-        writer.Write(Colors.Count);
-        foreach (var color in Colors)
+        if ((flags & StorageFlag.HasColorDescriptor) != 0)
         {
-            color.WriteTo(writer);
+            writer.Write(Colors.Count);
+            foreach (var color in Colors)
+            {
+                color.WriteTo(writer);
+            }
         }
 
         writer.Write(Regions.Count);
@@ -76,12 +82,16 @@ public sealed class PathIcon
         }
 
         int n;
-        Colors.Clear();
 
-        n = reader.ReadInt32();
-        for (var i = 0; i < n; i++)
+        if ((flags & StorageFlag.HasColorDescriptor) != 0)
         {
-            Colors.Add(ColorDescriptor.CreateFrom(reader));
+            Colors.Clear();
+
+            n = reader.ReadInt32();
+            for (var i = 0; i < n; i++)
+            {
+                Colors.Add(ColorDescriptor.CreateFrom(reader));
+            }
         }
 
         Regions.Clear();
