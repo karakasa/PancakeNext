@@ -1,8 +1,8 @@
 # Pancake for Grasshopper 2
 
-A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) for GH2.
+A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) for GH2. The project primarily serves as a technical demonstration and is not as feature-complete as its GH1 counterpart.
 
-Please note that Pancake introduces additional abstraction layers for localization and other purposes, so its code may differ from typical GH2 components.
+Moreover, please note that Pancake introduces additional abstraction layers for localization and other purposes, so its code may differ from typical GH2 components.
 
 # Porting Handbook
 
@@ -24,3 +24,5 @@ In short:
 * No warranty.
 * Free for non-commercial and commercial use.
 * Attribution required in modified files, if you make derivative works of this repo.
+
+![image](README.png)
