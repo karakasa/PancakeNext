@@ -4,7 +4,7 @@ A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) on GH
 
 # Handbook of Porting
 
-[Wiki](https://github.com/karakasa/PancakeNext/wiki)
+[Wiki](https://github.com/karakasa/PancakeNext/wiki). The wiki includes a quick starter guide and several other topics.
 
 # Example: 1 shared codebase for 2 GHs
 
