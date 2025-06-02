@@ -10,7 +10,7 @@ A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) on GH
 
 [Codebase](/example/OneCodeTwoVersions)
 
-It utilizes project configurations, preprocess directives and a thin compatibility layer for sharing codebases across GH1 & 2.
+It utilizes project configurations, preprocess directives and a thin compatibility layer for sharing codebases across GH1 & 2. The compatibility middleware focuses on the original GH1 syntax, making it runnable under GH2 with only minor changes.
 
 The project is merely for technical demonstration purpose. The API surface and interoperability implementation is subject to Grasshopper 1 terms by McNeel and David Rutten.
 
