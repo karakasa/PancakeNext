@@ -4,7 +4,7 @@ A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) on GH
 
 # Handbook of Porting Plugin from GH1 to GH2
 
-TBD
+[Wiki](https://github.com/karakasa/PancakeNext/wiki)
 
 # Example project: 1 Shared Codebase for 2 GHs
 
