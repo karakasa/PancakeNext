@@ -23,6 +23,7 @@ public sealed class AssociationTypeAssistant : TypeAssistant<GhAssocBase>
     }
     public override bool Same(GhAssocBase a, GhAssocBase b)
     {
+        return false;
         throw new NotImplementedException();
     }
 }

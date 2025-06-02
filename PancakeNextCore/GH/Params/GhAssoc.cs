@@ -511,6 +511,7 @@ public sealed class GhAssoc : GhAssocBase
 
     public override bool DeepEquals(GhAssocBase? another)
     {
+        return false;
         throw new NotImplementedException();
     }
 }

@@ -27,6 +27,8 @@ internal class Presenter
 
     internal static TransferWindowResult ShowTransferWindow(IReadOnlyList<Base> instances, out List<Base> selected)
     {
+        selected = [];
+        return TransferWindowResult.Cancelled;
         throw new NotImplementedException();
     }
 

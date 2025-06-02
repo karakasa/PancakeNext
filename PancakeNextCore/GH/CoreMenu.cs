@@ -310,36 +310,41 @@ internal sealed class CoreMenu
 
     private void mnuFarEndDownstream_Click()
     {
-        throw new NotImplementedException();
+        NotImplemented();
     }
 
     private void mnuFarEndUpstream_Click()
     {
-        throw new NotImplementedException();
+        NotImplemented();
     }
 
     private void mnuPickAll_Click()
     {
-        throw new NotImplementedException();
+        NotImplemented();
     }
 
     private void mnuPickUpstream_Click()
     {
-        throw new NotImplementedException();
+        NotImplemented();
     }
 
     private void mnuPickDownstream_Click()
     {
-        throw new NotImplementedException();
+        NotImplemented();
     }
 
     private void mnuShowDependency_Click()
     {
-        throw new NotImplementedException();
+        NotImplemented();
     }
 
     private void mnuInternalize_Click()
     {
-        throw new NotImplementedException();
+        NotImplemented();
+    }
+
+    private static void NotImplemented()
+    {
+
     }
 }

@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace PancakeNextCore.GH.Params;
 [IoId("22B79783-C674-4BC4-AFBA-014C94D727BE")]
@@ -226,6 +225,7 @@ public sealed class GhAtomList : GhAssocBase
 
     public override bool DeepEquals(GhAssocBase? another)
     {
+        return false;
         throw new NotImplementedException();
     }
 
