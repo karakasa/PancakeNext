@@ -21,6 +21,6 @@ The project is merely for technical demonstration purpose. The API surface and i
 In short:
 * No warranty.
 * Free for both non-commercial and commercial use.
-* Attribution required in modified files, if you make derivate works of this repo.
+* Attribution required in modified files, if you make derivative works of this repo.
 
 The example project above has its own license terms.
