@@ -1,20 +1,20 @@
 # Pancake for Grasshopper 2
 
-A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) on GH2.
+A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) for GH2.
 
-Please be advised that Pancake itself has abstraction layers to handle localization, etc. So the code would look different from a vanilla GH2 component.
+Please note that Pancake introduces additional abstraction layers for localization and other purposes, so its code may differ from typical GH2 components.
 
-# Handbook of Porting
+# Porting Handbook
 
-[Wiki](https://github.com/karakasa/PancakeNext/wiki). The wiki includes a quick starter guide and covers several other topics like how GH'2 new data model works.
+See the [Wiki](https://github.com/karakasa/PancakeNext/wiki) for a quick-start guide and other topics, including an overview of the new data model in GH2.
 
-# Example: 1 shared codebase for 2 GHs
+# Example: One Codebase for Both GH1 & GH2
 
 [Codebase](/example/OneCodeTwoVersions)
 
-It utilizes project configurations, preprocess directives and a thin compatibility layer for sharing codebases across GH1 & 2. The compatibility middleware focuses on the original GH1 syntax, making it runnable under GH2 with only minor changes.
+This example uses project configurations, preprocessor directives, and a thin compatibility layer to support both Grasshopper 1 and 2 from a single codebase. The compatibility layer is designed around GH1 conventions, allowing the same logic to run in GH2 with minimal changes.
 
-The project is merely for technical demonstration purpose. The API surface and interoperability implementation is subject to Grasshopper 1 terms by McNeel and David Rutten.
+> Note: This project is intended as a technical demonstration. The APIs and interoperability layers follow the terms and conditions defined by McNeel and David Rutten for Grasshopper 1.
 
 # License
 
@@ -22,7 +22,5 @@ The project is merely for technical demonstration purpose. The API surface and i
 
 In short:
 * No warranty.
-* Free for both non-commercial and commercial use.
+* Free for non-commercial and commercial use.
 * Attribution required in modified files, if you make derivative works of this repo.
-
-The example project above has its own license terms.
