@@ -12,7 +12,7 @@ See the [Wiki](https://github.com/karakasa/PancakeNext/wiki) for a quick-start g
 
 [Codebase](/example/OneCodeTwoVersions)
 
-This example uses project configurations, preprocessor directives, and a thin compatibility layer to support both Grasshopper 1 and 2 from a single codebase. The compatibility layer is designed around GH1 conventions, allowing the same logic to run in GH2 with minimal changes.
+This example uses project configurations, preprocessor directives, and a thin compatibility layer to support both Grasshopper 1 and 2 from a single codebase. The compatibility layer is designed around GH1 conventions, allowing the same logic to run in GH2 with minimal changes. Pancake itself doesn't use this due to its deep integration with Grasshopper.
 
 > Note: This project is intended as a technical demonstration. The APIs and interoperability layers follow the terms and conditions defined by McNeel and David Rutten for Grasshopper 1.
 
