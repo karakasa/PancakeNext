@@ -2,6 +2,8 @@
 
 A open-source port of [Pancake](https://www.food4rhino.com/en/app/pancake) on GH2.
 
+Please be advised that Pancake itself has abstraction layers to handle localization, etc. So the code would look different from a vanilla GH2 component.
+
 # Handbook of Porting
 
 [Wiki](https://github.com/karakasa/PancakeNext/wiki). The wiki includes a quick starter guide and covers several other topics like how GH'2 new data model works.
