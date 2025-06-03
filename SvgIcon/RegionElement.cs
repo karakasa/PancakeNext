@@ -30,7 +30,7 @@ public sealed class RegionElement
     }
 #endif
 
-    public void ReadFrom(BinaryReader reader)
+    public void ReadFrom(BinaryReader reader, PathIcon host)
     {
         Type = (RegionElementType)reader.ReadByte();
         FillColor = Color.FromArgb(reader.ReadInt32());

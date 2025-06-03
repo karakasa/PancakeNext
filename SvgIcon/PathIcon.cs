@@ -14,7 +14,7 @@ public sealed class PathIcon
     public string? SvgFallback { get; set; }
 
     [Flags]
-    private enum StorageFlag : int
+    internal enum StorageFlag : int
     {
         HasSvgFallback = 1,
         HasColorDescriptor = 2
@@ -66,24 +66,29 @@ public sealed class PathIcon
         WriteTo(writer);
     }
 #endif
+
+    internal StorageFlag FlagsDuringRead { get; private set; }
+    internal bool HasFlag(StorageFlag flag) => (FlagsDuringRead & flag) != 0;
     private void ReadFrom(BinaryReader reader)
     {
+        FlagsDuringRead = 0;
+
         var magicNumber = reader.ReadInt32();
         if (magicNumber != MagicNumber)
         {
             throw new InvalidDataException("Invalid file header.");
         }
 
-        var flags = (StorageFlag)reader.ReadInt32();
+        FlagsDuringRead = (StorageFlag)reader.ReadInt32();
 
-        if ((flags & StorageFlag.HasSvgFallback) != 0)
+        if (HasFlag(StorageFlag.HasSvgFallback))
         {
             SvgFallback = reader.ReadString();
         }
 
         int n;
 
-        if ((flags & StorageFlag.HasColorDescriptor) != 0)
+        if (HasFlag(StorageFlag.HasColorDescriptor))
         {
             Colors.Clear();
 
@@ -100,7 +105,7 @@ public sealed class PathIcon
         for (var i = 0; i < n; i++)
         {
             var loop = new RegionElement();
-            loop.ReadFrom(reader);
+            loop.ReadFrom(reader, this);
             Regions.Add(loop);
         }
     }

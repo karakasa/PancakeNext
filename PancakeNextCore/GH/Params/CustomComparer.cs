@@ -18,10 +18,42 @@ public enum ComparerType
 }
 public sealed class CustomComparer : ICustomComparer
 {
-    internal static readonly CustomComparer DefaultAscending = new(){ Type = ComparerType.Default, OriginalOrder = true };
-    internal static readonly CustomComparer DefaultDescending = new() { Type = ComparerType.Default, OriginalOrder = false };
-    internal static readonly CustomComparer NaturalAscending = new() { Type = ComparerType.BuiltinNaturalSort, OriginalOrder = true };
-    internal static readonly CustomComparer NaturalDescending = new() { Type = ComparerType.BuiltinNaturalSort, OriginalOrder = false };
+    internal int BuiltinId { get; private set; } = -1;
+    public CustomComparer() { }
+    internal CustomComparer(int builtinId, ComparerType type, bool originalOrder)
+    {
+        BuiltinId = builtinId;
+        Type = type;
+        OriginalOrder = originalOrder;
+    }
+
+    public CustomComparer(IComparer<IPear> pear, bool originalOrder)
+    {
+        CustomPear = pear ?? throw new ArgumentNullException(nameof(pear), "Custom comparer cannot be null.");
+        Type = ComparerType.Custom;
+        OriginalOrder = originalOrder;
+    }
+
+    public CustomComparer(IComparer native, bool originalOrder)
+    {
+        CustomNative = native ?? throw new ArgumentNullException(nameof(native), "Custom comparer cannot be null.");
+        Type = ComparerType.CustomNative;
+        OriginalOrder = originalOrder;
+    }
+
+    internal static readonly CustomComparer DefaultAscending = new(0, ComparerType.Default, true);
+    internal static readonly CustomComparer DefaultDescending = new(1, ComparerType.Default, false);
+    internal static readonly CustomComparer NaturalAscending = new(2, ComparerType.BuiltinNaturalSort, true);
+    internal static readonly CustomComparer NaturalDescending = new(3, ComparerType.BuiltinNaturalSort, false);
+
+    internal static CustomComparer ByBuiltInId(int id) => id switch
+    {
+        0 => DefaultAscending,
+        1 => DefaultDescending,
+        2 => NaturalAscending,
+        3 => NaturalDescending,
+        _ => throw new ArgumentOutOfRangeException(nameof(id), id, "Invalid builtin comparer id.")
+    };
     public static CustomComparer ByBuiltIn(ComparerType type, bool reversed = false)
     {
         return type switch

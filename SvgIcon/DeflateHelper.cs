@@ -17,7 +17,6 @@ public static class DeflateHelper
 
         return dest.ToArray();
     }
-#endif
     public static byte[] Decompress(byte[] data)
     {
         using var ms = new MemoryStream(data);
@@ -27,6 +26,7 @@ public static class DeflateHelper
 
         return dest.ToArray();
     }
+#endif
     public static byte[] Decompress(Stream data)
     {
         using var dest = new MemoryStream();
